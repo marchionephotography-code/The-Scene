@@ -7,6 +7,7 @@ import {
   Drama,
   Drum,
   Frame,
+  Heart,
   Guitar,
   Medal,
   Mic,
@@ -95,7 +96,15 @@ function useDrawOnView() {
   return ref
 }
 
-export function EventCard({ rec, now }: { rec: Recommendation; now: Date }) {
+interface CardProps {
+  rec: Recommendation
+  now: Date
+  favorite: boolean
+  onToggleFavorite: () => void
+  onOpen: () => void
+}
+
+export function EventCard({ rec, now, favorite, onToggleFavorite, onOpen }: CardProps) {
   const { event, miles, reasons } = rec
   const category = CATEGORIES.find((c) => c.id === event.category)!.label
   const h = hash(event.id + event.title)
@@ -115,6 +124,15 @@ export function EventCard({ rec, now }: { rec: Recommendation; now: Date }) {
           <Icon className="cover__icon" strokeWidth={1.25} />
         </div>
         <span className="card__cat">{category}</span>
+        <button
+          type="button"
+          className={`heart${favorite ? ' heart--on' : ''}`}
+          aria-pressed={favorite}
+          aria-label={favorite ? `Remove ${event.title} from favorites` : `Add ${event.title} to favorites`}
+          onClick={onToggleFavorite}
+        >
+          <Heart size={20} strokeWidth={2.25} fill={favorite ? 'currentColor' : 'rgba(0,0,0,0.25)'} aria-hidden="true" />
+        </button>
         {event.local && (
           <span className="card__badge">
             <Sparkles size={13} strokeWidth={2.5} aria-hidden="true" /> Local pick
@@ -123,7 +141,10 @@ export function EventCard({ rec, now }: { rec: Recommendation; now: Date }) {
       </div>
 
       <div className="card__body">
-        <h3 id={`${event.id}-title`} className="card__title">{event.title}</h3>
+        <h3 id={`${event.id}-title`} className="card__title">
+          {/* Stretched button: the whole card opens the details. */}
+          <button type="button" className="card__open" onClick={onOpen}>{event.title}</button>
+        </h3>
         <p className="card__line card__line--strong">{formatWhen(event.start, now)}</p>
         <p className="card__line">
           {event.venue} · {event.town}
