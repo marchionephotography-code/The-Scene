@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { buildSampleEvents } from '../data/sampleEvents'
-import { buildShareText, mailtoHref, smsHref, socialTargets } from './share'
+import { buildShareText, mailtoHref, PASTE_TARGETS, smsHref, socialTargets } from './share'
 
 describe('sharing', () => {
   const event = buildSampleEvents(new Date(2026, 9, 28, 12))[0]
@@ -19,5 +19,10 @@ describe('sharing', () => {
     const targets = socialTargets(text)
     expect(targets.map((t) => t.id)).toEqual(['x', 'threads', 'bluesky', 'whatsapp'])
     for (const t of targets) expect(t.href).toContain('Hi%20%26%20see')
+  })
+
+  it('includes Instagram, TikTok, and Facebook as copy-then-open targets', () => {
+    expect(PASTE_TARGETS.map((t) => t.label)).toEqual(['Instagram', 'TikTok', 'Facebook'])
+    for (const t of PASTE_TARGETS) expect(t.href).toMatch(/^https:\/\//)
   })
 })

@@ -3,7 +3,7 @@ import { useEffect, useId, useState } from 'react'
 import type { Saved } from '../hooks/useSaved'
 import { CATEGORIES } from '../lib/discovery'
 import { formatPriceRange, PRICE_STATUS_LABEL } from '../lib/money'
-import { buildShareText, formatShareWhen, mailtoHref, smsHref, socialTargets } from '../lib/share'
+import { buildShareText, formatShareWhen, mailtoHref, PASTE_TARGETS, smsHref, socialTargets } from '../lib/share'
 import type { SceneEvent } from '../types/event'
 
 const AGE_TEXT = { 'all-ages': 'All ages', family: 'Family friendly', '18+': '18+', '21+': '21+' } as const
@@ -17,6 +17,7 @@ interface Props {
 export function EventDetail({ event, saved }: Props) {
   const [message, setMessage] = useState(() => buildShareText(event))
   const [copied, setCopied] = useState(false)
+  const [pastedFor, setPastedFor] = useState<string | null>(null)
   const messageId = useId()
   const fav = saved.isFavorite(event.id)
   const wish = saved.onWishlist(event.id)
@@ -27,6 +28,20 @@ export function EventDetail({ event, saved }: Props) {
     const t = window.setTimeout(() => setCopied(false), 2200)
     return () => window.clearTimeout(t)
   }, [copied])
+
+  useEffect(() => {
+    if (!pastedFor) return
+    const t = window.setTimeout(() => setPastedFor(null), 6000)
+    return () => window.clearTimeout(t)
+  }, [pastedFor])
+
+  /** Copy the message, then let the link open the app (runs inside the click). */
+  const copyThenOpen = (label: string) => {
+    navigator.clipboard?.writeText(message).then(
+      () => setPastedFor(label),
+      () => setPastedFor(null),
+    )
+  }
 
   const copy = async () => {
     try {
@@ -116,11 +131,29 @@ export function EventDetail({ event, saved }: Props) {
               {s.label}
             </a>
           ))}
+          {PASTE_TARGETS.map((s) => (
+            <a
+              key={s.id}
+              className={`social social--${s.id}`}
+              href={s.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => copyThenOpen(s.label)}
+            >
+              {s.label}
+            </a>
+          ))}
         </div>
-        <p className="hint">
-          Each button opens that app with your post ready to send. For Instagram or Facebook, use Copy caption and paste
-          it into your post. Text and Email open the apps on your phone or computer.
-        </p>
+        {pastedFor ? (
+          <p className="hint hint--ok" role="status">
+            <Check size={14} strokeWidth={3} aria-hidden="true" /> Message copied. In {pastedFor}, paste it into your post or caption.
+          </p>
+        ) : (
+          <p className="hint">
+            X, Threads, Bluesky, and WhatsApp open with your post ready to send. Instagram, TikTok, and Facebook copy your
+            message first, then open so you can paste it.
+          </p>
+        )}
         <p className="sr-only" role="status">{copied ? 'Message copied' : ''}</p>
       </section>
     </div>

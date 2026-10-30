@@ -39,6 +39,22 @@ export interface SocialTarget {
   href: string
 }
 
+/**
+ * Networks that don't accept pre-written text from a web link. The button
+ * copies the message first, then opens the app so it can be pasted.
+ */
+export interface PasteTarget {
+  id: 'instagram' | 'tiktok' | 'facebook'
+  label: string
+  href: string
+}
+
+export const PASTE_TARGETS: PasteTarget[] = [
+  { id: 'instagram', label: 'Instagram', href: 'https://www.instagram.com/' },
+  { id: 'tiktok', label: 'TikTok', href: 'https://www.tiktok.com/upload' },
+  { id: 'facebook', label: 'Facebook', href: 'https://www.facebook.com/' },
+]
+
 /** Networks that accept a pre-written post from a web link. */
 export function socialTargets(text: string): SocialTarget[] {
   const t = encodeURIComponent(text)

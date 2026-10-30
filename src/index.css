@@ -685,6 +685,11 @@ body::before { content: ''; position: fixed; inset: 0 0 auto; height: env(safe-a
 .social--threads { background: #101010; }
 .social--bluesky { background: #0560d8; }
 .social--whatsapp { background: #0b7a3e; }
+.social--instagram { background: linear-gradient(45deg, #c13584, #833ab4 55%, #5b51d8); }
+.social--tiktok { background: #010101; box-shadow: inset 2px 0 0 #25f4ee, inset -2px 0 0 #fe2c55; }
+.social--facebook { background: #1460d6; }
+.hint--ok { display: flex; align-items: center; gap: 6px; color: var(--ink); font-weight: 600; animation: rise var(--t-state) var(--ease-out); }
+.hint--ok svg { color: #0b7a3e; flex: none; }
 
 /* ============================================================
    Calendar
