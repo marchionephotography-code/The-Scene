@@ -113,7 +113,8 @@ export function EventCard({ rec, now, favorite, onToggleFavorite, onOpen }: Card
   const icons = CATEGORY_ICONS[event.category]
   const Icon = icons[h % icons.length]
   const coverRef = useDrawOnView()
-  const photo = photoFor(event.category, h)
+  // Number in the id (sample-7 → 7) keeps neighbouring cards on different photos.
+  const photo = photoFor(event.category, Number(event.id.match(/\d+/)?.[0] ?? h))
 
   return (
     <article className="card" aria-labelledby={`${event.id}-title`}>
