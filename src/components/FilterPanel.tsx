@@ -24,7 +24,7 @@ export function FilterPanel({ filters, hasLocation, onChange }: Props) {
     })
 
   return (
-    <div className="filters" id="filter-panel">
+    <div className="filters">
       <fieldset className="filters__group">
         <legend>Category</legend>
         <div className="chips">

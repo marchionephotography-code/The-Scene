@@ -4,14 +4,16 @@ interface Props {
   value: DateFilter
   today: string // YYYY-MM-DD
   onChange: (d: DateFilter) => void
+  /** Wrap chips onto several lines instead of scrolling sideways. */
+  wrap?: boolean
 }
 
 const KINDS: DateFilter['kind'][] = ['any', 'tonight', 'tomorrow', 'weekend', 'custom']
 
-export function DateShortcuts({ value, today, onChange }: Props) {
+export function DateShortcuts({ value, today, onChange, wrap = false }: Props) {
   return (
-    <section aria-label="When" className="dates">
-      <div className="chips" role="group" aria-label="Date shortcuts">
+    <div className={`dates${wrap ? ' dates--wrap' : ''}`}>
+      <div className="chips" role="group" aria-label="When">
         {KINDS.map((k) => {
           const on = value.kind === k
           return (
@@ -56,6 +58,6 @@ export function DateShortcuts({ value, today, onChange }: Props) {
           </label>
         </div>
       )}
-    </section>
+    </div>
   )
 }

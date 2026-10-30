@@ -6,22 +6,24 @@ export type MoodId = 'chill' | 'lively' | 'laugh' | 'creative' | 'active' | 'fam
 
 export interface Mood {
   id: MoodId
+  /** Short tile label. */
   label: string
-  emoji: string
+  /** Used in "Matches:" reasons, e.g. "family time". */
+  reason: string
   /** An event matches if it has any of these tags or categories. */
   tags: string[]
   categories: Category[]
 }
 
 export const MOODS: Mood[] = [
-  { id: 'chill', label: 'Something chill', emoji: '🌿', tags: ['chill'], categories: [] },
-  { id: 'lively', label: 'Go out & get loud', emoji: '🎸', tags: ['lively', 'late night'], categories: [] },
-  { id: 'laugh', label: 'Have a laugh', emoji: '😂', tags: ['funny'], categories: [] },
-  { id: 'creative', label: 'Make something', emoji: '🎨', tags: ['creative', 'hands-on'], categories: ['arts'] },
-  { id: 'active', label: 'Get moving', emoji: '🥾', tags: ['active'], categories: ['outdoors'] },
-  { id: 'family', label: 'Family time', emoji: '👨‍👩‍👧', tags: ['family'], categories: ['family'] },
-  { id: 'date', label: 'Date night', emoji: '✨', tags: ['date night'], categories: [] },
-  { id: 'eat', label: 'Eat & drink', emoji: '🍔', tags: [], categories: ['food'] },
+  { id: 'chill', label: 'Chill', reason: 'something chill', tags: ['chill'], categories: [] },
+  { id: 'lively', label: 'Night out', reason: 'night out', tags: ['lively', 'late night'], categories: [] },
+  { id: 'laugh', label: 'Laugh', reason: 'a good laugh', tags: ['funny'], categories: [] },
+  { id: 'creative', label: 'Create', reason: 'make something', tags: ['creative', 'hands-on'], categories: ['arts'] },
+  { id: 'active', label: 'Get active', reason: 'get active', tags: ['active'], categories: ['outdoors'] },
+  { id: 'family', label: 'Family', reason: 'family time', tags: ['family'], categories: ['family'] },
+  { id: 'date', label: 'Date night', reason: 'date night', tags: ['date night'], categories: [] },
+  { id: 'eat', label: 'Food & drink', reason: 'food & drink', tags: [], categories: ['food'] },
 ]
 
 export const CATEGORIES: { id: Category; label: string }[] = [
@@ -205,7 +207,7 @@ export function recommend(
 
 function reasonsFor(e: SceneEvent, f: Filters, mood: Mood | null, miles: number | null): string[] {
   const r: string[] = []
-  if (mood) r.push(mood.label.toLowerCase())
+  if (mood) r.push(mood.reason)
   if (f.categories.includes(e.category)) r.push(CATEGORIES.find((c) => c.id === e.category)!.label.toLowerCase())
   if (f.price !== 'any') r.push(startingCents(e) === 0 ? 'free' : PRICE_LABELS[f.price].toLowerCase())
   if (f.age === 'kids') r.push('good for kids')
