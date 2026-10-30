@@ -33,6 +33,7 @@ import { useEffect, useRef, type CSSProperties } from 'react'
 import { CATEGORIES, formatMiles, type Recommendation } from '../lib/discovery'
 import { formatPriceRange, PRICE_STATUS_LABEL } from '../lib/money'
 import { prefersReducedMotion } from '../lib/motion'
+import { photoFor } from '../data/eventPhotos'
 import type { Category } from '../types/event'
 
 const AGE_TEXT = { 'all-ages': 'All ages', family: 'Family friendly', '18+': '18+', '21+': '21+' } as const
@@ -112,18 +113,25 @@ export function EventCard({ rec, now, favorite, onToggleFavorite, onOpen }: Card
   const icons = CATEGORY_ICONS[event.category]
   const Icon = icons[h % icons.length]
   const coverRef = useDrawOnView()
+  const photo = photoFor(event.category, h)
 
   return (
     <article className="card" aria-labelledby={`${event.id}-title`}>
       <div className="card__media">
-        <div
-          ref={coverRef}
-          className={`cover cover--${event.category} cover--v${h % 3}`}
-          style={{ '--tilt': `${115 + (h % 70)}deg` } as CSSProperties}
-          aria-hidden="true"
-        >
-          <Icon className="cover__icon" strokeWidth={1.25} />
-        </div>
+        {photo ? (
+          <div className="cover cover--photo" aria-hidden="true">
+            <img className="cover__photo" src={photo} alt="" loading="lazy" decoding="async" />
+          </div>
+        ) : (
+          <div
+            ref={coverRef}
+            className={`cover cover--${event.category} cover--v${h % 3}`}
+            style={{ '--tilt': `${115 + (h % 70)}deg` } as CSSProperties}
+            aria-hidden="true"
+          >
+            <Icon className="cover__icon" strokeWidth={1.25} />
+          </div>
+        )}
         <span className="card__cat">{category}</span>
         <button
           type="button"

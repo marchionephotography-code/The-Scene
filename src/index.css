@@ -891,3 +891,14 @@ body::before { content: ''; position: fixed; inset: 0 0 auto; height: env(safe-a
 
 .logo-mark { flex: none; letter-spacing: 0; }
 .brand:active .logo-mark { transform: none; }
+
+/* Photo covers (category photos from src/assets/events) */
+.cover--photo { background: var(--tile); }
+.cover--photo::before { content: none; }
+.cover--photo::after { background: linear-gradient(to top, rgba(0, 0, 0, 0.35), transparent 40%), linear-gradient(to bottom, rgba(0, 0, 0, 0.18), transparent 30%); z-index: 1; }
+.cover__photo {
+  position: absolute; inset: 0; width: 100%; height: 100%; max-width: 100%; object-fit: cover;
+  transition: transform var(--t-focal) var(--ease-out);
+}
+@media (hover: hover) { .card:hover .cover__photo { transform: scale(1.04); } }
+@media (prefers-reduced-motion: reduce) { .cover__photo { transition: none; } .card:hover .cover__photo { transform: none; } }
