@@ -7,7 +7,7 @@ import {
   type Filters,
   type PriceFilter,
 } from '../lib/discovery'
-import type { LibraryStatus } from '../data/eventSource'
+import type { LibraryStatus, SourceStatus } from '../data/eventSource'
 import type { Category } from '../types/event'
 
 interface Props {
@@ -16,9 +16,17 @@ interface Props {
   onChange: (patch: Partial<Filters>) => void
   /** Which library calendars answered, for the "Hosted by" note. */
   libraries?: LibraryStatus[]
+  /** Every live source and whether it is connected. */
+  sources?: SourceStatus[]
 }
 
-export function FilterPanel({ filters, hasLocation, onChange, libraries = [] }: Props) {
+function statusText(s: SourceStatus): string {
+  if (s.status === 'ok') return `${s.count} upcoming ${s.count === 1 ? 'event' : 'events'}`
+  if (s.status === 'needs-key') return 'not connected yet (needs a free API key)'
+  return 'not reachable right now'
+}
+
+export function FilterPanel({ filters, hasLocation, onChange, libraries = [], sources = [] }: Props) {
   const toggleCategory = (c: Category) =>
     onChange({
       categories: filters.categories.includes(c)
@@ -113,6 +121,21 @@ export function FilterPanel({ filters, hasLocation, onChange, libraries = [] }: 
           </ul>
         )}
       </fieldset>
+
+      {sources.length > 0 && (
+        <fieldset className="filters__group">
+          <legend>Event sources</legend>
+          <p className="hint" style={{ marginTop: 0 }}>Within about a 2-hour drive of Anderson, SC. Sample events fill in until sources connect.</p>
+          <ul className="lib-status" aria-label="Event sources">
+            {sources.map((s) => (
+              <li key={s.id}>
+                <span className={`lib-status__dot lib-status__dot--${s.status === 'ok' ? 'ok' : 'unavailable'}`} aria-hidden="true" />
+                {s.name}: {statusText(s)}
+              </li>
+            ))}
+          </ul>
+        </fieldset>
+      )}
     </div>
   )
 }

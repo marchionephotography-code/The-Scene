@@ -18,6 +18,8 @@ export interface LibraryFeed {
   id: string
   name: string
   url: string
+  /** What kind of organizer this is; libraries get the Library badge and filter. */
+  kind?: 'library' | 'museum'
   /** Used when an event has no venue coordinates. */
   fallback: GeoPoint & { town: string }
 }
@@ -34,6 +36,14 @@ export const LIBRARY_FEEDS: LibraryFeed[] = [
     name: 'Oconee County Public Library',
     url: 'https://oconeelibrary.org/wp-json/tribe/events/v1/events',
     fallback: { lat: 34.7473, lng: -83.0593, town: 'Walhalla, SC' },
+  },
+  {
+    // Upcountry History Museum (Greenville) uses the same WordPress calendar plugin.
+    id: 'upcountry-history',
+    name: 'Upcountry History Museum',
+    url: 'https://upcountryhistory.org/wp-json/tribe/events/v1/events',
+    kind: 'museum',
+    fallback: { lat: 34.8571, lng: -82.3954, town: 'Greenville, SC' },
   },
 ]
 
@@ -137,7 +147,7 @@ export function toSceneEvent(e: TribeEvent, feed: LibraryFeed): SceneEvent {
     local: true,
     description: desc.length > 220 ? `${desc.slice(0, 217).trimEnd()}…` : desc,
     source: 'live',
-    host: { name: feed.name, kind: 'library' },
+    host: { name: feed.name, kind: feed.kind ?? 'library' },
     url: e.url,
     image: pickImage(e.image),
   }

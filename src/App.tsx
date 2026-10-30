@@ -370,6 +370,7 @@ export default function App() {
           hasLocation={location.point !== null}
           onChange={patch}
           libraries={feed.status === 'ready' ? feed.feed.libraries : []}
+          sources={feed.status === 'ready' ? feed.feed.sources : []}
         />
       </Sheet>
 

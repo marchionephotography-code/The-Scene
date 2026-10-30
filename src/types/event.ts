@@ -52,7 +52,7 @@ export interface SceneEvent {
   description: string
   source: DataSource
   /** Who runs it, when known, e.g. a public library. */
-  host?: { name: string; kind: 'library' }
+  host?: { name: string; kind: 'library' | 'museum' }
   /** Link to the organizer's own page for this event (live sources only). */
   url?: string
   /** The organizer's own photo for this event, when the source provides one. */

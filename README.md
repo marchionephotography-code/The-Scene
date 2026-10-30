@@ -35,3 +35,18 @@ The Scene's logo is the **Tile S**: six bright tiles forming an S, each holding 
 - `src/components/LogoMark.tsx`: simplified mark used in the header
 
 Colors: coral `#FF5A36`, sun `#FFC53D`, cobalt `#3D6BFF`, pink `#FF8FC8`, cream `#F4ECDD`, violet `#8B74FF`, ink `#121212`.
+
+## Event sources
+
+All live sources search about a 2-hour drive around Anderson, SC (`src/data/feeds/area.ts`). Sample events fill in until sources connect, and Filters → Event sources shows each source's status.
+
+| Source | What it covers | Setup |
+|---|---|---|
+| Anderson County Library, Oconee County Public Library | Library programs | None (public WordPress calendar feed; not yet verified live) |
+| Upcountry History Museum | Museum events, Greenville | None (same feed type; not yet verified live) |
+| Ticketmaster Discovery API | Concerts, sports, theater, family shows at larger venues | Free key → `VITE_TICKETMASTER_KEY` in `.env` |
+| SeatGeek Platform API | Sports, concerts, theater (resale prices shown as estimates) | Free client ID → `VITE_SEATGEEK_CLIENT_ID` in `.env` |
+
+Not available: Eventbrite (public search removed from its API in 2019), Visit Greenville SC (no public feed), Pickens County Library (Communico; needs a key from the library).
+
+Copy `.env.example` to `.env`, add keys, and restart `npm run dev`. Never commit `.env`.
