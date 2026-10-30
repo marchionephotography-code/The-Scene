@@ -987,3 +987,64 @@ body::before { content: ''; position: fixed; inset: 0 0 auto; height: env(safe-a
   .card:hover .tiles__main, .card:hover .tiles__chip { transform: none; }
   .card:hover .cover--tiles .cover__icon { rotate: 0deg; }
 }
+
+/* ============================================================
+   Hero v2: Tile S collage
+   Phone:   [ photo      | a ]
+            [ photo      | b ]
+            [ headline tile  ]
+   Desktop: [ photo | headline tile ]
+            [ photo |   a   |   b   ]
+   ============================================================ */
+.collage {
+  display: grid; gap: 10px; margin-bottom: 20px;
+  grid-template-columns: minmax(0, 1fr) 84px;
+  grid-template-rows: 92px 92px auto;
+  grid-template-areas: "photo a" "photo b" "head head";
+}
+.collage__photo {
+  grid-area: photo; position: relative; overflow: hidden; background: #2a1d12;
+  border-radius: 140px 16px 16px 16px;
+}
+.collage__photo img {
+  position: absolute; inset: 0; width: 100%; height: 100%; max-width: 100%;
+  object-fit: cover; object-position: 52% 40%;
+  animation: hero-settle 1400ms var(--ease-out) both;
+}
+.collage__tile {
+  display: grid; place-items: center; color: #121212;
+  animation: pop 520ms var(--ease-out) both;
+}
+.collage__tile--a { grid-area: a; background: #8B74FF; border-radius: 16px 84px 16px 16px; animation-delay: 120ms; }
+.collage__tile--b { grid-area: b; background: #FF8FC8; border-radius: 16px 16px 84px 16px; animation-delay: 200ms; }
+.collage__head {
+  grid-area: head; display: grid; gap: 6px; align-content: end;
+  padding: 22px 22px 24px; min-height: 150px;
+  background: #FFC53D; color: #121212;
+  border-radius: 16px 16px 120px 16px;
+}
+.collage__title { margin: 0; max-width: 13ch; }
+.collage__sub { font-size: var(--fs-meta); font-weight: 600; color: rgba(18, 18, 18, 0.82); max-width: 32ch; }
+
+@media (min-width: 760px) {
+  .collage {
+    grid-template-columns: minmax(0, 1.55fr) minmax(0, 0.5fr) minmax(0, 0.5fr);
+    grid-template-rows: minmax(0, 1fr) 150px;
+    grid-template-areas: "photo head head" "photo a b";
+    height: 440px;
+  }
+  .collage__photo { border-radius: 260px 20px 20px 20px; }
+  .collage__head { padding: 32px; border-radius: 20px 20px 160px 20px; min-height: 0; align-content: center; }
+  .collage__tile--a { border-radius: 20px 20px 20px 150px; }
+  .collage__tile--b { border-radius: 20px 150px 20px 20px; }
+  .collage__tile svg { width: 40px; height: 40px; }
+  .collage__sub { font-size: var(--fs-body); }
+}
+@media (hover: hover) {
+  .collage__tile { transition: transform var(--t-state) var(--ease-out); }
+  .collage__tile:hover { transform: rotate(-4deg) scale(1.03); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .collage__photo img, .collage__tile { animation: none; }
+  .collage__tile:hover { transform: none; }
+}

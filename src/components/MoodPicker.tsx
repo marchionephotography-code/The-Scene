@@ -4,6 +4,7 @@ import {
   Palette,
   PartyPopper,
   Footprints,
+  Music,
   Sparkles,
   Users,
   UtensilsCrossed,
@@ -33,19 +34,28 @@ interface Props {
 export function MoodPicker({ value, onChange }: Props) {
   return (
     <section aria-labelledby="mood-heading" className="moods">
-      <div className="hero">
-        <img
-          className="hero__img"
-          src={hero900}
-          srcSet={`${hero900} 900w, ${hero1800} 1800w`}
-          sizes="(min-width: 1120px) 1072px, 100vw"
-          alt=""
-          fetchPriority="high"
-          decoding="async"
-        />
-        <div className="hero__content">
-          <h1 id="mood-heading" className="title hero__title">What do you feel like doing?</h1>
-          <p className="hero__sub">Find something fun nearby, then plan it together.</p>
+      {/* Hero v2: a Tile S collage. The photo sits in one big quarter-round tile,
+          with brand-color tiles carrying the headline and two small icons. */}
+      <div className="collage">
+        <div className="collage__photo">
+          <img
+            src={hero900}
+            srcSet={`${hero900} 900w, ${hero1800} 1800w`}
+            sizes="(min-width: 760px) 640px, 100vw"
+            alt=""
+            fetchPriority="high"
+            decoding="async"
+          />
+        </div>
+        <div className="collage__tile collage__tile--a" aria-hidden="true">
+          <Music size={30} strokeWidth={2.25} />
+        </div>
+        <div className="collage__tile collage__tile--b" aria-hidden="true">
+          <Sparkles size={30} strokeWidth={2.25} />
+        </div>
+        <div className="collage__head">
+          <h1 id="mood-heading" className="title collage__title">What do you feel like doing?</h1>
+          <p className="collage__sub">Find something fun nearby, then plan it together.</p>
         </div>
       </div>
       <div
