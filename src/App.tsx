@@ -10,6 +10,7 @@ import { LocationBar } from './components/LocationBar'
 import { MoodPicker } from './components/MoodPicker'
 import { SavedView } from './components/SavedView'
 import { SearchPill } from './components/SearchPill'
+import { LogoMark } from './components/LogoMark'
 import { Sheet } from './components/Sheet'
 import { TabBar, type Tab } from './components/TabBar'
 import { APP_NAME } from './config'
@@ -156,7 +157,8 @@ export default function App() {
                 window.scrollTo({ top: 0, behavior: 'smooth' })
               }}
             >
-              {APP_NAME}
+              <LogoMark height={30} />
+              <span>{APP_NAME}</span>
             </button>
             {isSample && (
               <span className="badge-sample" title="These events are made up for the demo. Prices and times are not real.">

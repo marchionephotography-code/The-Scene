@@ -114,6 +114,7 @@ body::before { content: ''; position: fixed; inset: 0 0 auto; height: env(safe-a
   /* Wordmark: 100 tracking (0.1em). It doubles as the home button. */
   font-family: var(--font-display); font-weight: 800; font-size: 1.375rem;
   letter-spacing: 0.1em; line-height: 1; white-space: nowrap; text-transform: uppercase;
+  display: inline-flex; align-items: center; gap: 10px;
   margin: -11px -0.1em -11px -6px; padding: 11px calc(6px + 0.1em) 11px 6px; /* trim trailing track, keep a 44px tap area */
   background: none; border: 0; border-radius: var(--r-sm); color: var(--ink);
   transition: opacity var(--t-state), transform var(--t-feedback) var(--ease-out);
@@ -887,3 +888,6 @@ body::before { content: ''; position: fixed; inset: 0 0 auto; height: env(safe-a
 }
 @keyframes hero-settle { from { transform: scale(1.06); filter: saturate(0.85); } }
 @media (prefers-reduced-motion: reduce) { .hero__img { animation: none; } }
+
+.logo-mark { flex: none; letter-spacing: 0; }
+.brand:active .logo-mark { transform: none; }

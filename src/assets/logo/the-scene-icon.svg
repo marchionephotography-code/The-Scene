@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="The Scene">
+  <!-- The Scene · Tile S logo (app icon, full detail). Colors: coral #FF5A36, sun #FFC53D,
+       cobalt #3D6BFF, pink #FF8FC8, cream #F4ECDD, violet #8B74FF on ink #121212. -->
+  <rect width="512" height="512" rx="112" fill="#121212"/>
+  <defs>
+    <clipPath id="ts-red"><path d="M219,188 A96,96 0 0 1 315,92 L315,188 Z"/></clipPath>
+    <clipPath id="ts-yellow"><rect x="325" y="92" width="96" height="96" rx="8"/></clipPath>
+    <clipPath id="ts-blue"><path d="M315,294 A96,96 0 0 1 219,198 L315,198 Z"/></clipPath>
+  </defs>
+  <g transform="translate(256 256) scale(1.1) translate(-320 -246)">
+    <path d="M219,188 A96,96 0 0 1 315,92 L315,188 Z" fill="#FF5A36"/>
+    <rect x="325" y="92" width="96" height="96" rx="8" fill="#FFC53D"/>
+    <path d="M315,294 A96,96 0 0 1 219,198 L315,198 Z" fill="#3D6BFF"/>
+    <path d="M325,198 A96,96 0 0 1 421,294 L325,294 Z" fill="#FF8FC8"/>
+    <rect x="219" y="304" width="96" height="96" rx="8" fill="#F4ECDD"/>
+    <path d="M421,304 A96,96 0 0 1 325,400 L325,304 Z" fill="#8B74FF"/>
+    <g fill="#121212" stroke="#121212" stroke-linecap="round" stroke-linejoin="round">
+      <!-- string lights across the coral tile -->
+      <g clip-path="url(#ts-red)">
+        <path d="M236,126 Q277,182 318,126" fill="none" stroke-width="4"/>
+        <circle cx="252.4" cy="150" r="5.5" stroke="none"/>
+        <circle cx="268.8" cy="159" r="5.5" stroke="none"/>
+        <circle cx="285.2" cy="159" r="5.5" stroke="none"/>
+        <circle cx="301.6" cy="150" r="5.5" stroke="none"/>
+      </g>
+      <!-- stage curtain on the sun tile -->
+      <g clip-path="url(#ts-yellow)">
+        <path d="M300,80 H398 Q392,116 378,136 Q366,152 372,160 Q388,178 394,200 H300 Z" stroke="none"/>
+        <g fill="none" stroke="#FFC53D" stroke-width="3">
+          <path d="M340,92 Q344,126 337,150 Q333,172 340,188"/>
+          <path d="M358,92 Q360,120 352,146"/>
+          <path d="M374,92 Q374,114 364,138"/>
+          <path d="M356,166 Q366,178 368,188"/>
+          <path d="M325,152 Q348,160 371,152" stroke-width="4"/>
+        </g>
+      </g>
+      <!-- mountains running off the cobalt tile -->
+      <g clip-path="url(#ts-blue)">
+        <path d="M196,270 L238,206 L262,238 L280,220 L312,270 Z" stroke-width="2"/>
+      </g>
+      <!-- music note, heart, sparkle -->
+      <circle cx="356" cy="267" r="9.5" stroke="none"/>
+      <rect x="361" y="229" width="5" height="39" stroke="none"/>
+      <path d="M366,229 Q381,233 382,250 Q375,241 366,241 Z" stroke="none"/>
+      <path d="M267,372 C244,356 242,338 254,333 C262,330 266,335 267,340 C268,335 272,330 280,333 C292,338 290,356 267,372 Z" stroke="none"/>
+      <path d="M390,308 L395.3,324.7 L412,330 L395.3,335.3 L390,352 L384.7,335.3 L368,330 L384.7,324.7 Z" stroke="none"/>
+    </g>
+  </g>
+</svg>
