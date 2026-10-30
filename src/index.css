@@ -1090,3 +1090,42 @@ body::before { content: ''; position: fixed; inset: 0 0 auto; height: env(safe-a
   .cover--tiles ~ .card__cat { left: 70px; }
   .tag-pill--quiet { display: none; }
 }
+
+/* ============================================================
+   Event photos in brand colors (duotone)
+   The photo goes black-and-white, then the category's ground color
+   is multiplied over it and its tile color lifts the highlights, so
+   real band and venue photos sit in the same palette as the tile art.
+   ============================================================ */
+.cover--duo { background: var(--g); isolation: isolate; }
+.cover--duo .cover__photo { filter: grayscale(1) contrast(1.15) brightness(1.05); }
+.cover--duo::before {
+  content: ''; position: absolute; inset: 0; z-index: 1;
+  background: var(--g); mix-blend-mode: multiply;
+}
+.cover--duo::after {
+  content: ''; position: absolute; inset: 0; z-index: 1;
+  background: linear-gradient(160deg, var(--t), transparent 70%);
+  mix-blend-mode: screen; opacity: 0.55;
+}
+.duo__tile {
+  position: absolute; right: 0; bottom: 0; z-index: 1;
+  height: 34%; aspect-ratio: 1; background: var(--t);
+  border-radius: 100% 0 0 0;
+  transition: transform var(--t-focal) var(--ease-out); transform-origin: 100% 100%;
+}
+.cover--duo .cover__photo { transition: transform var(--t-focal) var(--ease-out), filter var(--t-focal) var(--ease-out); }
+@media (hover: hover) {
+  .card:hover .cover--duo .cover__photo { transform: scale(1.04); filter: grayscale(0.6) contrast(1.1) brightness(1.05); }
+  .card:hover .duo__tile { transform: scale(1.15); }
+}
+/* Sports' ground is near-black, so multiply would hide the photo: tint with its tile color instead. */
+.cover--duo.tiles--sports::before { background: var(--t); opacity: 0.85; }
+.cover--duo.tiles--sports .duo__tile { background: var(--k); }
+/* Outdoors' cream ground is too light to tint; use its cobalt tile. */
+.cover--duo.tiles--outdoors::before { background: var(--t); }
+.cover--duo.tiles--outdoors .duo__tile { background: var(--k); }
+@media (prefers-reduced-motion: reduce) {
+  .cover--duo .cover__photo, .duo__tile { transition: none; }
+  .card:hover .cover--duo .cover__photo, .card:hover .duo__tile { transform: none; }
+}

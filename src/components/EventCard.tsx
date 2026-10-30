@@ -145,7 +145,7 @@ export function EventCard({ rec, now, favorite, onToggleFavorite, onOpen }: Card
     <article className="card" aria-labelledby={`${event.id}-title`}>
       <div className="card__media">
         {photo ? (
-          <div className="cover cover--photo" aria-hidden="true">
+          <div className={`cover cover--photo cover--duo tiles--${event.category}`} aria-hidden="true">
             <img
               className="cover__photo"
               src={photo}
@@ -155,6 +155,7 @@ export function EventCard({ rec, now, favorite, onToggleFavorite, onOpen }: Card
               referrerPolicy="no-referrer"
               onError={() => setPhotoFailed(true)}
             />
+            <span className="duo__tile" />
           </div>
         ) : (
           <div ref={coverRef} className={`cover cover--tiles tiles--${event.category} tiles--c${h % 3}`} aria-hidden="true">
