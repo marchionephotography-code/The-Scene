@@ -144,7 +144,17 @@ export default function App() {
       <header className="topbar">
         <div className="topbar__inner">
           <div className="topbar__brand">
-            <span className="brand">{APP_NAME}</span>
+            <button
+              type="button"
+              className="brand"
+              aria-label={`${APP_NAME}, go to home`}
+              onClick={() => {
+                goTab('explore')
+                window.scrollTo({ top: 0, behavior: 'smooth' })
+              }}
+            >
+              {APP_NAME}
+            </button>
             {isSample && (
               <span className="badge-sample" title="These events are made up for the demo. Prices and times are not real.">
                 Sample data

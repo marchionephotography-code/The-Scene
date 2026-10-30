@@ -1,5 +1,5 @@
 # The-Scene
-Event web app. That helps take the guess work out of planning fun excursions for families, friends, date, anniversary etc. 
+Event web app (name: The Scene). That helps take the guess work out of planning fun excursions for families, friends, date, anniversary etc. 
 
 ## Running it
 

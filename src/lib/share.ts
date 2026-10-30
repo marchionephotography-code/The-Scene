@@ -1,4 +1,5 @@
 import type { SceneEvent } from '../types/event'
+import { APP_NAME } from '../config'
 import { formatPriceRange } from './money'
 
 /** "Sat, Oct 31 · 7:30 PM" */
@@ -19,7 +20,7 @@ export function buildShareText(event: SceneEvent, locale?: string): string {
     `${formatShareWhen(event.start, locale)} at ${event.venue}, ${event.town}`,
     `Price: ${formatPriceRange(event.price, locale)}`,
   ]
-  if (event.source === 'sample') lines.push('', '(Sample listing from the SCENE demo, not a real event yet.)')
+  if (event.source === 'sample') lines.push('', `(Sample listing from the ${APP_NAME} demo, not a real event yet.)`)
   return lines.join('\n')
 }
 

@@ -111,13 +111,19 @@ body::before { content: ''; position: fixed; inset: 0 0 auto; height: env(safe-a
 }
 .topbar__brand { display: flex; align-items: center; justify-content: space-between; }
 .brand {
-  font-family: var(--font-display); font-weight: 800; font-size: 1.5rem;
-  letter-spacing: -0.035em; line-height: 1;
+  /* Wordmark: 100 tracking (0.1em). It doubles as the home button. */
+  font-family: var(--font-display); font-weight: 800; font-size: 1.375rem;
+  letter-spacing: 0.1em; line-height: 1; white-space: nowrap;
+  margin: -11px -0.1em -11px -6px; padding: 11px calc(6px + 0.1em) 11px 6px; /* trim trailing track, keep a 44px tap area */
+  background: none; border: 0; border-radius: var(--r-sm); color: var(--ink);
+  transition: opacity var(--t-state), transform var(--t-feedback) var(--ease-out);
 }
+@media (hover: hover) { .brand:hover { opacity: 0.72; } }
+.brand:active { transform: scale(0.96); }
 .badge-sample {
   background: var(--sample-bg); color: var(--sample-ink);
   font-size: var(--fs-small); font-weight: 700; letter-spacing: var(--track-small);
-  padding: 4px 10px; border-radius: 999px;
+  padding: 4px 10px; border-radius: 999px; white-space: nowrap;
 }
 
 @media (min-width: 760px) {
@@ -562,7 +568,7 @@ body::before { content: ''; position: fixed; inset: 0 0 auto; height: env(safe-a
   .mood--on .mood__tile svg, .cover[data-draw='go'] { animation: none; }
   .sheet__inner, .sheet[data-closing] .sheet__inner { animation: fade-in 120ms ease-out; }
   .skeleton__media, .skeleton__line { animation: none; }
-  .pill:active, .round-btn:active, .chip:active, .btn:active, .mood:active .mood__tile { transform: none; }
+  .brand:active, .pill:active, .round-btn:active, .chip:active, .btn:active, .mood:active .mood__tile { transform: none; }
   .cover, .cover::before, .cover__icon { transition: none; }
   .card:hover .cover::before, .card:hover .cover__icon { transform: none; rotate: revert-layer; scale: 1; }
   ::view-transition-group(*), ::view-transition-old(*), ::view-transition-new(*) { animation: none !important; }

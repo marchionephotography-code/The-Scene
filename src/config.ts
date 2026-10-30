@@ -1,1 +1,1 @@
-export const APP_NAME = 'SCENE'
+export const APP_NAME = 'The Scene'
