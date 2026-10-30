@@ -29,7 +29,7 @@ import {
   Volleyball,
   type LucideIcon,
 } from 'lucide-react'
-import { useEffect, useRef, type CSSProperties } from 'react'
+import { useEffect, useRef } from 'react'
 import { CATEGORIES, formatMiles, type Recommendation } from '../lib/discovery'
 import { formatPriceRange, PRICE_STATUS_LABEL } from '../lib/money'
 import { prefersReducedMotion } from '../lib/motion'
@@ -106,6 +106,25 @@ interface CardProps {
   onOpen: () => void
 }
 
+function dayParts(startIso: string, now: Date) {
+  const d = new Date(startIso)
+  const diff = Math.round(
+    (new Date(d.getFullYear(), d.getMonth(), d.getDate()).getTime() -
+      new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime()) /
+      86_400_000,
+  )
+  return {
+    top: diff === 0 ? 'Today' : diff === 1 ? 'Tmrw' : d.toLocaleDateString(undefined, { weekday: 'short' }),
+    day: d.getDate(),
+    month: d.toLocaleDateString(undefined, { month: 'short' }),
+    soon: diff <= 1,
+    time: d.toLocaleTimeString(undefined, { hour: 'numeric', minute: '2-digit' }),
+  }
+}
+
+/** Reasons already shown elsewhere on the card don't need repeating. */
+const SHOWN_ON_CARD = new Set(['local pick', 'library event'])
+
 export function EventCard({ rec, now, favorite, onToggleFavorite, onOpen }: CardProps) {
   const { event, miles, reasons } = rec
   const category = CATEGORIES.find((c) => c.id === event.category)!.label
@@ -116,6 +135,10 @@ export function EventCard({ rec, now, favorite, onToggleFavorite, onOpen }: Card
   // Number in the id (sample-7 → 7) keeps neighbouring cards on different photos.
   const photo = photoFor(event.category, Number(event.id.match(/\d+/)?.[0] ?? h))
 
+  const when = dayParts(event.start, now)
+  const extraReasons = reasons.filter((r) => !SHOWN_ON_CARD.has(r))
+  const isLibrary = event.host?.kind === 'library'
+
   return (
     <article className="card" aria-labelledby={`${event.id}-title`}>
       <div className="card__media">
@@ -124,13 +147,11 @@ export function EventCard({ rec, now, favorite, onToggleFavorite, onOpen }: Card
             <img className="cover__photo" src={photo} alt="" loading="lazy" decoding="async" />
           </div>
         ) : (
-          <div
-            ref={coverRef}
-            className={`cover cover--${event.category} cover--v${h % 3}`}
-            style={{ '--tilt': `${115 + (h % 70)}deg` } as CSSProperties}
-            aria-hidden="true"
-          >
-            <Icon className="cover__icon" strokeWidth={1.25} />
+          <div ref={coverRef} className={`cover cover--tiles tiles--${event.category} tiles--c${h % 3}`} aria-hidden="true">
+            <span className="tiles__main">
+              <Icon className="cover__icon" strokeWidth={1.75} />
+            </span>
+            <span className="tiles__chip" />
           </div>
         )}
         <span className="card__cat">{category}</span>
@@ -143,18 +164,11 @@ export function EventCard({ rec, now, favorite, onToggleFavorite, onOpen }: Card
         >
           <Heart size={20} strokeWidth={2.25} fill={favorite ? 'currentColor' : 'rgba(0,0,0,0.25)'} aria-hidden="true" />
         </button>
-        <div className="card__badges">
-          {event.host?.kind === 'library' && (
-            <span className="card__badge">
-              <BookOpen size={13} strokeWidth={2.5} aria-hidden="true" /> Library
-            </span>
-          )}
-          {event.local && event.host?.kind !== 'library' && (
-            <span className="card__badge">
-              <Sparkles size={13} strokeWidth={2.5} aria-hidden="true" /> Local pick
-            </span>
-          )}
-        </div>
+        <span className={`stub${when.soon ? ' stub--soon' : ''}`} aria-hidden="true">
+          <span className="stub__top">{when.top}</span>
+          <span className="stub__day">{when.day}</span>
+          <span className="stub__month">{when.month}</span>
+        </span>
       </div>
 
       <div className="card__body">
@@ -162,22 +176,33 @@ export function EventCard({ rec, now, favorite, onToggleFavorite, onOpen }: Card
           {/* Stretched button: the whole card opens the details. */}
           <button type="button" className="card__open" onClick={onOpen}>{event.title}</button>
         </h3>
-        <p className="card__line card__line--strong">{formatWhen(event.start, now)}</p>
-        <p className="card__line">
-          {event.venue} · {event.town}
-          {miles !== null && <> · {formatMiles(miles)}</>}
+        <p className="card__when">
+          <span className="sr-only">{formatWhen(event.start, now)}, </span>
+          <strong aria-hidden="true">{when.time}</strong>
+          <span className="card__where">
+            {event.venue} · {event.town}
+            {miles !== null && <> · {formatMiles(miles)}</>}
+          </span>
         </p>
         <p className="card__desc">{event.description}</p>
-        <p className="card__price">
-          <strong>{formatPriceRange(event.price)}</strong>
-          <span className={`status status--${event.price.status}`}>{PRICE_STATUS_LABEL[event.price.status]}</span>
-          <span className="card__dot" aria-hidden="true">·</span>
-          <span className="card__age">{AGE_TEXT[event.age]}</span>
-        </p>
-        {reasons.length > 0 && (
+        <div className="card__foot">
+          <p className="card__price">
+            <strong>{formatPriceRange(event.price)}</strong>
+            <span className={`status status--${event.price.status}`}>{PRICE_STATUS_LABEL[event.price.status]}</span>
+          </p>
+          <p className="card__tags">
+            {isLibrary ? (
+              <span className="tag-pill"><BookOpen size={13} strokeWidth={2.5} aria-hidden="true" /> Library</span>
+            ) : event.local ? (
+              <span className="tag-pill"><Sparkles size={13} strokeWidth={2.5} aria-hidden="true" /> Local</span>
+            ) : null}
+            <span className="tag-pill tag-pill--quiet">{AGE_TEXT[event.age]}</span>
+          </p>
+        </div>
+        {extraReasons.length > 0 && (
           <p className="card__why">
             <Check size={14} strokeWidth={2.75} aria-hidden="true" />
-            <span><span className="sr-only">Matches: </span>{reasons.join(' · ')}</span>
+            <span><span className="sr-only">Matches: </span>{extraReasons.join(' · ')}</span>
           </p>
         )}
       </div>
