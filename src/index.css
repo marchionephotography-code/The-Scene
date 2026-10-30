@@ -69,7 +69,7 @@
 }
 
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not([data-theme="light"]) {
     --bg: #0e0e0e;
     --surface: #171717;
     --tile: #1f1f1f;
@@ -94,6 +94,31 @@
   }
 }
 
+/* Explicit theme choice from a host (e.g. data-theme="dark") wins both ways. */
+:root[data-theme="dark"] {
+  --bg: #0e0e0e;
+  --surface: #171717;
+  --tile: #1f1f1f;
+  --tile-hover: #2a2a2a;
+  --ink: #f4f4f4;
+  --ink-2: #a8a8a8;
+  --line: #2b2b2b;
+  --line-strong: #3d3d3d;
+  --primary: #f4f4f4;
+  --primary-ink: #111111;
+  --accent: #a594ff;
+  --warn: #ff8a80;
+  --sample-bg: #3a2f0d;
+  --sample-ink: #ffe28a;
+  --focus: #93c5fd;
+  --shadow-pill: 0 0 0 1px #2b2b2b, 0 6px 18px rgba(0, 0, 0, 0.5);
+  --shadow-pill-hover: 0 0 0 1px #3d3d3d, 0 10px 26px rgba(0, 0, 0, 0.6);
+  /* Light-on-dark: a touch more air and tracking */
+  --track-small: 0.015em;
+  --lh-text: 1.55;
+  color-scheme: dark;
+}
+
 * { box-sizing: border-box; }
 body { margin: 0; background: var(--bg); }
 button, input, select { font: inherit; color: inherit; letter-spacing: inherit; }
@@ -114,18 +139,22 @@ p { text-wrap: pretty; }
 }
 
 .app { min-height: 100dvh; }
+/* Paints the phone's status-bar band so content never scrolls under it. */
+body::before { content: ''; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 30; background: var(--bg); }
 
 /* ============================================================
    Header + search pill
    ============================================================ */
 .topbar {
-  position: sticky; top: 0; z-index: 20;
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 20;
   background: var(--bg);
   border-bottom: 1px solid var(--line);
   view-transition-name: topbar; /* stays put while results reshuffle */
 }
 .topbar__inner {
-  max-width: 1120px; margin: 0 auto; padding: 10px 16px 12px;
+  max-width: 1120px; margin: 0 auto; padding-block: 10px 12px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
   display: grid; gap: 10px;
 }
 .topbar__brand { display: flex; align-items: center; justify-content: space-between; }
@@ -140,7 +169,7 @@ p { text-wrap: pretty; }
 }
 
 @media (min-width: 760px) {
-  .topbar__inner { grid-template-columns: 1fr minmax(0, 520px) 1fr; align-items: center; padding: 14px 24px; }
+  .topbar__inner { grid-template-columns: 1fr minmax(0, 520px) 1fr; align-items: center; padding-block: 14px; padding-left: max(24px, env(safe-area-inset-left, 0px)); padding-right: max(24px, env(safe-area-inset-right, 0px)); }
   .topbar__brand { justify-content: flex-start; gap: 12px; }
   .searchbar { grid-column: 2; }
 }
@@ -181,10 +210,14 @@ p { text-wrap: pretty; }
    Layout
    ============================================================ */
 .main {
-  max-width: 1120px; margin: 0 auto; padding: 28px 16px 56px;
+  max-width: 1120px; margin: 0 auto; padding-block: 28px 56px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
   display: grid; gap: 22px;
 }
-@media (min-width: 760px) { .main { padding: 56px 24px 72px; gap: 26px; } }
+@media (min-width: 760px) {
+  .main { padding-block: 56px 72px; padding-left: max(24px, env(safe-area-inset-left, 0px)); padding-right: max(24px, env(safe-area-inset-right, 0px)); gap: 26px; }
+}
 
 .title {
   font-family: var(--font-display); font-size: var(--fs-display); font-weight: 750;
