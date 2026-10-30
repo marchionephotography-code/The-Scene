@@ -49,6 +49,8 @@ export interface TribeEvent {
   venue?: { venue?: string; city?: string; state?: string; geo_lat?: number | string; geo_lng?: number | string } | unknown[]
   categories?: { name: string }[]
   tags?: { name: string }[]
+  /** Featured image; the API sends `false` when there is none. */
+  image?: { url?: string; sizes?: Record<string, { url?: string; width?: number }> } | false
 }
 
 export interface LibraryResult {
@@ -101,6 +103,17 @@ function priceFor(cost = ''): SceneEvent['price'] {
   return { min: null, max: null, status: 'missing' }
 }
 
+/** Pick a card-sized version of the event's featured image (about 600–1200px wide). */
+export function pickImage(image: TribeEvent['image']): string | undefined {
+  if (!image) return undefined
+  const sizes = Object.values(image.sizes ?? {}).filter((s) => s.url && s.width)
+  const fit = sizes
+    .filter((s) => (s.width ?? 0) >= 600)
+    .sort((a, b) => (a.width ?? 0) - (b.width ?? 0))[0]
+  const url = fit?.url ?? image.url
+  return url && /^https:\/\//.test(url) ? url : undefined
+}
+
 export function toSceneEvent(e: TribeEvent, feed: LibraryFeed): SceneEvent {
   const venue = Array.isArray(e.venue) ? undefined : (e.venue as Exclude<TribeEvent['venue'], unknown[]>)
   const lat = Number(venue?.geo_lat)
@@ -126,6 +139,7 @@ export function toSceneEvent(e: TribeEvent, feed: LibraryFeed): SceneEvent {
     source: 'live',
     host: { name: feed.name, kind: 'library' },
     url: e.url,
+    image: pickImage(e.image),
   }
 }
 

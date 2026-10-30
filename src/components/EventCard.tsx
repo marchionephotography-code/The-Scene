@@ -29,7 +29,7 @@ import {
   Volleyball,
   type LucideIcon,
 } from 'lucide-react'
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { CATEGORIES, formatMiles, type Recommendation } from '../lib/discovery'
 import { formatPriceRange, PRICE_STATUS_LABEL } from '../lib/money'
 import { prefersReducedMotion } from '../lib/motion'
@@ -133,7 +133,9 @@ export function EventCard({ rec, now, favorite, onToggleFavorite, onOpen }: Card
   const Icon = icons[h % icons.length]
   const coverRef = useDrawOnView()
   // Number in the id (sample-7 → 7) keeps neighbouring cards on different photos.
-  const photo = photoFor(event.category, Number(event.id.match(/\d+/)?.[0] ?? h))
+  // The event's own photo comes first; a broken or missing one falls back to the tile art.
+  const [photoFailed, setPhotoFailed] = useState(false)
+  const photo = photoFailed ? null : (event.image ?? photoFor(event.category, Number(event.id.match(/\d+/)?.[0] ?? h)))
 
   const when = dayParts(event.start, now)
   const extraReasons = reasons.filter((r) => !SHOWN_ON_CARD.has(r))
@@ -144,7 +146,15 @@ export function EventCard({ rec, now, favorite, onToggleFavorite, onOpen }: Card
       <div className="card__media">
         {photo ? (
           <div className="cover cover--photo" aria-hidden="true">
-            <img className="cover__photo" src={photo} alt="" loading="lazy" decoding="async" />
+            <img
+              className="cover__photo"
+              src={photo}
+              alt=""
+              loading="lazy"
+              decoding="async"
+              referrerPolicy="no-referrer"
+              onError={() => setPhotoFailed(true)}
+            />
           </div>
         ) : (
           <div ref={coverRef} className={`cover cover--tiles tiles--${event.category} tiles--c${h % 3}`} aria-hidden="true">

@@ -55,4 +55,6 @@ export interface SceneEvent {
   host?: { name: string; kind: 'library' }
   /** Link to the organizer's own page for this event (live sources only). */
   url?: string
+  /** The organizer's own photo for this event, when the source provides one. */
+  image?: string
 }

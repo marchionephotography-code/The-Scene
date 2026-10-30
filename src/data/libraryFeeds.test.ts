@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
-import { fetchLibrary, LIBRARY_FEEDS, plainText, toSceneEvent, type TribeEvent } from './libraryFeeds'
+import { fetchLibrary, LIBRARY_FEEDS, pickImage, plainText, toSceneEvent, type TribeEvent } from './libraryFeeds'
 
 const feed = LIBRARY_FEEDS[0]
 
@@ -37,6 +37,23 @@ describe('library feed parsing', () => {
     expect(e.price.min).toEqual({ amountCents: 500, currency: 'USD' })
     expect(e.age).toBe('18+')
     expect(e.category).toBe('arts')
+  })
+
+  it('picks a card-sized featured image and ignores missing ones', () => {
+    const image = {
+      url: 'https://example.org/full.jpg',
+      sizes: {
+        thumbnail: { url: 'https://example.org/150.jpg', width: 150 },
+        large: { url: 'https://example.org/1024.jpg', width: 1024 },
+        medium_large: { url: 'https://example.org/768.jpg', width: 768 },
+      },
+    }
+    expect(pickImage(image)).toBe('https://example.org/768.jpg')
+    expect(pickImage({ url: 'https://example.org/only.jpg' })).toBe('https://example.org/only.jpg')
+    expect(pickImage(false)).toBeUndefined()
+    expect(pickImage({ url: 'http://insecure.example.org/x.jpg' })).toBeUndefined()
+    expect(toSceneEvent({ ...storyTime, image }, feed).image).toBe('https://example.org/768.jpg')
+    expect(toSceneEvent(storyTime, feed).image).toBeUndefined()
   })
 
   it('strips tags and entities', () => {
