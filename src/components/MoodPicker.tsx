@@ -10,6 +10,8 @@ import {
   type LucideIcon,
 } from 'lucide-react'
 import type { UIEvent } from 'react'
+import hero900 from '../assets/hero-900.webp'
+import hero1800 from '../assets/hero-1800.webp'
 import { MOODS, type MoodId } from '../lib/discovery'
 
 const ICONS: Record<MoodId, LucideIcon> = {
@@ -31,7 +33,21 @@ interface Props {
 export function MoodPicker({ value, onChange }: Props) {
   return (
     <section aria-labelledby="mood-heading" className="moods">
-      <h1 id="mood-heading" className="title">What do you feel like doing?</h1>
+      <div className="hero">
+        <img
+          className="hero__img"
+          src={hero900}
+          srcSet={`${hero900} 900w, ${hero1800} 1800w`}
+          sizes="(min-width: 1120px) 1072px, 100vw"
+          alt=""
+          fetchPriority="high"
+          decoding="async"
+        />
+        <div className="hero__content">
+          <h1 id="mood-heading" className="title hero__title">What do you feel like doing?</h1>
+          <p className="hero__sub">Find something fun nearby, then plan it together.</p>
+        </div>
+      </div>
       <div
         className="moods__grid"
         onScroll={(e: UIEvent<HTMLDivElement>) => {
