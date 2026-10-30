@@ -37,9 +37,18 @@ interface Seed {
   age: AgeSuitability
   local: boolean
   description: string
+  /** Host library name, for sample library events. */
+  library?: string
 }
 
 const SEEDS: Seed[] = [
+  // Sample public-library events (fictional branches, invented programs)
+  { title: 'Toddler Story Time & Bubbles', category: 'family', tags: ['family', 'chill', 'indoors'], venue: 'Lakeside Branch Library (sample)', town: 'Anderson, SC', lat: 34.5101, lng: -82.6422, day: 1, hour: 10, minute: 30, durationHours: 0.75, priceMin: null, age: 'family', local: true, description: 'Songs, two picture books, and a bubble finale. Best for ages 1–4 with a grown-up.', library: 'Lakeside Branch Library (sample)' },
+  { title: 'LEGO Build Club', category: 'family', tags: ['family', 'creative', 'hands-on', 'indoors'], venue: 'Lakeside Branch Library (sample)', town: 'Anderson, SC', lat: 34.5101, lng: -82.6422, day: 'sat', hour: 14, durationHours: 1.5, priceMin: null, age: 'family', local: true, description: 'A new build challenge every week. Bricks provided; ages 6–12.', library: 'Lakeside Branch Library (sample)' },
+  { title: 'STEM Saturday: Paper Rockets', category: 'family', tags: ['family', 'hands-on', 'active'], venue: 'Hillcrest Library (sample)', town: 'Seneca, SC', lat: 34.6889, lng: -82.9601, day: 'sat', hour: 11, durationHours: 1.5, priceMin: null, age: 'family', local: true, description: 'Design, build, and launch your own paper rocket on the library lawn.', library: 'Hillcrest Library (sample)' },
+  { title: 'Family Movie Matinee', category: 'family', tags: ['family', 'chill', 'indoors'], venue: 'Main Street Library (sample)', town: 'Clemson, SC', lat: 34.6842, lng: -82.8352, day: 'sun', hour: 14, durationHours: 2, priceMin: null, age: 'family', local: true, description: 'A family-favorite movie on the big screen. Bring a blanket; popcorn provided.', library: 'Main Street Library (sample)' },
+  { title: 'Teen Game Night', category: 'family', tags: ['social', 'competitive', 'indoors'], venue: 'Hillcrest Library (sample)', town: 'Seneca, SC', lat: 34.6889, lng: -82.9601, day: 2, hour: 17, durationHours: 2, priceMin: null, age: 'all-ages', local: true, description: 'Board games, video games, and snacks for ages 12–18.', library: 'Hillcrest Library (sample)' },
+
   { title: 'Porch Light Bluegrass Jam', category: 'music', tags: ['chill', 'live music', 'outdoors'], venue: 'Mill Yard Stage (sample)', town: 'Pendleton, SC', lat: 34.6512, lng: -82.7838, day: 0, hour: 19, durationHours: 3, priceMin: null, age: 'all-ages', local: true, description: 'Open jam on the porch. Bring a chair or an instrument.' },
   { title: 'Trivia Night: 90s Edition', category: 'food', tags: ['social', 'lively', 'competitive'], venue: 'Copper Kettle Taproom (sample)', town: 'Clemson, SC', lat: 34.6851, lng: -82.8361, day: 0, hour: 20, durationHours: 2, priceMin: null, age: '21+', local: true, description: 'Teams up to 6. Food and drink specials during the game.' },
   { title: 'Indie Rock Showcase', category: 'music', tags: ['lively', 'live music', 'late night'], venue: 'The Brickhouse (sample)', town: 'Greenville, SC', lat: 34.8507, lng: -82.3989, day: 0, hour: 21, durationHours: 3, priceMin: 12, priceMax: 15, age: '18+', local: true, description: 'Three local bands on one bill.' },
@@ -98,6 +107,7 @@ export function buildSampleEvents(now: Date = new Date()): SceneEvent[] {
       local: s.local,
       description: s.description,
       source: 'sample',
+      ...(s.library ? { host: { name: s.library, kind: 'library' as const } } : {}),
     }
   })
 }

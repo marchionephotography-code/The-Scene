@@ -130,6 +130,8 @@ export interface Filters {
   maxMiles: number | null
   price: PriceFilter
   age: AgeFilter
+  /** Only events hosted by public libraries. */
+  libraryOnly: boolean
 }
 
 export const DEFAULT_FILTERS: Filters = {
@@ -140,6 +142,7 @@ export const DEFAULT_FILTERS: Filters = {
   maxMiles: 25,
   price: 'any',
   age: 'any',
+  libraryOnly: false,
 }
 
 function startingCents(e: SceneEvent): number {
@@ -189,6 +192,7 @@ export function recommend(
     if (filters.categories.length && !filters.categories.includes(event.category)) continue
     if (!priceOk(event, filters.price)) continue
     if (!ageOk(event, filters.age)) continue
+    if (filters.libraryOnly && event.host?.kind !== 'library') continue
     if (q && ![event.title, event.venue, event.town, event.description, ...event.tags].some((s) => s.toLowerCase().includes(q))) continue
 
     const miles = origin ? distanceMiles(origin, event.location) : null
@@ -211,6 +215,7 @@ function reasonsFor(e: SceneEvent, f: Filters, mood: Mood | null, miles: number 
   if (f.categories.includes(e.category)) r.push(CATEGORIES.find((c) => c.id === e.category)!.label.toLowerCase())
   if (f.price !== 'any') r.push(startingCents(e) === 0 ? 'free' : PRICE_LABELS[f.price].toLowerCase())
   if (f.age === 'kids') r.push('good for kids')
+  if (e.host?.kind === 'library') r.push('library event')
   if (miles !== null) r.push(`${formatMiles(miles)} away`)
   if (e.local) r.push('local pick')
   return r
@@ -231,5 +236,6 @@ export function activeFilterCount(f: Filters): number {
   if (f.maxMiles !== DEFAULT_FILTERS.maxMiles) n++
   if (f.price !== 'any') n++
   if (f.age !== 'any') n++
+  if (f.libraryOnly) n++
   return n
 }

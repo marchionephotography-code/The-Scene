@@ -1,3 +1,4 @@
+import { ExternalLink, UtensilsCrossed } from 'lucide-react'
 import { useCallback, useEffect, useMemo, useState, type CSSProperties } from 'react'
 import { ActiveFilters } from './components/ActiveFilters'
 import { CalendarView } from './components/CalendarView'
@@ -15,6 +16,7 @@ import { APP_NAME } from './config'
 import { fetchEvents, type EventFeed } from './data/eventSource'
 import { useLocation } from './hooks/useLocation'
 import { useSaved } from './hooks/useSaved'
+import { FOOD_GUIDE } from './data/guides'
 import { startOfDay, type CalendarMode } from './lib/calendar'
 import {
   activeFilterCount,
@@ -124,9 +126,10 @@ export default function App() {
     filters.categories.length +
     (filters.maxMiles !== DEFAULT_FILTERS.maxMiles ? 1 : 0) +
     (filters.price !== 'any' ? 1 : 0) +
-    (filters.age !== 'any' ? 1 : 0)
+    (filters.age !== 'any' ? 1 : 0) +
+    (filters.libraryOnly ? 1 : 0)
 
-  const isSample = feed.status === 'ready' && feed.feed.source === 'sample'
+  const isSample = feed.status === 'ready' && feed.feed.source !== 'live'
   const loc = location.state
   const place =
     loc.status === 'device' || loc.status === 'manual' ? loc.label
@@ -205,6 +208,17 @@ export default function App() {
                   Add a location to see what’s nearby
                 </button>
               )}
+              {feed.status === 'ready' && (filters.mood === 'eat' || filters.categories.includes('food')) && (
+                <a className="guide" href={FOOD_GUIDE.url} target="_blank" rel="noopener noreferrer">
+                  <span className="guide__icon"><UtensilsCrossed size={20} strokeWidth={2.25} aria-hidden="true" /></span>
+                  <span className="guide__text">
+                    <span className="guide__title">{FOOD_GUIDE.title}</span>
+                    <span className="guide__sub">{FOOD_GUIDE.blurb}</span>
+                  </span>
+                  <ExternalLink size={18} strokeWidth={2.25} className="guide__go" aria-hidden="true" />
+                  <span className="sr-only">(opens {FOOD_GUIDE.name} in a new tab)</span>
+                </a>
+              )}
 
               {feed.status === 'loading' && (
                 <ul className="grid" aria-label="Loading events">
@@ -272,7 +286,9 @@ export default function App() {
 
         {isSample && (
           <p className="footnote">
-            All events, venues, times, and prices shown are sample data for this demo. They are not real listings.
+            {feed.status === 'ready' && feed.feed.source === 'mixed'
+              ? 'Library events come from each library’s own calendar. Everything else is sample data for this demo and labeled Sample.'
+              : 'All events, venues, times, and prices shown are sample data for this demo. They are not real listings.'}
           </p>
         )}
       </main>
@@ -322,7 +338,7 @@ export default function App() {
             <button
               type="button"
               className="link-btn"
-              onClick={() => patch({ categories: [], maxMiles: DEFAULT_FILTERS.maxMiles, price: 'any', age: 'any', mood: null })}
+              onClick={() => patch({ categories: [], maxMiles: DEFAULT_FILTERS.maxMiles, price: 'any', age: 'any', libraryOnly: false, mood: null })}
             >
               Clear all
             </button>
@@ -347,7 +363,12 @@ export default function App() {
             </div>
           </section>
         )}
-        <FilterPanel filters={filters} hasLocation={location.point !== null} onChange={patch} />
+        <FilterPanel
+          filters={filters}
+          hasLocation={location.point !== null}
+          onChange={patch}
+          libraries={feed.status === 'ready' ? feed.feed.libraries : []}
+        />
       </Sheet>
 
       <Sheet open={sheet === 'event'} title="Event details" onClose={closeSheet}>

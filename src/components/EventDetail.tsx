@@ -77,6 +77,17 @@ export function EventDetail({ event, saved }: Props) {
           {' · '}{AGE_TEXT[event.age]}
         </p>
         <p className="detail__desc">{event.description}</p>
+        {event.host?.kind === 'library' && (
+          <p className="detail__host">
+            Hosted by {event.host.name}
+            {event.url && (
+              <>
+                {' · '}
+                <a href={event.url} target="_blank" rel="noopener noreferrer">See it on the library’s calendar</a>
+              </>
+            )}
+          </p>
+        )}
       </section>
 
       <div className="detail__save">

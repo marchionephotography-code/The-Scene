@@ -45,6 +45,7 @@ export function ActiveFilters({ filters, onChange, onReset }: Props) {
     active.push({ key: 'mi', label: filters.maxMiles === null ? 'Any distance' : `Within ${filters.maxMiles} mi`, clear: { maxMiles: DEFAULT_FILTERS.maxMiles } })
   if (filters.price !== 'any') active.push({ key: 'price', label: PRICE_LABELS[filters.price], clear: { price: 'any' } })
   if (filters.age !== 'any') active.push({ key: 'age', label: AGE_LABELS[filters.age], clear: { age: 'any' } })
+  if (filters.libraryOnly) active.push({ key: 'lib', label: 'Public libraries', clear: { libraryOnly: false } })
 
   if (!active.length) return null
 

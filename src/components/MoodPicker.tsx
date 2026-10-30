@@ -9,6 +9,7 @@ import {
   UtensilsCrossed,
   type LucideIcon,
 } from 'lucide-react'
+import type { UIEvent } from 'react'
 import { MOODS, type MoodId } from '../lib/discovery'
 
 const ICONS: Record<MoodId, LucideIcon> = {
@@ -31,7 +32,14 @@ export function MoodPicker({ value, onChange }: Props) {
   return (
     <section aria-labelledby="mood-heading" className="moods">
       <h1 id="mood-heading" className="title">What do you feel like doing?</h1>
-      <div className="moods__grid">
+      <div
+        className="moods__grid"
+        onScroll={(e: UIEvent<HTMLDivElement>) => {
+          // Drop the "more this way" fade once the row is scrolled to its end.
+          const el = e.currentTarget
+          el.toggleAttribute('data-at-end', el.scrollLeft + el.clientWidth >= el.scrollWidth - 4)
+        }}
+      >
         {MOODS.map((m) => {
           const on = value === m.id
           const Icon = ICONS[m.id]

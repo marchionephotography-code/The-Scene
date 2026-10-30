@@ -179,14 +179,31 @@ body::before { content: ''; position: fixed; inset: 0 0 auto; height: env(safe-a
 
 .title {
   font-family: var(--font-display); font-size: var(--fs-display); font-weight: 750;
-  line-height: 1.02; letter-spacing: -0.03em; margin-bottom: 20px;
+  line-height: 1.02; letter-spacing: -0.03em; margin-bottom: 18px;
 }
 
 /* ============================================================
    Mood tiles (suggestion grid)
    ============================================================ */
-.moods__grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px 10px; }
-@media (min-width: 760px) { .moods__grid { grid-template-columns: repeat(8, 1fr); gap: 12px; } }
+/* Phones: one swipeable row (frees the screen for ideas). Desktop: all 8 in a row. */
+.main > *, .moods { min-width: 0; } /* let the row scroll inside the page instead of widening it */
+.moods__grid {
+  display: flex; gap: 10px; overflow-x: auto; overscroll-behavior-x: contain;
+  scroll-snap-type: x proximity; scrollbar-width: none;
+  margin: 0 -16px; padding: 2px 16px 4px; scroll-padding-inline: 16px;
+  -webkit-mask-image: linear-gradient(to right, #000 calc(100% - 40px), transparent);
+  mask-image: linear-gradient(to right, #000 calc(100% - 40px), transparent);
+}
+.moods__grid::-webkit-scrollbar { display: none; }
+.moods__grid[data-at-end] { -webkit-mask-image: none; mask-image: none; }
+.moods__grid > .mood { flex: none; width: 78px; scroll-snap-align: start; }
+@media (min-width: 760px) {
+  .moods__grid {
+    display: grid; grid-template-columns: repeat(8, 1fr); gap: 12px;
+    overflow: visible; margin: 0; padding: 0; -webkit-mask-image: none; mask-image: none;
+  }
+  .moods__grid > .mood { width: auto; }
+}
 
 .mood {
   display: grid; justify-items: center; align-content: start; gap: 8px; padding: 0;
@@ -198,7 +215,7 @@ body::before { content: ''; position: fixed; inset: 0 0 auto; height: env(safe-a
   background: var(--tile); border-radius: var(--r-md);
   transition: background var(--t-state), color var(--t-state), transform var(--t-feedback) var(--ease-out);
 }
-.mood:hover .mood__tile { background: var(--tile-hover); }
+@media (hover: hover) { .mood:hover .mood__tile { background: var(--tile-hover); } }
 .mood:active .mood__tile { transform: scale(0.94); }
 .mood__label {
   font-size: var(--fs-small); font-weight: 600; line-height: 1.25; letter-spacing: var(--track-small);
@@ -224,7 +241,7 @@ body::before { content: ''; position: fixed; inset: 0 0 auto; height: env(safe-a
   font-weight: 600; font-size: var(--fs-meta);
   transition: border-color var(--t-state), background var(--t-state), color var(--t-state), transform var(--t-feedback) var(--ease-out);
 }
-.chip:hover { border-color: var(--ink); }
+@media (hover: hover) { .chip:hover { border-color: var(--ink); } }
 .chip:active { transform: scale(0.95); }
 .chip--on, .chip--on:hover { background: var(--primary); color: var(--primary-ink); border-color: var(--primary); }
 .chip:disabled { opacity: 0.4; cursor: not-allowed; }
@@ -280,7 +297,7 @@ body::before { content: ''; position: fixed; inset: 0 0 auto; height: env(safe-a
   background: var(--tile); border: 0;
   transition: background var(--t-state);
 }
-.tag:hover { background: var(--tile-hover); }
+@media (hover: hover) { .tag:hover { background: var(--tile-hover); } }
 .active .link-btn { font-size: var(--fs-small); min-height: 34px; }
 
 /* ============================================================
@@ -326,6 +343,8 @@ body::before { content: ''; position: fixed; inset: 0 0 auto; height: env(safe-a
   font-size: var(--fs-small); font-weight: 700; line-height: 1.2; letter-spacing: var(--track-small);
   z-index: 2;
 }
+.card__badges { position: absolute; top: 12px; left: 12px; z-index: 2; display: flex; flex-wrap: wrap; gap: 6px; pointer-events: none; }
+.card__badges .card__badge { position: static; }
 .card__badge {
   top: 12px; left: 12px; background: #ffffff; color: #161616;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
@@ -496,7 +515,7 @@ body::before { content: ''; position: fixed; inset: 0 0 auto; height: env(safe-a
   background: none; border: 0; border-radius: var(--r-sm);
   transition: background var(--t-state);
 }
-.row:hover { background: var(--tile); }
+@media (hover: hover) { .row:hover { background: var(--tile); } }
 .rows li + li .row { border-top: 1px solid var(--line); border-radius: 0; }
 .row__icon {
   flex: none; width: 40px; height: 40px; border-radius: 999px;
@@ -718,7 +737,7 @@ body::before { content: ''; position: fixed; inset: 0 0 auto; height: env(safe-a
   border-radius: var(--r-md); border: 1px solid transparent; background: var(--tile);
   transition: background var(--t-state), color var(--t-state), transform var(--t-feedback) var(--ease-out);
 }
-.week__day:hover { background: var(--tile-hover); }
+@media (hover: hover) { .week__day:hover { background: var(--tile-hover); } }
 .week__day:active { transform: scale(0.95); }
 .week__dow { font-size: var(--fs-micro); font-weight: 700; color: var(--ink-2); text-transform: uppercase; letter-spacing: 0.06em; }
 .week__num { font-family: var(--font-display); font-size: 1.25rem; font-weight: 700; font-variant-numeric: tabular-nums; }
@@ -738,7 +757,7 @@ body::before { content: ''; position: fixed; inset: 0 0 auto; height: env(safe-a
   border-radius: 12px; border: 1px solid transparent; background: none;
   transition: background var(--t-state), color var(--t-state);
 }
-.month__day:hover { background: var(--tile); }
+@media (hover: hover) { .month__day:hover { background: var(--tile); } }
 .month__num { font-weight: 600; font-size: var(--fs-meta); font-variant-numeric: tabular-nums; }
 .month__count {
   min-width: 16px; height: 16px; padding: 0 4px; border-radius: 999px;
@@ -812,3 +831,27 @@ body::before { content: ''; position: fixed; inset: 0 0 auto; height: env(safe-a
   .heart:active, .save-btn:active, .share-btn:active, .social:active, .tabbar__btn:active,
   .week__day:active, .agenda__item:active, .icon-btn--ring:active { transform: none; }
 }
+
+/* Library sources */
+.lib-status { list-style: none; margin: 10px 0 0; padding: 0; display: grid; gap: 6px; font-size: var(--fs-small); color: var(--ink-2); }
+.lib-status li { display: flex; align-items: baseline; gap: 8px; }
+.lib-status__dot { flex: none; width: 8px; height: 8px; border-radius: 50%; transform: translateY(-1px); }
+.lib-status__dot--ok { background: #0b7a3e; }
+.lib-status__dot--unavailable { background: var(--line-strong); }
+.detail__host { font-size: var(--fs-meta); color: var(--ink-2); margin-top: 6px; }
+.detail__host a { color: var(--ink); font-weight: 600; text-underline-offset: 3px; }
+
+/* Outside guide link (Visit Greenville SC food & drink) */
+.guide {
+  display: flex; align-items: center; gap: 14px; padding: 14px 16px;
+  border-radius: var(--r-md); border: 1px solid var(--line-strong); background: var(--surface);
+  color: var(--ink); text-decoration: none; animation: rise var(--t-state) var(--ease-out);
+  transition: border-color var(--t-state), transform var(--t-feedback) var(--ease-out);
+}
+.guide:hover { border-color: var(--ink); }
+.guide:active { transform: scale(0.985); }
+.guide__icon { flex: none; width: 40px; height: 40px; border-radius: 999px; display: grid; place-items: center; background: var(--primary); color: var(--primary-ink); }
+.guide__text { flex: 1; display: grid; min-width: 0; }
+.guide__title { font-weight: 700; font-size: var(--fs-body); }
+.guide__sub { font-size: var(--fs-small); color: var(--ink-2); }
+.guide__go { flex: none; color: var(--ink-2); }

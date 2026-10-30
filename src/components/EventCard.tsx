@@ -6,6 +6,7 @@ import {
   Coffee,
   Drama,
   Drum,
+  BookOpen,
   Frame,
   Heart,
   Guitar,
@@ -133,11 +134,18 @@ export function EventCard({ rec, now, favorite, onToggleFavorite, onOpen }: Card
         >
           <Heart size={20} strokeWidth={2.25} fill={favorite ? 'currentColor' : 'rgba(0,0,0,0.25)'} aria-hidden="true" />
         </button>
-        {event.local && (
-          <span className="card__badge">
-            <Sparkles size={13} strokeWidth={2.5} aria-hidden="true" /> Local pick
-          </span>
-        )}
+        <div className="card__badges">
+          {event.host?.kind === 'library' && (
+            <span className="card__badge">
+              <BookOpen size={13} strokeWidth={2.5} aria-hidden="true" /> Library
+            </span>
+          )}
+          {event.local && event.host?.kind !== 'library' && (
+            <span className="card__badge">
+              <Sparkles size={13} strokeWidth={2.5} aria-hidden="true" /> Local pick
+            </span>
+          )}
+        </div>
       </div>
 
       <div className="card__body">

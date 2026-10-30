@@ -51,4 +51,8 @@ export interface SceneEvent {
   local: boolean
   description: string
   source: DataSource
+  /** Who runs it, when known, e.g. a public library. */
+  host?: { name: string; kind: 'library' }
+  /** Link to the organizer's own page for this event (live sources only). */
+  url?: string
 }

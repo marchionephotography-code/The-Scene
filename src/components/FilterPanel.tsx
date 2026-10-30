@@ -7,15 +7,18 @@ import {
   type Filters,
   type PriceFilter,
 } from '../lib/discovery'
+import type { LibraryStatus } from '../data/eventSource'
 import type { Category } from '../types/event'
 
 interface Props {
   filters: Filters
   hasLocation: boolean
   onChange: (patch: Partial<Filters>) => void
+  /** Which library calendars answered, for the "Hosted by" note. */
+  libraries?: LibraryStatus[]
 }
 
-export function FilterPanel({ filters, hasLocation, onChange }: Props) {
+export function FilterPanel({ filters, hasLocation, onChange, libraries = [] }: Props) {
   const toggleCategory = (c: Category) =>
     onChange({
       categories: filters.categories.includes(c)
@@ -84,6 +87,31 @@ export function FilterPanel({ filters, hasLocation, onChange }: Props) {
             )
           })}
         </div>
+      </fieldset>
+
+      <fieldset className="filters__group">
+        <legend>Hosted by</legend>
+        <div className="chips">
+          <button
+            type="button"
+            className={`chip${filters.libraryOnly ? ' chip--on' : ''}`}
+            aria-pressed={filters.libraryOnly}
+            onClick={() => onChange({ libraryOnly: !filters.libraryOnly })}
+          >
+            Public libraries
+          </button>
+        </div>
+        {libraries.length > 0 && (
+          <ul className="lib-status" aria-label="Library calendars">
+            {libraries.map((l) => (
+              <li key={l.id}>
+                <span className={`lib-status__dot lib-status__dot--${l.status}`} aria-hidden="true" />
+                {l.name}:{' '}
+                {l.status === 'ok' ? `${l.count} upcoming ${l.count === 1 ? 'event' : 'events'} from its calendar` : 'calendar not reachable right now, showing sample library events'}
+              </li>
+            ))}
+          </ul>
+        )}
       </fieldset>
     </div>
   )
