@@ -27,9 +27,10 @@ import {
   Volleyball,
   type LucideIcon,
 } from 'lucide-react'
-import type { CSSProperties } from 'react'
+import { useEffect, useRef, type CSSProperties } from 'react'
 import { CATEGORIES, formatMiles, type Recommendation } from '../lib/discovery'
 import { formatPriceRange, PRICE_STATUS_LABEL } from '../lib/money'
+import { prefersReducedMotion } from '../lib/motion'
 import type { Category } from '../types/event'
 
 const AGE_TEXT = { 'all-ages': 'All ages', family: 'Family friendly', '18+': '18+', '21+': '21+' } as const
@@ -67,23 +68,53 @@ function hash(s: string): number {
   return h
 }
 
+/**
+ * The cover icon draws its own linework the first time the card scrolls into
+ * view. The icon is fully drawn by default; it is only hidden ("armed") once
+ * an observer is in place to reveal it, so nothing stays blank if JS or
+ * IntersectionObserver is unavailable.
+ */
+function useDrawOnView() {
+  const ref = useRef<HTMLDivElement>(null)
+  useEffect(() => {
+    const el = ref.current
+    if (!el || prefersReducedMotion() || typeof IntersectionObserver === 'undefined') return
+    el.dataset.draw = 'armed'
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          el.dataset.draw = 'go'
+          io.disconnect()
+        }
+      },
+      { threshold: 0.35 },
+    )
+    io.observe(el)
+    return () => io.disconnect()
+  }, [])
+  return ref
+}
+
 export function EventCard({ rec, now }: { rec: Recommendation; now: Date }) {
   const { event, miles, reasons } = rec
   const category = CATEGORIES.find((c) => c.id === event.category)!.label
   const h = hash(event.id + event.title)
   const icons = CATEGORY_ICONS[event.category]
   const Icon = icons[h % icons.length]
+  const coverRef = useDrawOnView()
 
   return (
     <article className="card" aria-labelledby={`${event.id}-title`}>
       <div className="card__media">
         <div
+          ref={coverRef}
           className={`cover cover--${event.category} cover--v${h % 3}`}
           style={{ '--tilt': `${115 + (h % 70)}deg` } as CSSProperties}
           aria-hidden="true"
         >
           <Icon className="cover__icon" strokeWidth={1.25} />
         </div>
+        <span className="card__cat">{category}</span>
         {event.local && (
           <span className="card__badge">
             <Sparkles size={13} strokeWidth={2.5} aria-hidden="true" /> Local pick
@@ -92,7 +123,6 @@ export function EventCard({ rec, now }: { rec: Recommendation; now: Date }) {
       </div>
 
       <div className="card__body">
-        <p className="card__cat">{category}</p>
         <h3 id={`${event.id}-title`} className="card__title">{event.title}</h3>
         <p className="card__line card__line--strong">{formatWhen(event.start, now)}</p>
         <p className="card__line">

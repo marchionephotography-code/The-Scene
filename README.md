@@ -20,6 +20,8 @@ All events are **sample data** (`src/data/sampleEvents.ts`) — invented events 
 
 ## Design
 
-Clean, high-contrast style: lots of white space, near-black type and buttons, soft grey tiles, one violet accent, and light/dark modes. Font is Inter (Google Fonts) with a system-font fallback. Icons come from `lucide-react`. Event covers are generated per category (gradient + icon) until real event photos are available.
+Clean, high-contrast style: lots of white space, near-black type and buttons, soft grey tiles, one violet accent, and light/dark modes. Type: Bricolage Grotesque for headlines and titles, Figtree for everything else — both self-hosted via `@fontsource-variable`, with a fixed role scale (`--fs-*` tokens in `src/index.css`). Icons come from `lucide-react`. Event covers are generated per category (gradient + icon) until real event photos are available.
+
+Motion: when you change a mood, date, or filter, results rearrange with View Transitions (cards glide, new ones focus in, others blur out). Cover icons draw their linework the first time they scroll into view, and covers come alive on hover. Sheets slide in and out, and controls give quick press feedback. All of it respects `prefers-reduced-motion`.
 
 The app name lives in `src/config.ts`, so you can rename it in one place.

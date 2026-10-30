@@ -1,5 +1,6 @@
 import { X } from 'lucide-react'
 import { useEffect, useId, useRef, type ReactNode } from 'react'
+import { prefersReducedMotion } from '../lib/motion'
 
 interface Props {
   open: boolean
@@ -9,9 +10,14 @@ interface Props {
   footer?: ReactNode
 }
 
+/** Matches the exit animation length in index.css (.sheet[data-closing]). */
+const EXIT_MS = 200
+
 /**
  * Bottom sheet on phones, centered panel on wider screens. Built on the native
- * <dialog> element, which handles focus trapping and the Escape key.
+ * <dialog> element, which handles focus trapping. Every close path (Escape,
+ * backdrop tap, close button) goes through `onClose`, so the exit animation
+ * always plays before the dialog is removed.
  */
 export function Sheet({ open, title, onClose, children, footer }: Props) {
   const ref = useRef<HTMLDialogElement>(null)
@@ -20,8 +26,22 @@ export function Sheet({ open, title, onClose, children, footer }: Props) {
   useEffect(() => {
     const d = ref.current
     if (!d) return
-    if (open && !d.open) d.showModal()
-    if (!open && d.open) d.close()
+    if (open) {
+      d.removeAttribute('data-closing')
+      if (!d.open) d.showModal()
+      return
+    }
+    if (!d.open) return
+    if (prefersReducedMotion()) {
+      d.close()
+      return
+    }
+    d.setAttribute('data-closing', '')
+    const t = window.setTimeout(() => {
+      d.removeAttribute('data-closing')
+      d.close()
+    }, EXIT_MS)
+    return () => window.clearTimeout(t)
   }, [open])
 
   return (
@@ -29,6 +49,11 @@ export function Sheet({ open, title, onClose, children, footer }: Props) {
       ref={ref}
       className="sheet"
       aria-labelledby={titleId}
+      onCancel={(e) => {
+        // Escape: run our animated close instead of the instant native one.
+        e.preventDefault()
+        onClose()
+      }}
       onClose={onClose}
       onMouseDown={(e) => {
         // Tap on the dimmed backdrop closes the sheet.

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState, type CSSProperties } from 'react'
 import { ActiveFilters } from './components/ActiveFilters'
 import { DateShortcuts } from './components/DateShortcuts'
 import { EventCard } from './components/EventCard'
@@ -10,6 +10,7 @@ import { Sheet } from './components/Sheet'
 import { APP_NAME } from './config'
 import { fetchEvents, type EventFeed } from './data/eventSource'
 import { useLocation } from './hooks/useLocation'
+import { withViewTransition } from './lib/motion'
 import {
   activeFilterCount,
   DATE_LABELS,
@@ -55,8 +56,21 @@ export default function App() {
     load()
   }
 
-  const patch = useCallback((p: Partial<Filters>) => setFilters((f) => ({ ...f, ...p })), [])
-  const reset = useCallback(() => setFilters(DEFAULT_FILTERS), [])
+  // The first load gets a short staggered entrance; after that, changes
+  // animate through View Transitions instead.
+  const [intro, setIntro] = useState(true)
+
+  const update = useCallback((next: (f: Filters) => Filters) => {
+    const apply = () => {
+      setIntro(false)
+      setFilters(next)
+    }
+    // Inside an open sheet the grid is hidden behind it, so skip the transition.
+    if (sheet === 'none') withViewTransition(apply)
+    else apply()
+  }, [sheet])
+  const patch = useCallback((p: Partial<Filters>) => update((f) => ({ ...f, ...p })), [update])
+  const reset = useCallback(() => update(() => DEFAULT_FILTERS), [update])
   const closeSheet = useCallback(() => setSheet('none'), [])
 
   const results = useMemo(
@@ -115,14 +129,14 @@ export default function App() {
           <div className="results__head">
             <h2 id="results-heading" className="results__heading">Ideas for you</h2>
             {feed.status === 'ready' && (
-              <span className="results__count">
+              <span key={results.length} className="results__count">
                 {results.length} {results.length === 1 ? 'result' : 'results'}
               </span>
             )}
           </div>
           {location.point === null && feed.status === 'ready' && (
             <button type="button" className="nudge" onClick={() => setSheet('where')}>
-              Add a location to see distances and nearby picks
+              Add a location to see what’s nearby
             </button>
           )}
 
@@ -161,9 +175,14 @@ export default function App() {
           )}
 
           {feed.status === 'ready' && results.length > 0 && (
-            <ul className="grid">
-              {results.map((r) => (
-                <li key={r.event.id}><EventCard rec={r} now={now} /></li>
+            <ul className={`grid${intro ? ' grid--intro' : ''}`}>
+              {results.map((r, i) => (
+                <li
+                  key={r.event.id}
+                  style={{ viewTransitionName: `card-${r.event.id}`, '--i': i } as CSSProperties}
+                >
+                  <EventCard rec={r} now={now} />
+                </li>
               ))}
             </ul>
           )}

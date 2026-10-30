@@ -25,7 +25,7 @@ export function SearchPill({ place, detail, filterCount, onOpenSearch, onOpenFil
         aria-label={filterCount ? `Filters, ${filterCount} on` : 'Filters'}
       >
         <SlidersHorizontal size={18} strokeWidth={2.25} aria-hidden="true" />
-        {filterCount > 0 && <span className="round-btn__count" aria-hidden="true">{filterCount}</span>}
+        {filterCount > 0 && <span key={filterCount} className="round-btn__count" aria-hidden="true">{filterCount}</span>}
       </button>
     </div>
   )
