@@ -693,10 +693,10 @@ body::before { content: ''; position: fixed; inset: 0 0 auto; height: env(safe-a
 .share-btn:hover { background: var(--tile-hover); }
 .share-btn:active { transform: scale(0.96); }
 .share-btn__icon { width: 40px; height: 40px; display: grid; place-items: center; border-radius: 999px; background: var(--primary); color: var(--primary-ink); }
-.share-social { display: flex; flex-wrap: wrap; gap: 8px; }
+.share-social { display: flex; flex-wrap: wrap; gap: 6px; }
 .social {
-  display: inline-flex; align-items: center; min-height: 40px; padding: 8px 16px; border-radius: 999px;
-  font-weight: 700; font-size: var(--fs-meta); text-decoration: none; color: #ffffff;
+  display: inline-flex; align-items: center; min-height: 32px; padding: 5px 12px; border-radius: 999px;
+  font-weight: 700; font-size: var(--fs-small); text-decoration: none; color: #ffffff;
   transition: opacity var(--t-state), transform var(--t-feedback) var(--ease-out);
 }
 .social:hover { opacity: 0.88; }
