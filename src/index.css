@@ -1048,3 +1048,45 @@ body::before { content: ''; position: fixed; inset: 0 0 auto; height: env(safe-a
   .collage__photo img, .collage__tile { animation: none; }
   .collage__tile:hover { transform: none; }
 }
+
+/* ============================================================
+   Compact event cards
+   Phone: a row with a small square cover on the left.
+   Desktop: four across with shorter covers.
+   ============================================================ */
+@media (max-width: 619px) {
+  .grid { gap: 18px; }
+  .card { grid-template-columns: 116px minmax(0, 1fr); gap: 14px; align-items: start; }
+  .card .cover { aspect-ratio: 1 / 1; border-radius: 14px; }
+  .card__cat { display: none; }
+  .stub { top: 7px; left: 7px; width: auto; min-width: 40px; padding: 5px 6px 6px; border-radius: 9px; }
+  .stub__top { font-size: 0.5625rem; letter-spacing: 0.06em; }
+  .stub__day { font-size: 1.125rem; margin-top: 2px; }
+  .stub__month { display: none; }
+  .heart { top: 2px; right: 2px; width: 36px; height: 36px; }
+  .heart svg { width: 17px; height: 17px; }
+  .tiles--c2 .tiles__main { border-radius: 14px 14px 0 0; }
+  .card__body { gap: 2px; }
+  .card__title { font-size: var(--fs-body); }
+  .card__when { font-size: var(--fs-small); }
+  .card__desc { font-size: var(--fs-small); -webkit-line-clamp: 1; }
+  .card__foot { margin-top: 6px; padding-top: 6px; }
+  .card__foot .card__price { font-size: var(--fs-meta); }
+  .tag-pill--quiet { display: none; }
+  .card__why { margin-top: 4px; }
+}
+@media (min-width: 620px) {
+  .card .cover { aspect-ratio: 16 / 10; }
+}
+@media (min-width: 900px) {
+  .grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 28px 18px; }
+}
+@media (min-width: 1100px) {
+  .grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .card__title { font-size: 1.0625rem; }
+  .card__when, .card__desc { font-size: var(--fs-small); }
+  .stub { width: 52px; padding: 6px 8px 7px; }
+  .stub__day { font-size: 1.375rem; }
+  .cover--tiles ~ .card__cat { left: 70px; }
+  .tag-pill--quiet { display: none; }
+}
