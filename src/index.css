@@ -1009,8 +1009,13 @@ body::before { content: ''; position: fixed; inset: 0 0 auto; height: env(safe-a
 .collage__photo img {
   position: absolute; inset: 0; width: 100%; height: 100%; max-width: 100%;
   object-fit: cover; object-position: 52% 40%;
-  animation: hero-settle 1400ms var(--ease-out) both;
+  opacity: 0; transform: scale(1.04);
+  transition: opacity 1400ms ease, transform 7400ms linear;
 }
+/* Current photo fades in and drifts slowly; the outgoing one stays under it until covered. */
+.collage__photo .hero-img--on { opacity: 1; transform: scale(1); z-index: 2; }
+.collage__photo .hero-img--out { opacity: 1; z-index: 1; transform: scale(1); }
+.collage__photo .hero-img--first { animation: hero-settle 1400ms var(--ease-out) both; }
 .collage__tile {
   display: grid; place-items: center; color: #121212;
   animation: pop 520ms var(--ease-out) both;
@@ -1045,7 +1050,7 @@ body::before { content: ''; position: fixed; inset: 0 0 auto; height: env(safe-a
   .collage__tile:hover { transform: rotate(-4deg) scale(1.03); }
 }
 @media (prefers-reduced-motion: reduce) {
-  .collage__photo img, .collage__tile { animation: none; }
+  .collage__photo img, .collage__tile { animation: none; transition: none; transform: none; }
   .collage__tile:hover { transform: none; }
 }
 

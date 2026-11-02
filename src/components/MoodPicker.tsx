@@ -11,9 +11,8 @@ import {
   type LucideIcon,
 } from 'lucide-react'
 import type { UIEvent } from 'react'
-import hero900 from '../assets/hero-900.webp'
-import hero1800 from '../assets/hero-1800.webp'
 import { MOODS, type MoodId } from '../lib/discovery'
+import { HeroRotator } from './HeroRotator'
 
 const ICONS: Record<MoodId, LucideIcon> = {
   chill: Leaf,
@@ -38,14 +37,7 @@ export function MoodPicker({ value, onChange }: Props) {
           with brand-color tiles carrying the headline and two small icons. */}
       <div className="collage">
         <div className="collage__photo">
-          <img
-            src={hero900}
-            srcSet={`${hero900} 900w, ${hero1800} 1800w`}
-            sizes="(min-width: 760px) 640px, 100vw"
-            alt=""
-            fetchPriority="high"
-            decoding="async"
-          />
+          <HeroRotator />
         </div>
         <div className="collage__tile collage__tile--a" aria-hidden="true">
           <Music size={30} strokeWidth={2.25} />
