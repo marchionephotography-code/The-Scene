@@ -3,7 +3,7 @@ import { useEffect, useId, useState } from 'react'
 import type { Saved } from '../hooks/useSaved'
 import { CATEGORIES } from '../lib/discovery'
 import { formatPriceRange, PRICE_STATUS_LABEL } from '../lib/money'
-import { buildShareText, formatShareWhen, mailtoHref, PASTE_TARGETS, smsHref, socialTargets } from '../lib/share'
+import { appHref, buildShareText, detectPlatform, formatShareWhen, mailtoHref, PASTE_TARGETS, smsHref, socialTargets } from '../lib/share'
 import type { SceneEvent } from '../types/event'
 
 const AGE_TEXT = { 'all-ages': 'All ages', family: 'Family friendly', '18+': '18+', '21+': '21+' } as const
@@ -18,6 +18,9 @@ export function EventDetail({ event, saved }: Props) {
   const [message, setMessage] = useState(() => buildShareText(event))
   const [copied, setCopied] = useState(false)
   const [pastedFor, setPastedFor] = useState<string | null>(null)
+  /** Set when an app link didn't open (app not installed), to offer the website. */
+  const [fallback, setFallback] = useState<{ label: string; href: string } | null>(null)
+  const [platform] = useState(() => detectPlatform())
   const messageId = useId()
   const fav = saved.isFavorite(event.id)
   const wish = saved.onWishlist(event.id)
@@ -36,11 +39,17 @@ export function EventDetail({ event, saved }: Props) {
   }, [pastedFor])
 
   /** Copy the message, then let the link open the app (runs inside the click). */
-  const copyThenOpen = (label: string) => {
+  const copyThenOpen = (t: (typeof PASTE_TARGETS)[number]) => {
+    setFallback(null)
     navigator.clipboard?.writeText(message).then(
-      () => setPastedFor(label),
+      () => setPastedFor(t.label),
       () => setPastedFor(null),
     )
+    if (platform !== 'ios') return
+    // If the page is still showing after a moment, the app isn't installed.
+    window.setTimeout(() => {
+      if (document.visibilityState === 'visible') setFallback({ label: t.label, href: t.href })
+    }, 1500)
   }
 
   const copy = async () => {
@@ -113,6 +122,12 @@ export function EventDetail({ event, saved }: Props) {
         />
 
         <div className="share-main">
+          {canNativeShare && (
+            <button type="button" className="share-btn share-btn--lead" onClick={nativeShare}>
+              <span className="share-btn__icon"><Share2 size={20} strokeWidth={2.25} aria-hidden="true" /></span>
+              Share to an app
+            </button>
+          )}
           <a className="share-btn" href={smsHref(message)}>
             <span className="share-btn__icon"><MessageCircle size={20} strokeWidth={2.25} aria-hidden="true" /></span>
             Text a friend
@@ -127,12 +142,6 @@ export function EventDetail({ event, saved }: Props) {
             </span>
             {copied ? 'Copied' : 'Copy caption'}
           </button>
-          {canNativeShare && (
-            <button type="button" className="share-btn" onClick={nativeShare}>
-              <span className="share-btn__icon"><Share2 size={20} strokeWidth={2.25} aria-hidden="true" /></span>
-              More…
-            </button>
-          )}
         </div>
 
         <p className="field-label">Post to social media</p>
@@ -146,23 +155,28 @@ export function EventDetail({ event, saved }: Props) {
             <a
               key={s.id}
               className={`social social--${s.id}`}
-              href={s.href}
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={() => copyThenOpen(s.label)}
+              href={appHref(s, platform)}
+              {...(platform === 'desktop' ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+              onClick={() => copyThenOpen(s)}
             >
               {s.label}
             </a>
           ))}
         </div>
+        {fallback && (
+          <p className="hint" role="status">
+            {fallback.label} didn’t open?{' '}
+            <a href={fallback.href} target="_blank" rel="noopener noreferrer">Open {fallback.label} on the web</a>
+          </p>
+        )}
         {pastedFor ? (
           <p className="hint hint--ok" role="status">
             <Check size={14} strokeWidth={3} aria-hidden="true" /> Message copied. In {pastedFor}, paste it into your post or caption.
           </p>
         ) : (
           <p className="hint">
-            X, Threads, Bluesky, and WhatsApp open with your post ready to send. Instagram, TikTok, and Facebook copy your
-            message first, then open so you can paste it.
+            On a phone, each button opens the app if you have it. X, Threads, Bluesky, and WhatsApp open with your post
+            ready to send. Instagram, TikTok, and Facebook copy your message first so you can paste it.
           </p>
         )}
         <p className="sr-only" role="status">{copied ? 'Message copied' : ''}</p>

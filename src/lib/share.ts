@@ -49,11 +49,35 @@ export interface PasteTarget {
   href: string
 }
 
-export const PASTE_TARGETS: PasteTarget[] = [
-  { id: 'instagram', label: 'Instagram', href: 'https://www.instagram.com/' },
-  { id: 'tiktok', label: 'TikTok', href: 'https://www.tiktok.com/upload' },
-  { id: 'facebook', label: 'Facebook', href: 'https://www.facebook.com/' },
+export const PASTE_TARGETS: (PasteTarget & { iosScheme: string; androidPackage: string })[] = [
+  { id: 'instagram', label: 'Instagram', href: 'https://www.instagram.com/', iosScheme: 'instagram://app', androidPackage: 'com.instagram.android' },
+  { id: 'tiktok', label: 'TikTok', href: 'https://www.tiktok.com/upload', iosScheme: 'snssdk1233://', androidPackage: 'com.zhiliaoapp.musically' },
+  { id: 'facebook', label: 'Facebook', href: 'https://www.facebook.com/', iosScheme: 'fb://feed', androidPackage: 'com.facebook.katana' },
 ]
+
+export type Platform = 'ios' | 'android' | 'desktop'
+
+export function detectPlatform(ua: string = typeof navigator === 'undefined' ? '' : navigator.userAgent): Platform {
+  if (/android/i.test(ua)) return 'android'
+  // iPadOS reports itself as a Mac; touch support tells them apart.
+  if (/iphone|ipad|ipod/i.test(ua)) return 'ios'
+  if (/macintosh/i.test(ua) && typeof navigator !== 'undefined' && navigator.maxTouchPoints > 1) return 'ios'
+  return 'desktop'
+}
+
+/**
+ * The link that opens the installed app. Android's intent link falls back to
+ * the website by itself when the app is missing; iOS has no such fallback, so
+ * the screen offers a website link if the app doesn't open.
+ */
+export function appHref(t: (typeof PASTE_TARGETS)[number], platform: Platform): string {
+  if (platform === 'ios') return t.iosScheme
+  if (platform === 'android') {
+    const url = new URL(t.href)
+    return `intent://${url.host}${url.pathname}#Intent;scheme=https;package=${t.androidPackage};S.browser_fallback_url=${encodeURIComponent(t.href)};end`
+  }
+  return t.href
+}
 
 /** Networks that accept a pre-written post from a web link. */
 export function socialTargets(text: string): SocialTarget[] {

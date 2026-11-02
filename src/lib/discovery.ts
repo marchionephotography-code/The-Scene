@@ -16,14 +16,14 @@ export interface Mood {
 }
 
 export const MOODS: Mood[] = [
-  { id: 'chill', label: 'Chill', reason: 'something chill', tags: ['chill'], categories: [] },
-  { id: 'lively', label: 'Night out', reason: 'night out', tags: ['lively', 'late night'], categories: [] },
-  { id: 'laugh', label: 'Laugh', reason: 'a good laugh', tags: ['funny'], categories: [] },
-  { id: 'creative', label: 'Create', reason: 'make something', tags: ['creative', 'hands-on'], categories: ['arts'] },
-  { id: 'active', label: 'Get active', reason: 'get active', tags: ['active'], categories: ['outdoors'] },
-  { id: 'family', label: 'Family', reason: 'family time', tags: ['family'], categories: ['family'] },
-  { id: 'date', label: 'Date night', reason: 'date night', tags: ['date night'], categories: [] },
   { id: 'eat', label: 'Food & drink', reason: 'food & drink', tags: [], categories: ['food'] },
+  { id: 'date', label: 'Date night', reason: 'date night', tags: ['date night'], categories: [] },
+  { id: 'lively', label: 'Night out', reason: 'night out', tags: ['lively', 'late night'], categories: [] },
+  { id: 'chill', label: 'Chill', reason: 'something chill', tags: ['chill'], categories: [] },
+  { id: 'laugh', label: 'Laugh', reason: 'a good laugh', tags: ['funny'], categories: [] },
+  { id: 'active', label: 'Get active', reason: 'get active', tags: ['active'], categories: ['outdoors'] },
+  { id: 'creative', label: 'Create', reason: 'make something', tags: ['creative', 'hands-on'], categories: ['arts'] },
+  { id: 'family', label: 'Family', reason: 'family time', tags: ['family'], categories: ['family'] },
 ]
 
 export const CATEGORIES: { id: Category; label: string }[] = [
