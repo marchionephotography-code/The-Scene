@@ -6,6 +6,7 @@
 import type { DataSource, SceneEvent } from '../types/event'
 import { distanceMiles } from '../lib/discovery'
 import { AREA } from './feeds/area'
+import { fetchLocalist, LOCALIST_FEEDS } from './feeds/localist'
 import { fetchSeatGeek } from './feeds/seatgeek'
 import { fetchTicketmaster } from './feeds/ticketmaster'
 import { fetchLibrary, LIBRARY_FEEDS } from './libraryFeeds'
@@ -16,7 +17,7 @@ export type SourceState = 'ok' | 'unavailable' | 'needs-key'
 export interface SourceStatus {
   id: string
   name: string
-  kind: 'library' | 'museum' | 'ticketing'
+  kind: 'library' | 'museum' | 'ticketing' | 'campus'
   status: SourceState
   count: number
 }
@@ -70,6 +71,7 @@ export async function fetchEvents(now: Date = new Date()): Promise<EventFeed> {
           return r.events
         }),
       ),
+      ...LOCALIST_FEEDS.map((f) => settle(f.id, f.name, 'campus', () => fetchLocalist(f))),
       settle('ticketmaster', 'Ticketmaster', 'ticketing', () => fetchTicketmaster(now)),
       settle('seatgeek', 'SeatGeek', 'ticketing', () => fetchSeatGeek(now)),
     ]),

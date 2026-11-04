@@ -1139,3 +1139,144 @@ body::before { content: ''; position: fixed; inset: 0 0 auto; height: env(safe-a
 .share-btn--lead { grid-column: 1 / -1; grid-template-columns: auto auto; justify-content: center; align-items: center; min-height: 64px; background: var(--primary); color: var(--primary-ink); }
 .share-btn--lead .share-btn__icon { background: var(--primary-ink); color: var(--primary); }
 @media (hover: hover) { .share-btn--lead:hover { background: var(--primary); filter: brightness(1.05); } }
+
+/* ============================================================
+   Make it happen (event sheet planning tools)
+   ============================================================ */
+.plan { display: grid; gap: 12px; padding-top: 18px; border-top: 1px solid var(--line); }
+.plan__row { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+.plan-btn {
+  display: grid; justify-items: center; align-content: center; gap: 6px; min-height: 64px; padding: 10px 6px;
+  border-radius: var(--r-sm); border: 1px solid var(--line-strong); background: var(--surface); color: var(--ink);
+  font-weight: 700; font-size: var(--fs-small); text-align: center; text-decoration: none;
+  transition: border-color var(--t-state), transform var(--t-feedback) var(--ease-out);
+}
+@media (hover: hover) { .plan-btn:hover { border-color: var(--ink); } }
+.plan-btn:active { transform: scale(0.97); }
+.plan__note { display: flex; gap: 8px; align-items: flex-start; font-size: var(--fs-small); color: var(--ink-2); line-height: 1.45; }
+.plan__note svg { flex: none; margin-top: 2px; }
+.plan__note strong { color: var(--ink); }
+.plan__block { display: grid; gap: 8px; padding: 14px; border-radius: var(--r-md); background: var(--tile); justify-items: start; }
+.plan__title { display: flex; gap: 8px; align-items: center; font-weight: 700; font-size: var(--fs-meta); }
+.plan__list { list-style: none; padding: 0; margin: 0; display: grid; gap: 2px; font-size: var(--fs-small); }
+.plan__list .link-btn { font-size: var(--fs-small); min-height: 36px; padding: 6px 0; }
+.plan__meta { color: var(--ink-2); }
+.plan__block > .link-btn { font-size: var(--fs-small); padding-left: 0; text-align: left; }
+.plan__split { display: flex; flex-wrap: wrap; gap: 10px 16px; align-items: center; }
+.plan__total { font-size: var(--fs-small); color: var(--ink-2); font-variant-numeric: tabular-nums; }
+.plan__total strong { color: var(--ink); font-size: var(--fs-body); }
+.plan__handles { display: grid; grid-template-columns: 1fr 1fr; gap: 4px 10px; width: 100%; }
+.plan__handles .field-label { grid-row: 1; }
+.plan__handles .input { min-height: 44px; }
+.plan__block .btn { width: 100%; }
+.plan__block .btn:disabled { opacity: 0.4; }
+.plan__block .hint { margin: 0; }
+.stepper { display: inline-flex; align-items: center; gap: 4px; background: var(--surface); border: 1px solid var(--line-strong); border-radius: 999px; padding: 2px; font-weight: 700; font-size: var(--fs-small); font-variant-numeric: tabular-nums; }
+.stepper button { width: 36px; height: 36px; border-radius: 999px; border: 0; background: none; display: grid; place-items: center; color: var(--ink); }
+.stepper button:disabled { opacity: 0.3; }
+@media (hover: hover) { .stepper button:not(:disabled):hover { background: var(--tile); } }
+.stepper span { min-width: 72px; text-align: center; }
+
+/* ============================================================
+   Weather pills
+   ============================================================ */
+.tag-pill--rain { background: #e3eaff; color: #1f3fb0; }
+.tag-pill--wx { background: none; padding-inline: 2px; color: var(--ink-2); font-weight: 600; }
+
+/* ============================================================
+   This weekend strip
+   ============================================================ */
+.weekend { display: grid; gap: 10px; min-width: 0; }
+.weekend__head { display: flex; align-items: baseline; justify-content: space-between; }
+.weekend__head .link-btn { font-size: var(--fs-meta); }
+.weekend__wx { list-style: none; margin: 0; padding: 0; display: flex; gap: 8px; flex-wrap: wrap; }
+.weekend__wx li {
+  display: inline-flex; align-items: center; gap: 5px; padding: 6px 10px; border-radius: 999px;
+  background: var(--tile); font-size: var(--fs-small); font-variant-numeric: tabular-nums;
+}
+.weekend__wx li.is-wet { background: #e3eaff; color: #1f3fb0; }
+.weekend__wx-desc { color: inherit; opacity: 0.8; }
+.weekend__row {
+  list-style: none; margin: 0 -16px; padding: 2px 16px 6px; display: flex; gap: 10px;
+  overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; min-width: 0;
+}
+.weekend__row::-webkit-scrollbar { display: none; }
+.weekend__row li { flex: 0 0 auto; scroll-snap-align: start; }
+.wk {
+  width: 172px; min-height: 128px; display: grid; align-content: space-between; gap: 6px; text-align: left;
+  padding: 12px 14px; border: 0; border-radius: 18px 18px 18px 56px; color: #121212;
+  background: var(--g); transition: transform var(--t-feedback) var(--ease-out);
+}
+.wk:active { transform: scale(0.97); }
+.wk--music { --g: #8B74FF; } .wk--sports { --g: #FFC53D; } .wk--shows { --g: #FF5A36; }
+.wk--arts { --g: #FF8FC8; } .wk--food { --g: #FFC53D; } .wk--outdoors { --g: #F4ECDD; } .wk--family { --g: #3D6BFF; color: #fff; }
+.wk--sports, .wk--food { border-radius: 56px 18px 18px 18px; }
+.wk__day { font-size: var(--fs-micro); font-weight: 800; text-transform: uppercase; letter-spacing: 0.06em; }
+.wk__title { font-family: var(--font-display); font-weight: 700; font-size: var(--fs-meta); line-height: 1.2; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+.wk__meta { font-size: var(--fs-small); font-weight: 600; opacity: 0.85; }
+@media (min-width: 760px) { .weekend__row { margin: 0; padding-inline: 0; } }
+
+/* ============================================================
+   List / map toggle, Surprise me
+   ============================================================ */
+.results__tools { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.seg { display: inline-flex; padding: 3px; border-radius: 999px; background: var(--tile); }
+.seg button {
+  display: inline-flex; align-items: center; gap: 6px; min-height: 38px; padding: 6px 14px;
+  border: 0; border-radius: 999px; background: none; color: var(--ink-2); font-weight: 700; font-size: var(--fs-small);
+  transition: background var(--t-state), color var(--t-state);
+}
+.seg button[aria-pressed='true'] { background: var(--surface); color: var(--ink); box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12); }
+.surprise {
+  display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 8px 16px;
+  border: 0; border-radius: 999px; background: #FF5A36; color: #121212; font-weight: 800; font-size: var(--fs-small);
+  transition: transform var(--t-feedback) var(--ease-out);
+}
+.surprise:active { transform: scale(0.95) rotate(-2deg); }
+@media (hover: hover) { .surprise:hover svg { transform: rotate(20deg); } }
+.surprise svg { transition: transform var(--t-state) var(--ease-out); }
+
+/* ============================================================
+   Map view
+   ============================================================ */
+.mapview { display: grid; gap: 8px; }
+.mapview__map {
+  height: min(68vh, 560px); border-radius: var(--r-lg); overflow: hidden;
+  background: #F4ECDD; border: 1px solid var(--line); z-index: 0;
+}
+.pin {
+  width: 30px; height: 30px; display: grid; place-items: center; border-radius: 50% 50% 50% 0; transform: rotate(-45deg);
+  background: var(--g, #121212); border: 3px solid #fff; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  font: 800 12px/1 var(--font-text); color: #121212;
+}
+.pin b { transform: rotate(45deg); font-weight: 800; }
+.pin--music { --g: #8B74FF; } .pin--sports { --g: #FFC53D; } .pin--shows { --g: #FF5A36; }
+.pin--arts { --g: #FF8FC8; } .pin--food { --g: #FFC53D; } .pin--outdoors { --g: #3D6BFF; color: #fff; } .pin--family { --g: #3D6BFF; color: #fff; }
+.leaflet-container { font-family: var(--font-text); }
+.leaflet-popup-content-wrapper { border-radius: var(--r-md); }
+.leaflet-popup-content { margin: 12px 14px; }
+.pop { display: grid; gap: 4px; }
+.pop__venue { margin: 0 !important; font-size: var(--fs-small); font-weight: 700; color: var(--ink-2); }
+.pop__event {
+  display: grid; gap: 2px; text-align: left; width: 100%; padding: 8px 0; background: none; border: 0;
+  border-top: 1px solid var(--line); color: var(--ink); cursor: pointer;
+}
+.pop__title { font-weight: 700; font-size: var(--fs-meta); text-decoration: underline; text-underline-offset: 3px; }
+.pop__meta { font-size: var(--fs-small); color: var(--ink-2); }
+.pop__more { margin: 4px 0 0 !important; font-size: var(--fs-small); color: var(--ink-2); }
+.plan a.link-btn, .weekend a.link-btn { color: var(--ink); }
+.weekend__wx { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; }
+.weekend__wx li { flex: none; }
+
+/* ============================================================
+   Add to Home Screen
+   ============================================================ */
+.install {
+  display: grid; grid-template-columns: auto 1fr auto auto; align-items: center; gap: 12px;
+  padding: 12px 8px 12px 12px; border-radius: var(--r-lg); background: #F4ECDD;
+}
+.install__icon { border-radius: 11px; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15); }
+.install__title { font-weight: 800; font-size: var(--fs-meta); }
+.install__sub { font-size: var(--fs-small); color: var(--ink-2); }
+.install__inline { vertical-align: -2px; margin-inline: 2px; }
+.install__btn { display: inline-flex; align-items: center; gap: 6px; padding-inline: 14px; }

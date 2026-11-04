@@ -29,7 +29,9 @@ import {
   Volleyball,
   type LucideIcon,
 } from 'lucide-react'
+import { Cloud, CloudRain, Sun } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
+import { describe as describeWeather, isOutdoor, RAINY, type DayForecast } from '../lib/weather'
 import { CATEGORIES, formatMiles, type Recommendation } from '../lib/discovery'
 import { formatPriceRange, PRICE_STATUS_LABEL } from '../lib/money'
 import { prefersReducedMotion } from '../lib/motion'
@@ -104,6 +106,8 @@ interface CardProps {
   favorite: boolean
   onToggleFavorite: () => void
   onOpen: () => void
+  /** That day's forecast; shown on outdoor events only. */
+  weather?: DayForecast | null
 }
 
 function dayParts(startIso: string, now: Date) {
@@ -123,9 +127,9 @@ function dayParts(startIso: string, now: Date) {
 }
 
 /** Reasons already shown elsewhere on the card don't need repeating. */
-const SHOWN_ON_CARD = new Set(['local pick', 'library event'])
+const SHOWN_ON_CARD = new Set(['local pick', 'library event', 'rain likely'])
 
-export function EventCard({ rec, now, favorite, onToggleFavorite, onOpen }: CardProps) {
+export function EventCard({ rec, now, favorite, onToggleFavorite, onOpen, weather }: CardProps) {
   const { event, miles, reasons } = rec
   const category = CATEGORIES.find((c) => c.id === event.category)!.label
   const h = hash(event.id + event.title)
@@ -208,6 +212,15 @@ export function EventCard({ rec, now, favorite, onToggleFavorite, onOpen }: Card
               <span className="tag-pill"><Sparkles size={13} strokeWidth={2.5} aria-hidden="true" /> Local</span>
             ) : null}
             <span className="tag-pill tag-pill--quiet">{AGE_TEXT[event.age]}</span>
+            {weather && isOutdoor(event) && (
+              <span className={`tag-pill${weather.rainPct >= RAINY ? ' tag-pill--rain' : ' tag-pill--wx'}`}>
+                {weather.rainPct >= RAINY ? (
+                  <><CloudRain size={13} strokeWidth={2.5} aria-hidden="true" /> {weather.rainPct}% rain</>
+                ) : (
+                  <>{weather.code <= 1 ? <Sun size={13} strokeWidth={2.5} aria-hidden="true" /> : <Cloud size={13} strokeWidth={2.5} aria-hidden="true" />} {weather.highF}° {describeWeather(weather.code).toLowerCase()}</>
+                )}
+              </span>
+            )}
           </p>
         </div>
         {extraReasons.length > 0 && (

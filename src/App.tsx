@@ -1,4 +1,4 @@
-import { ExternalLink, UtensilsCrossed } from 'lucide-react'
+import { Dices, ExternalLink, List, Map as MapIcon, UtensilsCrossed } from 'lucide-react'
 import { useCallback, useEffect, useMemo, useState, type CSSProperties } from 'react'
 import { ActiveFilters } from './components/ActiveFilters'
 import { CalendarView } from './components/CalendarView'
@@ -7,7 +7,10 @@ import { EventCard } from './components/EventCard'
 import { EventDetail } from './components/EventDetail'
 import { FilterPanel } from './components/FilterPanel'
 import { LocationBar } from './components/LocationBar'
+import { InstallPrompt } from './components/InstallPrompt'
+import { MapView } from './components/MapView'
 import { MoodPicker } from './components/MoodPicker'
+import { WeekendStrip } from './components/WeekendStrip'
 import { SavedView } from './components/SavedView'
 import { SearchPill } from './components/SearchPill'
 import { LogoMark } from './components/LogoMark'
@@ -15,6 +18,8 @@ import { Sheet } from './components/Sheet'
 import { TabBar, type Tab } from './components/TabBar'
 import { APP_NAME } from './config'
 import { fetchEvents, type EventFeed } from './data/eventSource'
+import { AREA } from './data/feeds/area'
+import { applyWeather, fetchForecast, forecastFor, type Forecast } from './lib/weather'
 import { useLocation } from './hooks/useLocation'
 import { useSaved } from './hooks/useSaved'
 import { FOOD_GUIDE } from './data/guides'
@@ -63,6 +68,18 @@ export default function App() {
   const [calDay, setCalDay] = useState<Date>(() => startOfDay(new Date()))
   const location = useLocation()
   const saved = useSaved()
+  const [view, setView] = useState<'list' | 'map'>('list')
+  const [forecast, setForecast] = useState<Forecast | null>(null)
+
+  // Forecast for where the viewer is (or the Upstate by default). If it
+  // can't load, everything works the same, just without weather.
+  const wxLat = location.point?.lat ?? AREA.center.lat
+  const wxLng = location.point?.lng ?? AREA.center.lng
+  useEffect(() => {
+    const ctl = new AbortController()
+    fetchForecast({ lat: wxLat, lng: wxLng }, ctl.signal).then(setForecast, () => {})
+    return () => ctl.abort()
+  }, [wxLat, wxLng])
 
   const load = useCallback(() => {
     fetchEvents(now)
@@ -115,7 +132,19 @@ export default function App() {
   }, [])
 
   const events = useMemo(() => (feed.status === 'ready' ? feed.feed.events : []), [feed])
-  const results = useMemo(() => recommend(events, filters, now, location.point), [events, filters, now, location.point])
+  const results = useMemo(
+    () => applyWeather(recommend(events, filters, now, location.point), forecast),
+    [events, filters, now, location.point, forecast],
+  )
+  const weekend = useMemo(
+    () => applyWeather(recommend(events, { ...filters, date: { kind: 'weekend' } }, now, location.point), forecast),
+    [events, filters, now, location.point, forecast],
+  )
+  /** Opens a random pick from the top of the list. */
+  const surprise = () => {
+    const pool = results.slice(0, 12)
+    if (pool.length) openEvent(pool[Math.floor(Math.random() * pool.length)].event.id)
+  }
   // The calendar picks its own days, so it ignores the date filter.
   const calendarItems = useMemo(
     () => recommend(events, { ...filters, date: { kind: 'any' } }, now, location.point),
@@ -196,6 +225,16 @@ export default function App() {
 
             <ActiveFilters filters={filters} onChange={patch} onReset={reset} />
 
+            {feed.status === 'ready' && filters.date.kind === 'any' && (
+              <WeekendStrip
+                items={weekend}
+                forecast={forecast}
+                now={now}
+                onOpen={openEvent}
+                onSeeAll={() => patch({ date: { kind: 'weekend' } })}
+              />
+            )}
+
             <section aria-labelledby="results-heading" className="results" aria-busy={feed.status === 'loading'}>
               <div className="results__head">
                 <h2 id="results-heading" className="results__heading">Ideas for you</h2>
@@ -205,6 +244,21 @@ export default function App() {
                   </span>
                 )}
               </div>
+              {feed.status === 'ready' && results.length > 0 && (
+                <div className="results__tools">
+                  <div className="seg" role="group" aria-label="Show as">
+                    <button type="button" aria-pressed={view === 'list'} onClick={() => withViewTransition(() => setView('list'))}>
+                      <List size={16} strokeWidth={2.25} aria-hidden="true" /> List
+                    </button>
+                    <button type="button" aria-pressed={view === 'map'} onClick={() => withViewTransition(() => setView('map'))}>
+                      <MapIcon size={16} strokeWidth={2.25} aria-hidden="true" /> Map
+                    </button>
+                  </div>
+                  <button type="button" className="surprise" onClick={surprise}>
+                    <Dices size={18} strokeWidth={2.25} aria-hidden="true" /> Surprise me
+                  </button>
+                </div>
+              )}
               {location.point === null && feed.status === 'ready' && (
                 <button type="button" className="nudge" onClick={() => setSheet('where')}>
                   Add a location to see what’s nearby
@@ -248,7 +302,11 @@ export default function App() {
                 </div>
               )}
 
-              {feed.status === 'ready' && results.length > 0 && (
+              {feed.status === 'ready' && results.length > 0 && view === 'map' && (
+                <MapView items={results} origin={location.point} center={location.point ?? AREA.center} onOpen={openEvent} />
+              )}
+
+              {feed.status === 'ready' && results.length > 0 && view === 'list' && (
                 <ul className={`grid${intro ? ' grid--intro' : ''}`}>
                   {results.map((r, i) => (
                     <li
@@ -261,6 +319,7 @@ export default function App() {
                         favorite={saved.isFavorite(r.event.id)}
                         onToggleFavorite={() => saved.toggleFavorite(r.event.id)}
                         onOpen={() => openEvent(r.event.id)}
+                        weather={forecastFor(r.event, forecast)}
                       />
                     </li>
                   ))}
@@ -285,6 +344,8 @@ export default function App() {
         {tab === 'saved' && (
           <SavedView saved={saved} events={events} onOpen={openEvent} onBrowse={() => goTab('explore')} />
         )}
+
+        <InstallPrompt />
 
         {isSample && (
           <p className="footnote">
@@ -375,7 +436,7 @@ export default function App() {
       </Sheet>
 
       <Sheet open={sheet === 'event'} title="Event details" onClose={closeSheet}>
-        {openEventData && <EventDetail key={openEventData.id} event={openEventData} saved={saved} />}
+        {openEventData && <EventDetail key={openEventData.id} event={openEventData} saved={saved} allEvents={events} onOpenEvent={openEvent} />}
       </Sheet>
     </div>
   )

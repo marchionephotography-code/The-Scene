@@ -5,16 +5,19 @@ import { CATEGORIES } from '../lib/discovery'
 import { formatPriceRange, PRICE_STATUS_LABEL } from '../lib/money'
 import { appHref, buildShareText, detectPlatform, formatShareWhen, mailtoHref, PASTE_TARGETS, smsHref, socialTargets } from '../lib/share'
 import type { SceneEvent } from '../types/event'
+import { PlanTools } from './PlanTools'
 
 const AGE_TEXT = { 'all-ages': 'All ages', family: 'Family friendly', '18+': '18+', '21+': '21+' } as const
 
 interface Props {
   event: SceneEvent
   saved: Saved
+  allEvents: SceneEvent[]
+  onOpenEvent: (id: string) => void
 }
 
 /** Body of the event sheet: details, save actions, and sharing. */
-export function EventDetail({ event, saved }: Props) {
+export function EventDetail({ event, saved, allEvents, onOpenEvent }: Props) {
   const [message, setMessage] = useState(() => buildShareText(event))
   const [copied, setCopied] = useState(false)
   const [pastedFor, setPastedFor] = useState<string | null>(null)
@@ -109,6 +112,13 @@ export function EventDetail({ event, saved }: Props) {
           {wish ? 'On wish list' : 'Wish list'}
         </button>
       </div>
+
+      <PlanTools
+        event={event}
+        allEvents={allEvents}
+        onOpenEvent={onOpenEvent}
+        onAddToMessage={(line) => setMessage((m) => (m.includes(line) ? m : `${m.trimEnd()}\n\n${line}`))}
+      />
 
       <section className="detail__share" aria-labelledby={`${messageId}-h`}>
         <h3 id={`${messageId}-h`} className="sheet__label">Invite friends</h3>
