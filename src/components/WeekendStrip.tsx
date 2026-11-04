@@ -1,4 +1,5 @@
-import { Cloud, CloudRain, Sun } from 'lucide-react'
+import { Cloud, CloudRain, Drama, Mountain, Music, Palette, Smile, Sun, Trophy, UtensilsCrossed, type LucideIcon } from 'lucide-react'
+import type { Category, SceneEvent } from '../types/event'
 import type { Recommendation } from '../lib/discovery'
 import { formatPriceRange } from '../lib/money'
 import { describe, RAINY, type Forecast, dayKey } from '../lib/weather'
@@ -10,6 +11,21 @@ interface Props {
   onOpen: (id: string) => void
   onSeeAll: () => void
 }
+
+const ICON: Record<Category, LucideIcon> = {
+  music: Music, sports: Trophy, shows: Drama, arts: Palette, food: UtensilsCrossed, outdoors: Mountain, family: Smile,
+}
+
+/** Mockup switch: ?wk=stub | tile | list (temporary, for choosing a look). */
+type Look = 'stub' | 'tile' | 'list'
+function lookFromUrl(): Look {
+  const v = new URLSearchParams(window.location.search).get('wk')
+  return v === 'tile' || v === 'list' ? v : 'stub'
+}
+
+const wd = (iso: string) => new Date(iso).toLocaleDateString(undefined, { weekday: 'short' })
+const tm = (iso: string) => new Date(iso).toLocaleTimeString(undefined, { hour: 'numeric', minute: '2-digit' }).replace(':00', '')
+const town = (e: SceneEvent) => e.town.replace(/, SC$/, '')
 
 /** Fri/Sat/Sun dates for the coming (or current) weekend. */
 function weekendDays(now: Date): Date[] {
@@ -23,6 +39,7 @@ function weekendDays(now: Date): Date[] {
 export function WeekendStrip({ items, forecast, now, onOpen, onSeeAll }: Props) {
   if (!items.length) return null
   const days = weekendDays(now)
+  const look = lookFromUrl()
   return (
     <section className="weekend" aria-labelledby="weekend-h">
       <div className="weekend__head">
@@ -47,20 +64,65 @@ export function WeekendStrip({ items, forecast, now, onOpen, onSeeAll }: Props) 
           })}
         </ul>
       )}
-      <ul className="weekend__row">
-        {items.slice(0, 8).map(({ event: e }) => (
-          <li key={e.id}>
-            <button type="button" className={`wk wk--${e.category}`} onClick={() => onOpen(e.id)}>
-              <span className="wk__day">
-                {new Date(e.start).toLocaleDateString(undefined, { weekday: 'short' })}{' '}
-                {new Date(e.start).toLocaleTimeString(undefined, { hour: 'numeric', minute: '2-digit' })}
-              </span>
-              <span className="wk__title">{e.title}</span>
-              <span className="wk__meta">{e.town.replace(/, SC$/, '')} · {formatPriceRange(e.price)}</span>
-            </button>
-          </li>
-        ))}
-      </ul>
+      {look === 'list' ? (
+        <div className="wkl">
+          {days.map((d) => {
+            const list = items.filter((r) => dayKey(new Date(r.event.start)) === dayKey(d)).slice(0, 3)
+            if (!list.length) return null
+            return (
+              <div key={d.toISOString()} className="wkl__day">
+                <p className="wkl__label">{d.toLocaleDateString(undefined, { weekday: 'long' })}</p>
+                <ul>
+                  {list.map(({ event: e }) => {
+                    const Icon = ICON[e.category]
+                    return (
+                      <li key={e.id}>
+                        <button type="button" className="wkl__row" onClick={() => onOpen(e.id)}>
+                          <span className={`wkl__icon wkc--${e.category}`}><Icon size={18} strokeWidth={2.25} aria-hidden="true" /></span>
+                          <span className="wkl__time">{tm(e.start)}</span>
+                          <span className="wkl__title">{e.title}</span>
+                          <span className="wkl__meta">{town(e)} · {formatPriceRange(e.price)}</span>
+                        </button>
+                      </li>
+                    )
+                  })}
+                </ul>
+              </div>
+            )
+          })}
+        </div>
+      ) : (
+        <ul className="weekend__row">
+          {items.slice(0, 8).map(({ event: e }) => {
+            const Icon = ICON[e.category]
+            return (
+              <li key={e.id}>
+                {look === 'stub' ? (
+                  <button type="button" className={`wks wkc--${e.category}`} onClick={() => onOpen(e.id)}>
+                    <span className="wks__stub">
+                      <span className="wks__wd">{wd(e.start)}</span>
+                      <span className="wks__tm">{tm(e.start)}</span>
+                    </span>
+                    <span className="wks__body">
+                      <span className="wks__title">{e.title}</span>
+                      <span className="wks__meta">{town(e)} · {formatPriceRange(e.price)}</span>
+                    </span>
+                  </button>
+                ) : (
+                  <button type="button" className={`wkt wkc--${e.category}`} onClick={() => onOpen(e.id)}>
+                    <span className="wkt__art" aria-hidden="true">
+                      <span className="wkt__shape"><Icon size={26} strokeWidth={2} /></span>
+                      <span className="wkt__when">{wd(e.start)} · {tm(e.start)}</span>
+                    </span>
+                    <span className="wkt__title">{e.title}</span>
+                    <span className="wkt__meta">{town(e)} · {formatPriceRange(e.price)}</span>
+                  </button>
+                )}
+              </li>
+            )
+          })}
+        </ul>
+      )}
     </section>
   )
 }

@@ -1280,3 +1280,68 @@ body::before { content: ''; position: fixed; inset: 0 0 auto; height: env(safe-a
 .install__sub { font-size: var(--fs-small); color: var(--ink-2); }
 .install__inline { vertical-align: -2px; margin-inline: 2px; }
 .install__btn { display: inline-flex; align-items: center; gap: 6px; padding-inline: 14px; }
+
+/* ============================================================
+   Weekend card looks (mockups: ?wk=stub | tile | list)
+   ============================================================ */
+/* A · Ticket stub: colored stub with day + time, perforated edge, white body */
+.wks {
+  width: 236px; min-height: 108px; display: grid; grid-template-columns: 64px 1fr; text-align: left;
+  padding: 0; border: 1px solid var(--line); border-radius: 16px; background: var(--surface); color: var(--ink);
+  overflow: hidden; box-shadow: 0 1px 2px rgba(0,0,0,.05), 0 4px 14px rgba(0,0,0,.06);
+  transition: transform var(--t-feedback) var(--ease-out);
+}
+.wks:active { transform: scale(0.97); }
+.wks__stub {
+  position: relative; display: grid; align-content: center; justify-items: center; gap: 4px;
+  background: var(--g); color: #121212; border-right: 2px dashed rgba(255,255,255,.85);
+}
+.wks__stub::before, .wks__stub::after {
+  content: ''; position: absolute; right: -9px; width: 16px; height: 16px; border-radius: 50%; background: var(--bg);
+  border: 1px solid var(--line);
+}
+.wks__stub::before { top: -9px; } .wks__stub::after { bottom: -9px; }
+.wks__wd { font-size: var(--fs-micro); font-weight: 800; text-transform: uppercase; letter-spacing: .08em; }
+.wks__tm { font-family: var(--font-display); font-weight: 800; font-size: 1.05rem; letter-spacing: -.01em; }
+.wks__body { display: grid; align-content: space-between; gap: 8px; padding: 12px 14px; }
+.wks__title { font-family: var(--font-display); font-weight: 700; font-size: var(--fs-meta); line-height: 1.2; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+.wks__meta { font-size: var(--fs-small); color: var(--ink-2); font-weight: 600; }
+
+/* B · Mini tile: Tile S art up top, like a small event card */
+.wkt { width: 156px; display: grid; gap: 6px; text-align: left; padding: 0; border: 0; background: none; color: var(--ink); transition: transform var(--t-feedback) var(--ease-out); }
+.wkt:active { transform: scale(0.97); }
+.wkt__art { position: relative; height: 112px; border-radius: 16px; background: var(--g); overflow: hidden; }
+.wkt__shape {
+  position: absolute; right: -8px; bottom: -8px; width: 92px; height: 92px; display: grid; place-items: center;
+  border-radius: 92px 0 0 0; background: var(--t); color: #121212; padding: 12px 0 0 12px;
+}
+.wkt__when {
+  position: absolute; top: 10px; left: 10px; padding: 4px 8px; border-radius: 8px; background: #fff; color: #121212;
+  font-size: var(--fs-micro); font-weight: 800; text-transform: uppercase; letter-spacing: .06em;
+}
+.wkt__title { font-family: var(--font-display); font-weight: 700; font-size: var(--fs-meta); line-height: 1.2; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.wkt__meta { font-size: var(--fs-small); color: var(--ink-2); font-weight: 600; margin-top: -2px; }
+
+/* C · Day list: Friday / Saturday / Sunday with compact rows */
+.wkl { display: grid; gap: 14px; }
+.wkl__label { font-size: var(--fs-small); font-weight: 800; text-transform: uppercase; letter-spacing: .08em; color: var(--ink-2); margin-bottom: 4px; }
+.wkl ul { list-style: none; margin: 0; padding: 0; display: grid; }
+.wkl__row {
+  width: 100%; display: grid; grid-template-columns: 40px 58px 1fr; grid-template-rows: auto auto; column-gap: 10px; align-items: center;
+  padding: 8px 0; border: 0; border-bottom: 1px solid var(--line); background: none; text-align: left; color: var(--ink);
+}
+.wkl li:last-child .wkl__row { border-bottom: 0; }
+.wkl__icon { grid-row: span 2; width: 40px; height: 40px; display: grid; place-items: center; border-radius: 12px 12px 12px 4px; background: var(--g); color: #121212; }
+.wkl__time { grid-row: span 2; font-weight: 800; font-size: var(--fs-small); font-variant-numeric: tabular-nums; }
+.wkl__title { font-weight: 700; font-size: var(--fs-meta); line-height: 1.25; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.wkl__meta { font-size: var(--fs-small); color: var(--ink-2); }
+
+/* Weekend card colors: brand pairs per category (--g main, --t accent, --c ink on main) */
+.wkc--music    { --g: #8B74FF; --t: #FF8FC8; --c: #121212; }
+.wkc--sports   { --g: #3D6BFF; --t: #FFC53D; --c: #ffffff; }
+.wkc--shows    { --g: #FF5A36; --t: #8B74FF; --c: #121212; }
+.wkc--arts     { --g: #FF8FC8; --t: #FFC53D; --c: #121212; }
+.wkc--food     { --g: #FFC53D; --t: #FF5A36; --c: #121212; }
+.wkc--outdoors { --g: #F4ECDD; --t: #3D6BFF; --c: #121212; }
+.wkc--family   { --g: #3D6BFF; --t: #FF8FC8; --c: #ffffff; }
+.wks__stub, .wkl__icon { color: var(--c); }
