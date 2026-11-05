@@ -232,6 +232,7 @@ export default function App() {
                 now={now}
                 onOpen={openEvent}
                 onSeeAll={() => patch({ date: { kind: 'weekend' } })}
+                onSeeDay={(day) => patch({ date: { kind: 'custom', from: day, to: day } })}
               />
             )}
 

@@ -1189,32 +1189,6 @@ body::before { content: ''; position: fixed; inset: 0 0 auto; height: env(safe-a
 .weekend { display: grid; gap: 10px; min-width: 0; }
 .weekend__head { display: flex; align-items: baseline; justify-content: space-between; }
 .weekend__head .link-btn { font-size: var(--fs-meta); }
-.weekend__wx { list-style: none; margin: 0; padding: 0; display: flex; gap: 8px; flex-wrap: wrap; }
-.weekend__wx li {
-  display: inline-flex; align-items: center; gap: 5px; padding: 6px 10px; border-radius: 999px;
-  background: var(--tile); font-size: var(--fs-small); font-variant-numeric: tabular-nums;
-}
-.weekend__wx li.is-wet { background: #e3eaff; color: #1f3fb0; }
-.weekend__wx-desc { color: inherit; opacity: 0.8; }
-.weekend__row {
-  list-style: none; margin: 0 -16px; padding: 2px 16px 6px; display: flex; gap: 10px;
-  overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; min-width: 0;
-}
-.weekend__row::-webkit-scrollbar { display: none; }
-.weekend__row li { flex: 0 0 auto; scroll-snap-align: start; }
-.wk {
-  width: 172px; min-height: 128px; display: grid; align-content: space-between; gap: 6px; text-align: left;
-  padding: 12px 14px; border: 0; border-radius: 18px 18px 18px 56px; color: #121212;
-  background: var(--g); transition: transform var(--t-feedback) var(--ease-out);
-}
-.wk:active { transform: scale(0.97); }
-.wk--music { --g: #8B74FF; } .wk--sports { --g: #FFC53D; } .wk--shows { --g: #FF5A36; }
-.wk--arts { --g: #FF8FC8; } .wk--food { --g: #FFC53D; } .wk--outdoors { --g: #F4ECDD; } .wk--family { --g: #3D6BFF; color: #fff; }
-.wk--sports, .wk--food { border-radius: 56px 18px 18px 18px; }
-.wk__day { font-size: var(--fs-micro); font-weight: 800; text-transform: uppercase; letter-spacing: 0.06em; }
-.wk__title { font-family: var(--font-display); font-weight: 700; font-size: var(--fs-meta); line-height: 1.2; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
-.wk__meta { font-size: var(--fs-small); font-weight: 600; opacity: 0.85; }
-@media (min-width: 760px) { .weekend__row { margin: 0; padding-inline: 0; } }
 
 /* ============================================================
    List / map toggle, Surprise me
@@ -1265,8 +1239,6 @@ body::before { content: ''; position: fixed; inset: 0 0 auto; height: env(safe-a
 .pop__meta { font-size: var(--fs-small); color: var(--ink-2); }
 .pop__more { margin: 4px 0 0 !important; font-size: var(--fs-small); color: var(--ink-2); }
 .plan a.link-btn, .weekend a.link-btn { color: var(--ink); }
-.weekend__wx { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; }
-.weekend__wx li { flex: none; }
 
 /* ============================================================
    Add to Home Screen
@@ -1284,44 +1256,6 @@ body::before { content: ''; position: fixed; inset: 0 0 auto; height: env(safe-a
 /* ============================================================
    Weekend card looks (mockups: ?wk=stub | tile | list)
    ============================================================ */
-/* A · Ticket stub: colored stub with day + time, perforated edge, white body */
-.wks {
-  width: 236px; min-height: 108px; display: grid; grid-template-columns: 64px 1fr; text-align: left;
-  padding: 0; border: 1px solid var(--line); border-radius: 16px; background: var(--surface); color: var(--ink);
-  overflow: hidden; box-shadow: 0 1px 2px rgba(0,0,0,.05), 0 4px 14px rgba(0,0,0,.06);
-  transition: transform var(--t-feedback) var(--ease-out);
-}
-.wks:active { transform: scale(0.97); }
-.wks__stub {
-  position: relative; display: grid; align-content: center; justify-items: center; gap: 4px;
-  background: var(--g); color: #121212; border-right: 2px dashed rgba(255,255,255,.85);
-}
-.wks__stub::before, .wks__stub::after {
-  content: ''; position: absolute; right: -9px; width: 16px; height: 16px; border-radius: 50%; background: var(--bg);
-  border: 1px solid var(--line);
-}
-.wks__stub::before { top: -9px; } .wks__stub::after { bottom: -9px; }
-.wks__wd { font-size: var(--fs-micro); font-weight: 800; text-transform: uppercase; letter-spacing: .08em; }
-.wks__tm { font-family: var(--font-display); font-weight: 800; font-size: 1.05rem; letter-spacing: -.01em; }
-.wks__body { display: grid; align-content: space-between; gap: 8px; padding: 12px 14px; }
-.wks__title { font-family: var(--font-display); font-weight: 700; font-size: var(--fs-meta); line-height: 1.2; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
-.wks__meta { font-size: var(--fs-small); color: var(--ink-2); font-weight: 600; }
-
-/* B · Mini tile: Tile S art up top, like a small event card */
-.wkt { width: 156px; display: grid; gap: 6px; text-align: left; padding: 0; border: 0; background: none; color: var(--ink); transition: transform var(--t-feedback) var(--ease-out); }
-.wkt:active { transform: scale(0.97); }
-.wkt__art { position: relative; height: 112px; border-radius: 16px; background: var(--g); overflow: hidden; }
-.wkt__shape {
-  position: absolute; right: -8px; bottom: -8px; width: 92px; height: 92px; display: grid; place-items: center;
-  border-radius: 92px 0 0 0; background: var(--t); color: #121212; padding: 12px 0 0 12px;
-}
-.wkt__when {
-  position: absolute; top: 10px; left: 10px; padding: 4px 8px; border-radius: 8px; background: #fff; color: #121212;
-  font-size: var(--fs-micro); font-weight: 800; text-transform: uppercase; letter-spacing: .06em;
-}
-.wkt__title { font-family: var(--font-display); font-weight: 700; font-size: var(--fs-meta); line-height: 1.2; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-.wkt__meta { font-size: var(--fs-small); color: var(--ink-2); font-weight: 600; margin-top: -2px; }
-
 /* C · Day list: Friday / Saturday / Sunday with compact rows */
 .wkl { display: grid; gap: 14px; }
 .wkl__label { font-size: var(--fs-small); font-weight: 800; text-transform: uppercase; letter-spacing: .08em; color: var(--ink-2); margin-bottom: 4px; }
@@ -1338,10 +1272,29 @@ body::before { content: ''; position: fixed; inset: 0 0 auto; height: env(safe-a
 
 /* Weekend card colors: brand pairs per category (--g main, --t accent, --c ink on main) */
 .wkc--music    { --g: #8B74FF; --t: #FF8FC8; --c: #121212; }
-.wkc--sports   { --g: #3D6BFF; --t: #FFC53D; --c: #ffffff; }
+.wkc--sports   { --g: #121212; --t: #FFC53D; --c: #FFC53D; }
 .wkc--shows    { --g: #FF5A36; --t: #8B74FF; --c: #121212; }
 .wkc--arts     { --g: #FF8FC8; --t: #FFC53D; --c: #121212; }
 .wkc--food     { --g: #FFC53D; --t: #FF5A36; --c: #121212; }
 .wkc--outdoors { --g: #F4ECDD; --t: #3D6BFF; --c: #121212; }
 .wkc--family   { --g: #3D6BFF; --t: #FF8FC8; --c: #ffffff; }
-.wks__stub, .wkl__icon { color: var(--c); }
+.wkl__icon { color: var(--c); }
+
+/* Day tabs: Fri / Sat / Sun with the forecast */
+.wkd { display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none; }
+.wkd::-webkit-scrollbar { display: none; }
+.wkd__tab {
+  flex: none; display: inline-flex; align-items: center; gap: 5px; min-height: 40px; padding: 6px 12px;
+  border-radius: 999px; border: 1px solid var(--line-strong); background: var(--surface); color: var(--ink);
+  font-size: var(--fs-small); font-variant-numeric: tabular-nums;
+  transition: background var(--t-state), color var(--t-state), border-color var(--t-state);
+}
+.wkd__tab.is-wet { color: #1f3fb0; }
+.wkd__tab.is-on { background: var(--primary); border-color: var(--primary); color: var(--primary-ink); }
+.wkd__rain { opacity: 0.85; }
+@media (hover: hover) { .wkd__tab:not(.is-on):hover { border-color: var(--ink); } }
+.wkl ul { animation: wkl-in var(--t-layout) var(--ease-out); }
+@keyframes wkl-in { from { opacity: 0; transform: translateY(6px); } }
+@media (prefers-reduced-motion: reduce) { .wkl ul { animation: none; } }
+.wkl__more { justify-self: start; font-size: var(--fs-small); padding-left: 0; min-height: 36px; }
+.wkl { gap: 4px; }
