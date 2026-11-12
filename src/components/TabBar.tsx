@@ -1,11 +1,12 @@
-import { CalendarDays, Compass, Heart, type LucideIcon } from 'lucide-react'
+import { CalendarDays, CircleUserRound, Compass, Heart, type LucideIcon } from 'lucide-react'
 
-export type Tab = 'explore' | 'calendar' | 'saved'
+export type Tab = 'explore' | 'calendar' | 'saved' | 'you'
 
 const TABS: { id: Tab; label: string; icon: LucideIcon }[] = [
   { id: 'explore', label: 'Explore', icon: Compass },
   { id: 'calendar', label: 'Calendar', icon: CalendarDays },
   { id: 'saved', label: 'Saved', icon: Heart },
+  { id: 'you', label: 'You', icon: CircleUserRound },
 ]
 
 interface Props {

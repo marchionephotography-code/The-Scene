@@ -1,4 +1,4 @@
-import { Check, Copy, Mail, MessageCircle, Plus, Share2 } from 'lucide-react'
+import { Check, Copy, Mail, MessageCircle, Plus, Share2, ThumbsDown, ThumbsUp } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import type { Saved } from '../hooks/useSaved'
 import { CATEGORIES } from '../lib/discovery'
@@ -15,10 +15,13 @@ interface Props {
   saved: Saved
   allEvents: SceneEvent[]
   onOpenEvent: (id: string) => void
+  moreLike: boolean
+  onMoreLike: () => void
+  onNotForMe: () => void
 }
 
 /** Body of the event sheet: details, save actions, and sharing. */
-export function EventDetail({ event, saved, allEvents, onOpenEvent }: Props) {
+export function EventDetail({ event, saved, allEvents, onOpenEvent, moreLike, onMoreLike, onNotForMe }: Props) {
   const [message, setMessage] = useState(() => buildShareText(event))
   const [copied, setCopied] = useState(false)
   const [pastedFor, setPastedFor] = useState<string | null>(null)
@@ -102,6 +105,15 @@ export function EventDetail({ event, saved, allEvents, onOpenEvent }: Props) {
           </p>
         )}
       </section>
+
+      <div className="detail__taste" role="group" aria-label="Tune your picks">
+        <button type="button" className={`taste-btn${moreLike ? ' taste-btn--on' : ''}`} aria-pressed={moreLike} onClick={onMoreLike}>
+          <ThumbsUp size={17} strokeWidth={2.25} aria-hidden="true" /> More like this
+        </button>
+        <button type="button" className="taste-btn" onClick={onNotForMe}>
+          <ThumbsDown size={17} strokeWidth={2.25} aria-hidden="true" /> Not for me
+        </button>
+      </div>
 
       <div className="detail__save">
         <button type="button" className={`save-btn${wish ? ' save-btn--on' : ''}`} aria-pressed={wish} onClick={() => saved.toggleWishEvent(event.id, event.title)}>

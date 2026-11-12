@@ -1,5 +1,5 @@
-import { Dices, ExternalLink, Heart, List, Map as MapIcon, MapPin, Send, UtensilsCrossed } from 'lucide-react'
-import { useCallback, useEffect, useMemo, useState, type CSSProperties } from 'react'
+import { Dices, ExternalLink, Heart, List, Map as MapIcon, MapPin, Send, Sparkles, UtensilsCrossed, X } from 'lucide-react'
+import { useCallback, useEffect, useMemo, useRef, useState, type CSSProperties } from 'react'
 import { ActiveFilters } from './components/ActiveFilters'
 import { CalendarView } from './components/CalendarView'
 import { DateShortcuts } from './components/DateShortcuts'
@@ -10,6 +10,8 @@ import { LocationBar } from './components/LocationBar'
 import { InstallPrompt } from './components/InstallPrompt'
 import { LinkViewer } from './components/LinkViewer'
 import { MapView } from './components/MapView'
+import { Onboarding } from './components/Onboarding'
+import { ProfileView } from './components/ProfileView'
 import { MoodPicker } from './components/MoodPicker'
 import { WeekendStrip } from './components/WeekendStrip'
 import { SavedView } from './components/SavedView'
@@ -22,6 +24,8 @@ import { fetchEvents, type EventFeed } from './data/eventSource'
 import { AREA } from './data/feeds/area'
 import { applyWeather, fetchForecast, forecastFor, type Forecast } from './lib/weather'
 import { setLinkViewer, type OutsideLink } from './lib/links'
+import { personalize } from './lib/profile'
+import { useProfile } from './hooks/useProfile'
 import { useLocation } from './hooks/useLocation'
 import { useSaved } from './hooks/useSaved'
 import { FOOD_GUIDE } from './data/guides'
@@ -43,7 +47,7 @@ type FeedState =
 
 type OpenSheet = 'none' | 'where' | 'filters' | 'event'
 
-const TAB_IDS: Tab[] = ['explore', 'calendar', 'saved']
+const TAB_IDS: Tab[] = ['explore', 'calendar', 'saved', 'you']
 
 function tabFromHash(): Tab {
   const h = window.location.hash.replace('#', '') as Tab
@@ -70,6 +74,24 @@ export default function App() {
   const [calDay, setCalDay] = useState<Date>(() => startOfDay(new Date()))
   const location = useLocation()
   const saved = useSaved()
+  const me = useProfile(saved)
+  const [setupOpen, setSetupOpen] = useState(false)
+  // Start from home base, if they set one, until they pick somewhere else.
+  const homeLabel = me.profile.home?.label
+  const { setManual } = location
+  const startedHome = useRef(false)
+  useEffect(() => {
+    if (startedHome.current || !homeLabel || location.state.status !== 'unset') return
+    startedHome.current = true
+    setManual(homeLabel, me.profile.home!.point)
+  }, [homeLabel, location.state.status, setManual, me.profile.home])
+  const [showHidden, setShowHidden] = useState(false)
+  const [toast, setToast] = useState<{ text: string; undo?: () => void } | null>(null)
+  useEffect(() => {
+    if (!toast) return
+    const t = window.setTimeout(() => setToast(null), 6000)
+    return () => window.clearTimeout(t)
+  }, [toast])
   const [view, setView] = useState<'list' | 'map'>('list')
 
   // Outside links open in an in-app page with a Back button. It takes a
@@ -159,13 +181,15 @@ export default function App() {
   }, [])
 
   const events = useMemo(() => (feed.status === 'ready' ? feed.feed.events : []), [feed])
-  const results = useMemo(
-    () => applyWeather(recommend(events, filters, now, location.point), forecast),
-    [events, filters, now, location.point, forecast],
+  // Ranked for this person: their likes first, their skips hidden.
+  const personal = useMemo(
+    () => personalize(applyWeather(recommend(events, filters, now, location.point), forecast), me.profile, events, showHidden),
+    [events, filters, now, location.point, forecast, me.profile, showHidden],
   )
+  const results = personal.recs
   const weekend = useMemo(
-    () => applyWeather(recommend(events, { ...filters, date: { kind: 'weekend' } }, now, location.point), forecast),
-    [events, filters, now, location.point, forecast],
+    () => personalize(applyWeather(recommend(events, { ...filters, date: { kind: 'weekend' } }, now, location.point), forecast), me.profile, events).recs,
+    [events, filters, now, location.point, forecast, me.profile],
   )
   /** Opens a random pick from the top of the list. */
   const surprise = () => {
@@ -252,6 +276,20 @@ export default function App() {
 
             <ActiveFilters filters={filters} onChange={patch} onReset={reset} />
 
+            {!me.profile.onboarded && (
+              <div className="setup-card">
+                <span className="setup-card__icon" aria-hidden="true"><Sparkles size={22} strokeWidth={2.25} /></span>
+                <div className="setup-card__text">
+                  <p className="setup-card__title">Make The Scene yours</p>
+                  <p className="setup-card__sub">Tell us what you love and what to skip. About a minute.</p>
+                </div>
+                <button type="button" className="btn" onClick={() => setSetupOpen(true)}>Set up</button>
+                <button type="button" className="icon-btn setup-card__x" aria-label="Not now" onClick={() => me.update({ onboarded: true })}>
+                  <X size={18} strokeWidth={2.25} aria-hidden="true" />
+                </button>
+              </div>
+            )}
+
             {feed.status === 'ready' && filters.date.kind === 'any' && (
               <WeekendStrip
                 items={weekend}
@@ -286,6 +324,12 @@ export default function App() {
                     <Dices size={18} strokeWidth={2.25} aria-hidden="true" /> Surprise me
                   </button>
                 </div>
+              )}
+              {feed.status === 'ready' && (personal.hiddenCount > 0 || showHidden) && (
+                <p className="hidden-note">
+                  {showHidden ? 'Showing everything, including what you skip.' : `${personal.hiddenCount} hidden based on what you skip.`}{' '}
+                  <button type="button" className="link-btn" onClick={() => setShowHidden((v) => !v)}>{showHidden ? 'Hide them' : 'Show them'}</button>
+                </p>
               )}
               {location.point === null && feed.status === 'ready' && (
                 <button type="button" className="nudge" onClick={() => setSheet('where')}>
@@ -382,6 +426,8 @@ export default function App() {
             onOpen={openEvent}
           />
         )}
+
+        {tab === 'you' && <ProfileView api={me} onRedoSetup={() => setSetupOpen(true)} />}
 
         {tab === 'saved' && (
           <SavedView saved={saved} events={events} onOpen={openEvent} onBrowse={() => goTab('explore')} />
@@ -509,8 +555,46 @@ export default function App() {
           )
         }
       >
-        {openEventData && <EventDetail key={openEventData.id} event={openEventData} saved={saved} allEvents={events} onOpenEvent={openEvent} />}
+        {openEventData && (
+          <EventDetail
+            key={openEventData.id}
+            event={openEventData}
+            saved={saved}
+            allEvents={events}
+            onOpenEvent={openEvent}
+            moreLike={me.profile.moreLike.includes(openEventData.id)}
+            onMoreLike={() => {
+              const id = openEventData.id
+              const on = me.profile.moreLike.includes(id)
+              me.update({ moreLike: on ? me.profile.moreLike.filter((x) => x !== id) : [...me.profile.moreLike, id] })
+              if (!on) setToast({ text: 'Got it. You’ll see more like this.' })
+            }}
+            onNotForMe={() => {
+              const id = openEventData.id
+              const before = me.profile.hiddenEvents
+              me.update({ hiddenEvents: [...before.filter((x) => x !== id), id], moreLike: me.profile.moreLike.filter((x) => x !== id) })
+              closeSheet()
+              setToast({ text: 'Hidden. We’ll show fewer like this.', undo: () => me.update({ hiddenEvents: before }) })
+            }}
+          />
+        )}
       </Sheet>
+      <Onboarding
+        open={setupOpen}
+        api={me}
+        onClose={() => setSetupOpen(false)}
+        onDone={(home) => {
+          setSetupOpen(false)
+          if (home && !location.point) location.setManual(home.label, home.point)
+          setToast({ text: me.profile.name ? `You’re all set, ${me.profile.name}.` : 'You’re all set.' })
+        }}
+      />
+      {toast && (
+        <div className="toast" role="status">
+          <span>{toast.text}</span>
+          {toast.undo && <button type="button" className="toast__undo" onClick={() => { toast.undo!(); setToast(null) }}>Undo</button>}
+        </div>
+      )}
       {outside && <LinkViewer key={outside.href} link={outside} onBack={closeOutside} />}
     </div>
   )

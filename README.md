@@ -50,3 +50,31 @@ All live sources search about a 2-hour drive around Anderson, SC (`src/data/feed
 Not available: Eventbrite (public search removed from its API in 2019), Visit Greenville SC (no public feed), Pickens County Library (Communico; needs a key from the library).
 
 Copy `.env.example` to `.env`, add keys, and restart `npm run dev`. Never commit `.env`.
+
+
+## Accounts and profiles
+
+Everyone can set up a profile (name, home base, what they're into, what they
+skip, budget, when and who they go out with). It's saved on the device and
+used to rank events: likes go first, skips are hidden ("Show them" brings
+them back), and "More like this" / "Not for me" on any event keep tuning it.
+
+Sign-in that syncs a profile, favorites, and wish list across devices uses
+[Supabase](https://supabase.com) (free tier). To switch it on:
+
+1. Create a Supabase project.
+2. In **SQL Editor**, run `supabase/schema.sql`.
+3. In **Authentication → URL Configuration**, add the site's address as the Site URL
+   and a Redirect URL.
+4. Optional: **Authentication → Providers → Google** to offer "Continue with Google".
+5. Put `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` (Project Settings → API)
+   in `.env`, or in the host's environment variables, and rebuild.
+
+Without those keys the app works the same; sign-in buttons are replaced by a
+note that everything is saved on this device.
+
+## Group texts
+
+"Text friends" on an event keeps a list of friends (name and number) on the
+device only, never in an account, and sends one group message to everyone
+picked (iPhone: `sms://open?addresses=…`, Android: numbers separated by `;`).
