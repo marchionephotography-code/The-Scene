@@ -31,22 +31,19 @@ export const REGION_HUBS: SearchArea[] = [
 /** Wait between requests to one API (Ticketmaster allows 5 a second). */
 export const pause = (ms: number) => new Promise((r) => setTimeout(r, ms))
 
-/** Runs one search per area in turn and merges the results, keeping the first copy of each id. */
+/**
+ * Runs one search per area and merges the results, keeping the first copy
+ * of each id. Searches start `gapMs` apart (Ticketmaster allows 5 a second)
+ * but run at the same time, so a slow city never holds up the rest.
+ */
 export async function searchEach<T extends { id: string }>(areas: SearchArea[], run: (a: SearchArea) => Promise<T[]>, gapMs = 250): Promise<T[]> {
+  const settled = await Promise.allSettled(areas.map((a, i) => pause(i * gapMs).then(() => run(a))))
+  const needsKey = settled.find((r) => r.status === 'rejected' && r.reason instanceof Error && r.reason.message === 'needs-key')
+  if (needsKey) throw new Error('needs-key')
+  const ok = settled.filter((r): r is PromiseFulfilledResult<T[]> => r.status === 'fulfilled')
+  if (!ok.length) throw new Error('unavailable')
   const out = new Map<string, T>()
-  let ok = 0
-  let lastErr: unknown
-  for (const [i, a] of areas.entries()) {
-    if (i) await pause(gapMs)
-    try {
-      for (const e of await run(a)) if (!out.has(e.id)) out.set(e.id, e)
-      ok++
-    } catch (err) {
-      lastErr = err
-      if (err instanceof Error && err.message === 'needs-key') throw err
-    }
-  }
-  if (!ok) throw lastErr ?? new Error('unavailable')
+  for (const r of ok) for (const e of r.value) if (!out.has(e.id)) out.set(e.id, e)
   return [...out.values()]
 }
 
