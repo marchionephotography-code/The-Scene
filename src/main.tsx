@@ -8,6 +8,8 @@ import App from './App.tsx'
 // Mockup switch for card artwork: ?art=a|b|c (temporary).
 const artLook = new URLSearchParams(window.location.search).get('art')
 if (artLook) document.documentElement.dataset.art = artLook
+const palLook = new URLSearchParams(window.location.search).get('pal')
+if (palLook) document.documentElement.dataset.pal = palLook
 
 
 createRoot(document.getElementById('root')!).render(

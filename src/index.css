@@ -1419,3 +1419,29 @@ body::before { content: ''; position: fixed; inset: 0 0 auto; height: env(safe-a
 [data-art='c'] .bigdate { place-content: end start; justify-items: start; padding: 0 0 12px 14px; }
 @media (max-width: 619px) { [data-art='a'] .cover--tiles .tiles__main { right: 8px; bottom: 8px; width: 38px; height: 38px; border-radius: 12px !important; } [data-art='a'] .cover--tiles .cover__icon { width: 19px; } [data-art='c'] .bigdate { padding: 0 0 8px 10px; } [data-art='c'] .bigdate b { font-size: 2.75rem; } }
 [data-art='a'] .cover--tiles .tiles__main, [data-art='b'] .cover--tiles .tiles__main { padding: 0; }
+
+/* Palette mockups for the aurora art (?pal=earth|night), temporary */
+/* Earthy: terracotta, olive, clay, moss, mustard, sand, deep teal */
+[data-pal='earth'] .tiles--music.cover--tiles    { --g: #8C4A3B; --t: #D98B5F; --k: #E8C07A; }
+[data-pal='earth'] .tiles--sports.cover--tiles   { --g: #3F5A3C; --t: #8FA35B; --k: #D9B66B; }
+[data-pal='earth'] .tiles--shows.cover--tiles    { --g: #B5543A; --t: #E59A6B; --k: #6E2F2A; }
+[data-pal='earth'] .tiles--arts.cover--tiles     { --g: #C4895B; --t: #EAC9A0; --k: #8C4A3B; }
+[data-pal='earth'] .tiles--food.cover--tiles     { --g: #C99A2E; --t: #E8C07A; --k: #B5543A; }
+[data-pal='earth'] .tiles--outdoors.cover--tiles { --g: #2F5D62; --t: #7FA39A; --k: #C9B98B; }
+[data-pal='earth'] .tiles--family.cover--tiles   { --g: #6B7B3A; --t: #B7C47A; --k: #E8C07A; }
+
+/* Nightlife: deep plum/ink base lit by neon glows */
+[data-pal='night'] .cover--tiles {
+  background:
+    radial-gradient(55% 65% at 18% 25%, color-mix(in oklab, var(--t) 85%, transparent) 0%, transparent 70%),
+    radial-gradient(50% 60% at 88% 88%, color-mix(in oklab, var(--k) 80%, transparent) 0%, transparent 70%),
+    radial-gradient(90% 90% at 60% 40%, #2A1650 0%, transparent 80%),
+    #120B24 !important;
+}
+[data-pal='night'] .tiles--music.cover--tiles    { --t: #FF2E88; --k: #7B5CFF; }
+[data-pal='night'] .tiles--sports.cover--tiles   { --t: #2EE6FF; --k: #3D6BFF; }
+[data-pal='night'] .tiles--shows.cover--tiles    { --t: #FF5A36; --k: #FF2E88; }
+[data-pal='night'] .tiles--arts.cover--tiles     { --t: #C04BFF; --k: #FF8FC8; }
+[data-pal='night'] .tiles--food.cover--tiles     { --t: #FFB020; --k: #FF5A36; }
+[data-pal='night'] .tiles--outdoors.cover--tiles { --t: #2EFFB5; --k: #2EE6FF; }
+[data-pal='night'] .tiles--family.cover--tiles   { --t: #FFD84D; --k: #7B5CFF; }
