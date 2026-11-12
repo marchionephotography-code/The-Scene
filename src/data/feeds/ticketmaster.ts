@@ -5,7 +5,7 @@
  * Default quota: 5,000 calls a day, 5 a second.
  */
 import type { AgeSuitability, Category, SceneEvent } from '../../types/event'
-import { AREA, fetchJson } from './area'
+import { AREA, fetchJson, REGION_HUBS, searchEach, type SearchArea } from './area'
 
 export const TICKETMASTER_KEY: string | undefined = import.meta.env.VITE_TICKETMASTER_KEY
 
@@ -73,14 +73,13 @@ export function tmToScene(e: TmEvent): SceneEvent | null {
   }
 }
 
-export async function fetchTicketmaster(now: Date): Promise<SceneEvent[]> {
-  if (!TICKETMASTER_KEY) throw new Error('needs-key')
+async function searchTicketmaster(now: Date, area: SearchArea, size: number): Promise<SceneEvent[]> {
   const params = new URLSearchParams({
-    apikey: TICKETMASTER_KEY,
-    latlong: `${AREA.center.lat},${AREA.center.lng}`,
-    radius: String(AREA.radiusMiles),
+    apikey: TICKETMASTER_KEY ?? '',
+    latlong: `${area.center.lat},${area.center.lng}`,
+    radius: String(area.radiusMiles),
     unit: 'miles',
-    size: '100',
+    size: String(size),
     sort: 'date,asc',
     startDateTime: now.toISOString().replace(/\.\d{3}Z$/, 'Z'),
   })
@@ -88,4 +87,14 @@ export async function fetchTicketmaster(now: Date): Promise<SceneEvent[]> {
     `https://app.ticketmaster.com/discovery/v2/events.json?${params}`,
   )
   return (body._embedded?.events ?? []).map(tmToScene).filter((e): e is SceneEvent => e !== null)
+}
+
+/**
+ * Events around one chosen city, or (no city) around each regional hub so
+ * many cities are represented.
+ */
+export async function fetchTicketmaster(now: Date, area?: SearchArea): Promise<SceneEvent[]> {
+  if (!TICKETMASTER_KEY) throw new Error('needs-key')
+  if (area) return searchTicketmaster(now, area, 100)
+  return searchEach(REGION_HUBS, (hub) => searchTicketmaster(now, hub, 40))
 }

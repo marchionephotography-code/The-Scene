@@ -42,6 +42,9 @@ export function useLocation() {
     setState({ status: 'manual', point, label })
   }, [])
 
+  /** Back to the whole region (no single city). */
+  const clear = useCallback(() => setState({ status: 'unset' }), [])
+
   const point = state.status === 'device' || state.status === 'manual' ? state.point : null
-  return { state, point, requestDevice, setManual }
+  return { state, point, requestDevice, setManual, clear }
 }

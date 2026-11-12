@@ -81,11 +81,19 @@ export default function App() {
     return () => ctl.abort()
   }, [wxLat, wxLng])
 
+  // Live sources search around the chosen city; with no city, across the
+  // whole region (the Upstate plus Atlanta, Charlotte, Asheville, and more).
+  const cityLat = location.point?.lat
+  const cityLng = location.point?.lng
+  const cityName = location.state.status === 'manual' || location.state.status === 'device' ? location.state.label : null
   const load = useCallback(() => {
-    fetchEvents(now)
+    const area = cityLat !== undefined && cityLng !== undefined
+      ? { name: cityName ?? 'Near you', center: { lat: cityLat, lng: cityLng }, radiusMiles: 60 }
+      : undefined
+    fetchEvents(now, area)
       .then((f) => setFeed({ status: 'ready', feed: f }))
       .catch(() => setFeed({ status: 'error', message: "We couldn't load events right now." }))
-  }, [now])
+  }, [now, cityLat, cityLng, cityName])
 
   useEffect(load, [load])
 
@@ -292,6 +300,17 @@ export default function App() {
 
               {feed.status === 'ready' && results.length === 0 && (
                 <div className="state" role="status">
+                  {location.point && feed.feed.source === 'sample' && !feed.feed.sources.some((x) => x.kind === 'ticketing' && x.status === 'ok') ? (
+                    <>
+                      <p className="state__title">Nothing loaded for {place ?? 'this spot'} yet</p>
+                      <p>
+                        Events outside the Upstate come from Ticketmaster, which only connects on the live website.
+                        Once the site is online, you’ll see concerts, games, and shows wherever you are.
+                      </p>
+                      <button type="button" className="btn" onClick={() => location.clear()}>Show all cities nearby</button>
+                    </>
+                  ) : (
+                  <>
                   <p className="state__title">Nothing matches these filters</p>
                   <p>
                     {filters.maxMiles !== null && location.point
@@ -300,6 +319,8 @@ export default function App() {
                   </p>
                   {activeFilterCount(filters) > 0 && (
                     <button type="button" className="btn" onClick={reset}>Reset filters</button>
+                  )}
+                  </>
                   )}
                 </div>
               )}
@@ -373,7 +394,7 @@ export default function App() {
       >
         <section className="sheet__section">
           <h3 className="sheet__label">Where</h3>
-          <LocationBar state={location.state} onUseDevice={location.requestDevice} onPickTown={location.setManual} />
+          <LocationBar state={location.state} onUseDevice={location.requestDevice} onPickTown={location.setManual} onClear={location.clear} />
         </section>
         {tab !== 'calendar' && (
           <section className="sheet__section">

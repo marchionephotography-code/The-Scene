@@ -1338,3 +1338,94 @@ body::before { content: ''; position: fixed; inset: 0 0 auto; height: env(safe-a
 .plan-btn { grid-auto-flow: column; justify-content: center; min-height: 52px; }
 .filters__empty { display: grid; gap: 10px; justify-items: start; }
 .filters__empty .hint { margin: 0; }
+
+/* ============================================================
+   Card tag + heart mockups (?cards=a|b|c), temporary
+   ============================================================ */
+/* A · Color text: no pills, colored icon + word, coral heart disc */
+[data-cards='a'] .card__tags .tag-pill { background: none; padding: 0; font-weight: 800; font-size: var(--fs-small); }
+[data-cards='a'] .tag-pill--local { color: #C2390F; }
+[data-cards='a'] .tag-pill--library { color: #2A4FD6; }
+[data-cards='a'] .card .status--sample { background: none; padding: 0; color: #8A6A00; letter-spacing: 0.08em; }
+[data-cards='a'] .heart { width: 34px; height: 34px; background: #FF5A36; color: #fff; box-shadow: 0 2px 6px rgba(194, 57, 15, 0.35); }
+[data-cards='a'] .heart--on { background: #fff; color: #E31C5F; }
+
+/* B · Stickers: small brand-filled tags with a tilt, ink heart disc */
+[data-cards='b'] .card__tags .tag-pill {
+  padding: 3px 8px; border-radius: 6px; font-size: var(--fs-micro); font-weight: 800; text-transform: uppercase; letter-spacing: 0.06em;
+}
+[data-cards='b'] .tag-pill--local { background: #FFC53D; color: #121212; transform: rotate(-3deg); }
+[data-cards='b'] .tag-pill--library { background: #3D6BFF; color: #fff; transform: rotate(2deg); }
+[data-cards='b'] .card .status--sample { background: none; border: 1.5px dashed #B08A00; color: #6B5300; padding: 1px 6px; }
+[data-cards='b'] .heart { width: 34px; height: 34px; background: #121212; color: #fff; box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3); }
+[data-cards='b'] .heart--on { background: #E31C5F; color: #fff; }
+
+/* C · Tile S corner: heart lives in a quarter-round corner piece; tags become ticket tabs */
+[data-cards='c'] .heart {
+  top: 0; right: 0; width: 46px; height: 46px; border-radius: 0 var(--r-md) 0 46px; padding: 0 0 8px 8px;
+  background: #FF5A36; color: #121212; box-shadow: none;
+}
+[data-cards='c'] .heart--on { background: #121212; color: #FF8FC8; }
+[data-cards='c'] .card__tags .tag-pill {
+  position: relative; padding: 4px 10px; border-radius: 4px; font-size: var(--fs-micro); font-weight: 800;
+  text-transform: uppercase; letter-spacing: 0.06em;
+  -webkit-mask: radial-gradient(circle 4px at 0 50%, #0000 98%, #000) left / 51% 100% no-repeat, radial-gradient(circle 4px at 100% 50%, #0000 98%, #000) right / 51% 100% no-repeat;
+          mask: radial-gradient(circle 4px at 0 50%, #0000 98%, #000) left / 51% 100% no-repeat, radial-gradient(circle 4px at 100% 50%, #0000 98%, #000) right / 51% 100% no-repeat;
+}
+[data-cards='c'] .tag-pill--local { background: #FF8FC8; color: #121212; }
+[data-cards='c'] .tag-pill--library { background: #8B74FF; color: #121212; }
+[data-cards='c'] .card .status--sample { background: #F4ECDD; color: #6B5300; }
+
+/* Location picker: city search + groups */
+.where { display: grid; gap: 8px; }
+.where__search {
+  display: flex; align-items: center; gap: 10px; min-height: 52px; padding: 0 8px 0 16px;
+  border: 1px solid var(--line-strong); border-radius: 999px; background: var(--surface);
+}
+.where__search:focus-within { border-color: var(--ink); box-shadow: 0 0 0 3px var(--focus); }
+.where__input { flex: 1; min-width: 0; border: 0; background: none; font: inherit; font-size: var(--fs-body); color: var(--ink); outline: none; padding: 12px 0; }
+.where__input::-webkit-search-cancel-button { display: none; }
+.where__clear { width: 36px; height: 36px; border: 0; border-radius: 999px; background: var(--tile); display: grid; place-items: center; color: var(--ink); }
+.where__group { margin-top: 10px; font-size: var(--fs-small); font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-2); }
+
+/* ============================================================
+   Card artwork mockups (?art=a|b|c), temporary
+   ============================================================ */
+.poster { display: none; }
+
+/* A · Big icon: one solid brand color, one bold icon, nothing else */
+[data-art='a'] .cover--tiles .tiles__main { inset: 0; height: 100%; width: 100%; border-radius: 0 !important; background: none; transform: none !important; }
+[data-art='a'] .cover--tiles .tiles__chip { display: none; }
+[data-art='a'] .cover--tiles .cover__icon { width: 44%; stroke-width: 2.25; color: #121212; translate: 6% 10%; }
+[data-art='a'] .tiles--sports .cover__icon, [data-art='a'] .tiles--family .cover__icon { color: #fff; }
+
+/* B · Poster word: one huge word, gig-poster style, cropped by the tile */
+[data-art='b'] .cover--tiles .tiles__main, [data-art='b'] .cover--tiles .tiles__chip { display: none; }
+[data-art='b'] .poster {
+  display: block; position: absolute; left: -4%; bottom: -14%; z-index: 1;
+  font-family: var(--font-display); font-weight: 800; font-size: clamp(3.5rem, 22cqi, 7rem); line-height: 0.85;
+  letter-spacing: -0.04em; text-transform: uppercase; color: var(--t); rotate: -8deg; white-space: nowrap;
+}
+[data-art='b'] .cover--tiles { container-type: inline-size; }
+@media (max-width: 619px) { [data-art='b'] .poster { font-size: 3.4rem; bottom: -6%; } }
+
+/* C · Ticket: the date is the art; a colored stub with a perforated edge */
+@media (max-width: 619px) {
+  [data-art='c'] .card { grid-template-columns: 84px minmax(0, 1fr); }
+  [data-art='c'] .card__media { align-self: stretch; }
+  [data-art='c'] .card .cover { position: absolute; inset: 0; aspect-ratio: auto; border-radius: 14px 6px 6px 14px; }
+}
+[data-art='c'] .cover--tiles .tiles__main, [data-art='c'] .cover--tiles .tiles__chip { display: none; }
+[data-art='c'] .cover--tiles::after {
+  content: ''; position: absolute; top: 6px; bottom: 6px; right: 5px; width: 0; border-right: 2px dashed rgba(255, 255, 255, 0.75);
+}
+[data-art='c'] .stub {
+  inset: 0; width: auto; display: grid; align-content: center; justify-items: center; gap: 2px; padding: 0 8px 0 0;
+  background: none; box-shadow: none; color: #121212;
+}
+[data-art='c'] .tiles--sports ~ .stub, [data-art='c'] .tiles--family ~ .stub { color: #fff; }
+[data-art='c'] .stub__top, [data-art='c'] .stub--soon .stub__top { color: inherit; opacity: 0.85; }
+[data-art='c'] .stub__day { font-size: 2.25rem !important; }
+[data-art='c'] .stub__month { display: none !important; }
+[data-art='c'] .stub { padding-bottom: 34px; }
+[data-art='c'] .heart { top: auto; bottom: 8px; left: 50%; right: auto; translate: -50% 0; margin-left: -4px; width: 32px; height: 32px; }

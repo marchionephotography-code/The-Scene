@@ -128,6 +128,10 @@ function dayParts(startIso: string, now: Date) {
 
 /** Reasons already shown elsewhere on the card don't need repeating. */
 const SHOWN_ON_CARD = new Set(['local pick', 'library event', 'rain likely'])
+/** One big word per category for the poster-style art. */
+const POSTER_WORD: Record<Category, string> = {
+  music: 'Live', sports: 'Game', shows: 'Show', arts: 'Art', food: 'Eat', outdoors: 'Out', family: 'Fun',
+}
 /** Reasons that only add noise on a card (the weather already shows). */
 const HIDDEN_ON_CARD = new Set(['indoors on a rainy day'])
 
@@ -171,6 +175,7 @@ export function EventCard({ rec, now, favorite, onToggleFavorite, onOpen, weathe
               <Icon className="cover__icon" strokeWidth={1.75} />
             </span>
             <span className="tiles__chip" />
+            <span className="poster">{POSTER_WORD[event.category]}</span>
           </div>
         )}
         <span className="card__cat">{category}</span>
@@ -218,9 +223,9 @@ export function EventCard({ rec, now, favorite, onToggleFavorite, onOpen, weathe
           </p>
           <p className="card__tags">
             {isLibrary ? (
-              <span className="tag-pill"><BookOpen size={13} strokeWidth={2.5} aria-hidden="true" /> Library</span>
+              <span className="tag-pill tag-pill--library"><BookOpen size={13} strokeWidth={2.5} aria-hidden="true" /> Library</span>
             ) : event.local ? (
-              <span className="tag-pill"><Sparkles size={13} strokeWidth={2.5} aria-hidden="true" /> Local</span>
+              <span className="tag-pill tag-pill--local"><Sparkles size={13} strokeWidth={2.5} aria-hidden="true" /> Local</span>
             ) : null}
             <span className="tag-pill tag-pill--quiet">{AGE_TEXT[event.age]}</span>
           </p>

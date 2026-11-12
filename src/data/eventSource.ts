@@ -5,7 +5,7 @@
  */
 import type { DataSource, SceneEvent } from '../types/event'
 import { distanceMiles } from '../lib/discovery'
-import { AREA } from './feeds/area'
+import { AREA, type SearchArea } from './feeds/area'
 import { fetchLocalist, LOCALIST_FEEDS } from './feeds/localist'
 import { fetchSeatGeek } from './feeds/seatgeek'
 import { fetchTicketmaster } from './feeds/ticketmaster'
@@ -61,7 +61,12 @@ function dedupe(events: SceneEvent[]): SceneEvent[] {
   })
 }
 
-export async function fetchEvents(now: Date = new Date()): Promise<EventFeed> {
+/**
+ * Everything on in the default region, or (with `area`) around one chosen
+ * city anywhere in the US.
+ */
+export async function fetchEvents(now: Date = new Date(), area?: SearchArea): Promise<EventFeed> {
+  const where = area ?? AREA
   const [results] = await Promise.all([
     Promise.all([
       ...LIBRARY_FEEDS.map((f) =>
@@ -72,15 +77,15 @@ export async function fetchEvents(now: Date = new Date()): Promise<EventFeed> {
         }),
       ),
       ...LOCALIST_FEEDS.map((f) => settle(f.id, f.name, 'campus', () => fetchLocalist(f))),
-      settle('ticketmaster', 'Ticketmaster', 'ticketing', () => fetchTicketmaster(now)),
-      settle('seatgeek', 'SeatGeek', 'ticketing', () => fetchSeatGeek(now)),
+      settle('ticketmaster', 'Ticketmaster', 'ticketing', () => fetchTicketmaster(now, area)),
+      settle('seatgeek', 'SeatGeek', 'ticketing', () => fetchSeatGeek(now, area)),
     ]),
     // Short floor so the loading state never flashes.
     new Promise((r) => setTimeout(r, 300)),
   ])
 
   const live = dedupe(results.flatMap((r) => r.events)).filter(
-    (e) => distanceMiles(AREA.center, e.location) <= AREA.radiusMiles,
+    (e) => distanceMiles(where.center, e.location) <= where.radiusMiles,
   )
   const sources = results.map((r) => r.status)
   return {

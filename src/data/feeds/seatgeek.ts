@@ -3,7 +3,7 @@
  * from https://seatgeek.com/account/develop — set VITE_SEATGEEK_CLIENT_ID.
  */
 import type { Category, SceneEvent } from '../../types/event'
-import { AREA, fetchJson } from './area'
+import { AREA, fetchJson, REGION_HUBS, searchEach, type SearchArea } from './area'
 
 export const SEATGEEK_CLIENT_ID: string | undefined = import.meta.env.VITE_SEATGEEK_CLIENT_ID
 
@@ -53,17 +53,22 @@ export function sgToScene(e: SgEvent): SceneEvent | null {
   }
 }
 
-export async function fetchSeatGeek(now: Date): Promise<SceneEvent[]> {
-  if (!SEATGEEK_CLIENT_ID) throw new Error('needs-key')
+async function searchSeatGeek(now: Date, area: SearchArea, perPage: number): Promise<SceneEvent[]> {
   const params = new URLSearchParams({
-    client_id: SEATGEEK_CLIENT_ID,
-    lat: String(AREA.center.lat),
-    lon: String(AREA.center.lng),
-    range: `${AREA.radiusMiles}mi`,
-    per_page: '100',
+    client_id: SEATGEEK_CLIENT_ID ?? '',
+    lat: String(area.center.lat),
+    lon: String(area.center.lng),
+    range: `${area.radiusMiles}mi`,
+    per_page: String(perPage),
     sort: 'datetime_local.asc',
     'datetime_local.gte': now.toISOString().slice(0, 19),
   })
   const body = await fetchJson<{ events?: SgEvent[] }>(`https://api.seatgeek.com/2/events?${params}`)
   return (body.events ?? []).map(sgToScene).filter((e): e is SceneEvent => e !== null)
+}
+
+export async function fetchSeatGeek(now: Date, area?: SearchArea): Promise<SceneEvent[]> {
+  if (!SEATGEEK_CLIENT_ID) throw new Error('needs-key')
+  if (area) return searchSeatGeek(now, area, 100)
+  return searchEach(REGION_HUBS, (hub) => searchSeatGeek(now, hub, 40), 150)
 }

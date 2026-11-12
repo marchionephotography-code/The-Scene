@@ -5,6 +5,12 @@ import '@fontsource-variable/figtree'
 import './index.css'
 import App from './App.tsx'
 
+// Mockup switch for card tag styles: ?cards=a|b|c (temporary).
+const cardsLook = new URLSearchParams(window.location.search).get('cards')
+if (cardsLook) document.documentElement.dataset.cards = cardsLook
+const artLook = new URLSearchParams(window.location.search).get('art')
+if (artLook) document.documentElement.dataset.art = artLook
+
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <App />
