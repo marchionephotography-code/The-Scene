@@ -83,19 +83,33 @@ export function tmToScene(e: TmEvent): SceneEvent | null {
   }
 }
 
+/**
+ * On the live site the search goes through our own server (/api/ticketmaster),
+ * which holds the key and caches results. VITE_TICKETMASTER_KEY is only for
+ * running the app on your own computer.
+ */
 async function searchTicketmaster(now: Date, area: SearchArea, size: number): Promise<SceneEvent[]> {
-  const params = new URLSearchParams({
-    apikey: TICKETMASTER_KEY ?? '',
-    latlong: `${area.center.lat},${area.center.lng}`,
-    radius: String(area.radiusMiles),
-    unit: 'miles',
-    size: String(size),
-    sort: 'date,asc',
-    startDateTime: now.toISOString().replace(/\.\d{3}Z$/, 'Z'),
+  let url: string
+  if (TICKETMASTER_KEY) {
+    const params = new URLSearchParams({
+      apikey: TICKETMASTER_KEY,
+      latlong: `${area.center.lat},${area.center.lng}`,
+      radius: String(area.radiusMiles),
+      unit: 'miles',
+      size: String(size),
+      sort: 'date,asc',
+      startDateTime: now.toISOString().replace(/\.\d{3}Z$/, 'Z'),
+    })
+    url = `https://app.ticketmaster.com/discovery/v2/events.json?${params}`
+  } else {
+    const params = new URLSearchParams({ lat: String(area.center.lat), lng: String(area.center.lng), radius: String(area.radiusMiles), size: String(size) })
+    url = `${import.meta.env.BASE_URL}api/ticketmaster?${params}`
+  }
+  const body = await fetchJson<{ _embedded?: { events?: TmEvent[] }; error?: string }>(url).catch((err: unknown) => {
+    // No server here (a preview or plain file host): treat it like a missing key.
+    if (!TICKETMASTER_KEY && err instanceof Error && /HTTP (404|503)/.test(err.message)) throw new Error('needs-key')
+    throw err
   })
-  const body = await fetchJson<{ _embedded?: { events?: TmEvent[] } }>(
-    `https://app.ticketmaster.com/discovery/v2/events.json?${params}`,
-  )
   return (body._embedded?.events ?? []).map(tmToScene).filter((e): e is SceneEvent => e !== null)
 }
 
@@ -104,7 +118,20 @@ async function searchTicketmaster(now: Date, area: SearchArea, size: number): Pr
  * many cities are represented.
  */
 export async function fetchTicketmaster(now: Date, area?: SearchArea): Promise<SceneEvent[]> {
-  if (!TICKETMASTER_KEY) throw new Error('needs-key')
   if (area) return searchTicketmaster(now, area, 100)
   return searchEach(REGION_HUBS, (hub) => searchTicketmaster(now, hub, 40))
+}
+
+/** One event by id, for shared links to shows outside the current area. */
+export async function fetchTicketmasterEvent(id: string): Promise<SceneEvent | null> {
+  const tmId = id.replace(/^tm-/, '')
+  const url = TICKETMASTER_KEY
+    ? `https://app.ticketmaster.com/discovery/v2/events/${encodeURIComponent(tmId)}.json?apikey=${TICKETMASTER_KEY}`
+    : `${import.meta.env.BASE_URL}api/ticketmaster?id=${encodeURIComponent(tmId)}`
+  try {
+    const e = tmToScene(await fetchJson<TmEvent>(url))
+    return e && e.status !== 'cancelled' ? e : null
+  } catch {
+    return null
+  }
 }

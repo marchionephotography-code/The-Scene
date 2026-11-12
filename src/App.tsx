@@ -21,10 +21,13 @@ import { Sheet } from './components/Sheet'
 import { TabBar, type Tab } from './components/TabBar'
 import { APP_NAME } from './config'
 import { fetchEvents, type EventFeed } from './data/eventSource'
+import type { SceneEvent } from './types/event'
 import { AREA } from './data/feeds/area'
+import { fetchTicketmasterEvent } from './data/feeds/ticketmaster'
 import { applyWeather, fetchForecast, forecastFor, type Forecast } from './lib/weather'
 import { setLinkViewer, type OutsideLink } from './lib/links'
 import { personalize } from './lib/profile'
+import { eventIdFromLocation, showEventInAddress } from './lib/eventLinks'
 import { useProfile } from './hooks/useProfile'
 import { useLocation } from './hooks/useLocation'
 import { useSaved } from './hooks/useSaved'
@@ -174,13 +177,22 @@ export default function App() {
   )
   const patch = useCallback((p: Partial<Filters>) => update((f) => ({ ...f, ...p })), [update])
   const reset = useCallback(() => update(() => DEFAULT_FILTERS), [update])
-  const closeSheet = useCallback(() => setSheet('none'), [])
+  const closeSheet = useCallback(() => {
+    setSheet('none')
+    showEventInAddress(null)
+  }, [])
   const openEvent = useCallback((id: string) => {
     setOpenEventId(id)
     setSheet('event')
+    showEventInAddress(id)
   }, [])
 
-  const events = useMemo(() => (feed.status === 'ready' ? feed.feed.events : []), [feed])
+  // Events opened from a shared link that aren't in this area's list.
+  const [linkedExtra, setLinkedExtra] = useState<SceneEvent[]>([])
+  const events = useMemo(
+    () => (feed.status === 'ready' ? [...feed.feed.events, ...linkedExtra.filter((x) => !feed.feed.events.some((e) => e.id === x.id))] : []),
+    [feed, linkedExtra],
+  )
   // Ranked for this person: their likes first, their skips hidden.
   const personal = useMemo(
     () => personalize(applyWeather(recommend(events, filters, now, location.point), forecast), me.profile, events, showHidden),
@@ -202,6 +214,26 @@ export default function App() {
     [events, filters, now, location.point],
   )
   const openEventData = events.find((e) => e.id === openEventId) ?? null
+
+  // Arriving from a shared link (/e/<id>): open that event once events load.
+  const linkedId = useRef(eventIdFromLocation())
+  useEffect(() => {
+    const id = linkedId.current
+    if (!id || feed.status !== 'ready') return
+    linkedId.current = null
+    const gone = () => {
+      showEventInAddress(null)
+      setToast({ text: 'That event has ended or isn’t listed anymore. Here’s what else is on.' })
+    }
+    if (events.some((e) => e.id === id)) openEvent(id)
+    else if (id.startsWith('tm-')) {
+      fetchTicketmasterEvent(id).then((e) => {
+        if (!e || new Date(e.end ?? e.start) < new Date()) return gone()
+        setLinkedExtra((x) => [...x, e])
+        openEvent(e.id)
+      })
+    } else gone()
+  }, [feed.status, events, openEvent])
 
   const panelFilterCount =
     filters.categories.length +

@@ -5,6 +5,7 @@ import { CATEGORIES } from '../lib/discovery'
 import { formatPriceRange, PRICE_STATUS_LABEL } from '../lib/money'
 import { appHref, buildShareText, detectPlatform, formatShareWhen, mailtoHref, PASTE_TARGETS, socialTargets } from '../lib/share'
 import type { SceneEvent } from '../types/event'
+import { eventUrl } from '../lib/eventLinks'
 import { GroupText } from './GroupText'
 import { PlanTools } from './PlanTools'
 import { ReportProblem } from './ReportProblem'
@@ -23,7 +24,7 @@ interface Props {
 
 /** Body of the event sheet: details, save actions, and sharing. */
 export function EventDetail({ event, saved, allEvents, onOpenEvent, moreLike, onMoreLike, onNotForMe }: Props) {
-  const [message, setMessage] = useState(() => buildShareText(event))
+  const [message, setMessage] = useState(() => buildShareText(event, undefined, eventUrl(event.id)))
   const [copied, setCopied] = useState(false)
   const [pastedFor, setPastedFor] = useState<string | null>(null)
   const [textOpen, setTextOpen] = useState(false)
@@ -73,7 +74,8 @@ export function EventDetail({ event, saved, allEvents, onOpenEvent, moreLike, on
 
   const nativeShare = async () => {
     try {
-      await navigator.share({ title: event.title, text: message })
+      const url = eventUrl(event.id)
+      await navigator.share(url ? { title: event.title, text: message.replace(url, '').trim(), url } : { title: event.title, text: message })
     } catch {
       // Cancelled or not allowed; nothing to do.
     }

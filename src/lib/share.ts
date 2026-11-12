@@ -14,12 +14,13 @@ export function formatShareWhen(startIso: string, locale?: string): string {
  * The default message for texting, emailing, or posting an event.
  * Sample events say so, so nobody mistakes a demo listing for a real one.
  */
-export function buildShareText(event: SceneEvent, locale?: string): string {
+export function buildShareText(event: SceneEvent, locale?: string, link = ''): string {
   const lines = [
     `Want to go? ${event.title}`,
     `${formatShareWhen(event.start, locale)} at ${event.venue}, ${event.town}`,
     `Price: ${formatPriceRange(event.price, locale)}`,
   ]
+  if (link) lines.push(link)
   if (event.source === 'sample') lines.push('', `(Sample listing from the ${APP_NAME} demo, not a real event yet.)`)
   return lines.join('\n')
 }
