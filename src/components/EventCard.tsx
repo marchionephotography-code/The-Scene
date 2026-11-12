@@ -128,6 +128,8 @@ function dayParts(startIso: string, now: Date) {
 
 /** Reasons already shown elsewhere on the card don't need repeating. */
 const SHOWN_ON_CARD = new Set(['local pick', 'library event', 'rain likely'])
+/** Reasons that only add noise on a card (the weather already shows). */
+const HIDDEN_ON_CARD = new Set(['indoors on a rainy day'])
 
 export function EventCard({ rec, now, favorite, onToggleFavorite, onOpen, weather }: CardProps) {
   const { event, miles, reasons } = rec
@@ -142,7 +144,9 @@ export function EventCard({ rec, now, favorite, onToggleFavorite, onOpen, weathe
   const photo = photoFailed ? null : (event.image ?? photoFor(event.category, Number(event.id.match(/\d+/)?.[0] ?? h)))
 
   const when = dayParts(event.start, now)
-  const extraReasons = reasons.filter((r) => !SHOWN_ON_CARD.has(r))
+  const extraReasons = reasons.filter((r) => !SHOWN_ON_CARD.has(r) && !HIDDEN_ON_CARD.has(r))
+  const wx = weather && isOutdoor(event) ? weather : null
+  const wet = !!wx && wx.rainPct >= RAINY
   const isLibrary = event.host?.kind === 'library'
 
   return (
@@ -177,7 +181,7 @@ export function EventCard({ rec, now, favorite, onToggleFavorite, onOpen, weathe
           aria-label={favorite ? `Remove ${event.title} from favorites` : `Add ${event.title} to favorites`}
           onClick={onToggleFavorite}
         >
-          <Heart size={20} strokeWidth={2.25} fill={favorite ? 'currentColor' : 'rgba(0,0,0,0.25)'} aria-hidden="true" />
+          <Heart size={18} strokeWidth={2.5} fill={favorite ? 'currentColor' : 'none'} aria-hidden="true" />
         </button>
         <span className={`stub${when.soon ? ' stub--soon' : ''}`} aria-hidden="true">
           <span className="stub__top">{when.top}</span>
@@ -194,6 +198,13 @@ export function EventCard({ rec, now, favorite, onToggleFavorite, onOpen, weathe
         <p className="card__when">
           <span className="sr-only">{formatWhen(event.start, now)}, </span>
           <strong aria-hidden="true">{when.time}</strong>
+          {wx && (
+            <span className={`card__wx${wet ? ' card__wx--rain' : ''}`}>
+              {wet ? <CloudRain size={14} strokeWidth={2.5} aria-hidden="true" /> : wx.code <= 1 ? <Sun size={14} strokeWidth={2.5} aria-hidden="true" /> : <Cloud size={14} strokeWidth={2.5} aria-hidden="true" />}
+              {wet ? `${wx.rainPct}% rain` : `${wx.highF}°`}
+              <span className="sr-only">{wet ? ' likely' : ` ${describeWeather(wx.code)}`}</span>
+            </span>
+          )}
           <span className="card__where">
             {event.venue} · {event.town}
             {miles !== null && <> · {formatMiles(miles)}</>}
@@ -212,15 +223,6 @@ export function EventCard({ rec, now, favorite, onToggleFavorite, onOpen, weathe
               <span className="tag-pill"><Sparkles size={13} strokeWidth={2.5} aria-hidden="true" /> Local</span>
             ) : null}
             <span className="tag-pill tag-pill--quiet">{AGE_TEXT[event.age]}</span>
-            {weather && isOutdoor(event) && (
-              <span className={`tag-pill${weather.rainPct >= RAINY ? ' tag-pill--rain' : ' tag-pill--wx'}`}>
-                {weather.rainPct >= RAINY ? (
-                  <><CloudRain size={13} strokeWidth={2.5} aria-hidden="true" /> {weather.rainPct}% rain</>
-                ) : (
-                  <>{weather.code <= 1 ? <Sun size={13} strokeWidth={2.5} aria-hidden="true" /> : <Cloud size={13} strokeWidth={2.5} aria-hidden="true" />} {weather.highF}° {describeWeather(weather.code).toLowerCase()}</>
-                )}
-              </span>
-            )}
           </p>
         </div>
         {extraReasons.length > 0 && (

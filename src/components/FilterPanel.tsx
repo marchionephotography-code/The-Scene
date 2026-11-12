@@ -1,3 +1,4 @@
+import { MapPin } from 'lucide-react'
 import {
   AGE_LABELS,
   CATEGORIES,
@@ -14,6 +15,8 @@ interface Props {
   filters: Filters
   hasLocation: boolean
   onChange: (patch: Partial<Filters>) => void
+  /** Opens the location picker (shown when no location is set). */
+  onSetLocation?: () => void
   /** Which library calendars answered, for the "Hosted by" note. */
   libraries?: LibraryStatus[]
   /** Every live source and whether it is connected. */
@@ -26,7 +29,7 @@ function statusText(s: SourceStatus): string {
   return 'not reachable right now'
 }
 
-export function FilterPanel({ filters, hasLocation, onChange, libraries = [], sources = [] }: Props) {
+export function FilterPanel({ filters, hasLocation, onChange, onSetLocation, libraries = [], sources = [] }: Props) {
   const toggleCategory = (c: Category) =>
     onChange({
       categories: filters.categories.includes(c)
@@ -52,20 +55,30 @@ export function FilterPanel({ filters, hasLocation, onChange, libraries = [], so
 
       <fieldset className="filters__group">
         <legend>Distance</legend>
-        <div className="chips">
-          {DISTANCE_OPTIONS.map((mi) => {
-            const on = filters.maxMiles === mi
-            return (
-              <button key={mi} type="button" className={`chip${on ? ' chip--on' : ''}`} aria-pressed={on} disabled={!hasLocation} onClick={() => onChange({ maxMiles: mi })}>
-                {mi} mi
+        {hasLocation ? (
+          <div className="chips">
+            {DISTANCE_OPTIONS.map((mi) => {
+              const on = filters.maxMiles === mi
+              return (
+                <button key={mi} type="button" className={`chip${on ? ' chip--on' : ''}`} aria-pressed={on} onClick={() => onChange({ maxMiles: mi })}>
+                  {mi} mi
+                </button>
+              )
+            })}
+            <button type="button" className={`chip${filters.maxMiles === null ? ' chip--on' : ''}`} aria-pressed={filters.maxMiles === null} onClick={() => onChange({ maxMiles: null })}>
+              Any
+            </button>
+          </div>
+        ) : (
+          <div className="filters__empty">
+            <p className="hint">Distance works once you add where you’re starting from.</p>
+            {onSetLocation && (
+              <button type="button" className="nudge" onClick={onSetLocation}>
+                <MapPin size={16} strokeWidth={2.25} aria-hidden="true" /> Add your location
               </button>
-            )
-          })}
-          <button type="button" className={`chip${filters.maxMiles === null ? ' chip--on' : ''}`} aria-pressed={filters.maxMiles === null} disabled={!hasLocation} onClick={() => onChange({ maxMiles: null })}>
-            Any
-          </button>
-        </div>
-        {!hasLocation && <p className="hint">Set a location to filter by distance.</p>}
+            )}
+          </div>
+        )}
       </fieldset>
 
       <fieldset className="filters__group">

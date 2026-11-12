@@ -73,19 +73,29 @@ export function PlanTools({ event, allEvents, onOpenEvent, onAddToMessage }: Pro
       <h3 id={`${id}-h`} className="sheet__label">Make it happen</h3>
 
       <div className="plan__row">
-        <button type="button" className="plan-btn" onClick={downloadIcs}>
-          <CalendarPlus size={18} strokeWidth={2.25} aria-hidden="true" />
-          {platform === 'android' ? 'Calendar file' : 'Add to calendar'}
-        </button>
-        <a className="plan-btn" href={googleCalendarHref(event)} target="_blank" rel="noopener noreferrer">
-          <CalendarPlus size={18} strokeWidth={2.25} aria-hidden="true" />
-          Google Calendar
-        </a>
+        {platform === 'android' ? (
+          <a className="plan-btn" href={googleCalendarHref(event)} target="_blank" rel="noopener noreferrer">
+            <CalendarPlus size={18} strokeWidth={2.25} aria-hidden="true" />
+            Add to calendar
+          </a>
+        ) : (
+          <button type="button" className="plan-btn" onClick={downloadIcs}>
+            <CalendarPlus size={18} strokeWidth={2.25} aria-hidden="true" />
+            Add to calendar
+          </button>
+        )}
         <a className="plan-btn" href={directionsHref(event.location, event.venue, platform)} target="_blank" rel="noopener noreferrer">
           <Navigation size={18} strokeWidth={2.25} aria-hidden="true" />
           Directions
         </a>
       </div>
+
+      {platform !== 'android' && (
+        <p className="plan__alt">
+          Use Google Calendar?{' '}
+          <a href={googleCalendarHref(event)} target="_blank" rel="noopener noreferrer">Add it there</a>
+        </p>
+      )}
 
       <p className="plan__note">
         <Car size={16} strokeWidth={2.25} aria-hidden="true" />

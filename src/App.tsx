@@ -1,4 +1,4 @@
-import { Dices, ExternalLink, List, Map as MapIcon, UtensilsCrossed } from 'lucide-react'
+import { Dices, ExternalLink, Heart, List, Map as MapIcon, MapPin, Send, UtensilsCrossed } from 'lucide-react'
 import { useCallback, useEffect, useMemo, useState, type CSSProperties } from 'react'
 import { ActiveFilters } from './components/ActiveFilters'
 import { CalendarView } from './components/CalendarView'
@@ -167,7 +167,7 @@ export default function App() {
     : null
   const mood = MOODS.find((m) => m.id === filters.mood)
   const pillDetail = [
-    tab === 'calendar' ? 'Calendar' : filters.date.kind === 'any' ? 'Any time' : DATE_LABELS[filters.date.kind],
+    tab === 'calendar' ? 'Dates from your calendar' : filters.date.kind === 'any' ? 'Any time' : DATE_LABELS[filters.date.kind],
     mood ? mood.label : 'Any mood',
   ].join(' · ')
   const savedCount = saved.favorites.length + saved.wishlist.filter((w) => !w.done).length
@@ -262,7 +262,8 @@ export default function App() {
               )}
               {location.point === null && feed.status === 'ready' && (
                 <button type="button" className="nudge" onClick={() => setSheet('where')}>
-                  Add a location to see what’s nearby
+                  <MapPin size={16} strokeWidth={2.25} aria-hidden="true" />
+                  Add your location to see what’s close by
                 </button>
               )}
               {feed.status === 'ready' && (filters.mood === 'eat' || filters.categories.includes('food')) && (
@@ -346,7 +347,7 @@ export default function App() {
           <SavedView saved={saved} events={events} onOpen={openEvent} onBrowse={() => goTab('explore')} />
         )}
 
-        <InstallPrompt />
+        {tab === 'explore' && <InstallPrompt />}
 
         {isSample && (
           <p className="footnote">
@@ -431,12 +432,43 @@ export default function App() {
           filters={filters}
           hasLocation={location.point !== null}
           onChange={patch}
+          onSetLocation={() => setSheet('where')}
           libraries={feed.status === 'ready' ? feed.feed.libraries : []}
           sources={feed.status === 'ready' ? feed.feed.sources : []}
         />
       </Sheet>
 
-      <Sheet open={sheet === 'event'} title="Event details" onClose={closeSheet}>
+      <Sheet
+        open={sheet === 'event'}
+        title="Event details"
+        onClose={closeSheet}
+        footer={
+          openEventData && (
+            <>
+              <button
+                type="button"
+                className={`fav-btn${saved.isFavorite(openEventData.id) ? ' fav-btn--on' : ''}`}
+                aria-pressed={saved.isFavorite(openEventData.id)}
+                onClick={() => saved.toggleFavorite(openEventData.id)}
+              >
+                <Heart size={20} strokeWidth={2.25} fill={saved.isFavorite(openEventData.id) ? 'currentColor' : 'none'} aria-hidden="true" />
+                {saved.isFavorite(openEventData.id) ? 'Saved' : 'Save'}
+              </button>
+              <button
+                type="button"
+                className="btn btn--lg"
+                onClick={() => {
+                  const el = document.getElementById('invite')
+                  el?.scrollIntoView({ behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' })
+                  window.setTimeout(() => document.getElementById('invite-message')?.focus({ preventScroll: true }), 450)
+                }}
+              >
+                <Send size={18} strokeWidth={2.25} aria-hidden="true" /> Invite friends
+              </button>
+            </>
+          )
+        }
+      >
         {openEventData && <EventDetail key={openEventData.id} event={openEventData} saved={saved} allEvents={events} onOpenEvent={openEvent} />}
       </Sheet>
     </div>

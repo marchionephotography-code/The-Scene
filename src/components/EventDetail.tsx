@@ -1,5 +1,5 @@
-import { Check, Copy, Heart, Mail, MessageCircle, Plus, Share2 } from 'lucide-react'
-import { useEffect, useId, useState } from 'react'
+import { Check, Copy, Mail, MessageCircle, Plus, Share2 } from 'lucide-react'
+import { useEffect, useState } from 'react'
 import type { Saved } from '../hooks/useSaved'
 import { CATEGORIES } from '../lib/discovery'
 import { formatPriceRange, PRICE_STATUS_LABEL } from '../lib/money'
@@ -24,8 +24,7 @@ export function EventDetail({ event, saved, allEvents, onOpenEvent }: Props) {
   /** Set when an app link didn't open (app not installed), to offer the website. */
   const [fallback, setFallback] = useState<{ label: string; href: string } | null>(null)
   const [platform] = useState(() => detectPlatform())
-  const messageId = useId()
-  const fav = saved.isFavorite(event.id)
+  const messageId = 'invite-message'
   const wish = saved.onWishlist(event.id)
   const canNativeShare = typeof navigator !== 'undefined' && typeof navigator.share === 'function'
 
@@ -103,13 +102,9 @@ export function EventDetail({ event, saved, allEvents, onOpenEvent }: Props) {
       </section>
 
       <div className="detail__save">
-        <button type="button" className={`save-btn${fav ? ' save-btn--on' : ''}`} aria-pressed={fav} onClick={() => saved.toggleFavorite(event.id)}>
-          <Heart size={18} strokeWidth={2.25} fill={fav ? 'currentColor' : 'none'} aria-hidden="true" />
-          {fav ? 'Favorited' : 'Favorite'}
-        </button>
         <button type="button" className={`save-btn${wish ? ' save-btn--on' : ''}`} aria-pressed={wish} onClick={() => saved.toggleWishEvent(event.id, event.title)}>
           {wish ? <Check size={18} strokeWidth={2.5} aria-hidden="true" /> : <Plus size={18} strokeWidth={2.5} aria-hidden="true" />}
-          {wish ? 'On wish list' : 'Wish list'}
+          {wish ? 'On your wish list' : 'Add to wish list'}
         </button>
       </div>
 
@@ -120,7 +115,7 @@ export function EventDetail({ event, saved, allEvents, onOpenEvent }: Props) {
         onAddToMessage={(line) => setMessage((m) => (m.includes(line) ? m : `${m.trimEnd()}\n\n${line}`))}
       />
 
-      <section className="detail__share" aria-labelledby={`${messageId}-h`}>
+      <section id="invite" className="detail__share" aria-labelledby={`${messageId}-h`}>
         <h3 id={`${messageId}-h`} className="sheet__label">Invite friends</h3>
         <label className="field-label" htmlFor={messageId}>Message (you can edit it)</label>
         <textarea
@@ -185,8 +180,7 @@ export function EventDetail({ event, saved, allEvents, onOpenEvent }: Props) {
           </p>
         ) : (
           <p className="hint">
-            On a phone, each button opens the app if you have it. X, Threads, Bluesky, and WhatsApp open with your post
-            ready to send. Instagram, TikTok, and Facebook copy your message first so you can paste it.
+            Opens the app if you have it. Instagram, TikTok, and Facebook copy your message first so you can paste it.
           </p>
         )}
         <p className="sr-only" role="status">{copied ? 'Message copied' : ''}</p>

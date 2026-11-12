@@ -1298,3 +1298,43 @@ body::before { content: ''; position: fixed; inset: 0 0 auto; height: env(safe-a
 @media (prefers-reduced-motion: reduce) { .wkl ul { animation: none; } }
 .wkl__more { justify-self: start; font-size: var(--fs-small); padding-left: 0; min-height: 36px; }
 .wkl { gap: 4px; }
+
+/* ============================================================
+   UX pass (Nov 12)
+   ============================================================ */
+/* Heart sits on a white disc so it reads on any tile color or photo. */
+.heart {
+  top: 10px; right: 10px; width: 36px; height: 36px; color: var(--ink);
+  background: rgba(255, 255, 255, 0.94); filter: none;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.12), 0 3px 10px rgba(0, 0, 0, 0.12);
+}
+.heart::before { content: ''; position: absolute; inset: -4px; } /* 44px tap area */
+.heart--on { color: #E31C5F; }
+/* Weather rides on the time line instead of adding a row. */
+.card__wx { display: inline-flex; align-items: center; gap: 3px; font-weight: 600; color: var(--ink-2); font-variant-numeric: tabular-nums; }
+.card__wx--rain { color: #1f3fb0; }
+.card__when { align-items: center; }
+.detail__save { grid-template-columns: 1fr; }
+/* Event sheet footer: Save + Invite friends, always in reach */
+.fav-btn {
+  display: inline-flex; align-items: center; gap: 8px; min-height: 52px; padding: 0 18px;
+  border-radius: var(--r-sm); border: 1px solid var(--line-strong); background: var(--surface);
+  color: var(--ink); font-weight: 700; font-size: var(--fs-meta);
+  transition: border-color var(--t-state), transform var(--t-feedback) var(--ease-out);
+}
+@media (hover: hover) { .fav-btn:hover { border-color: var(--ink); } }
+.fav-btn:active { transform: scale(0.96); }
+.fav-btn--on { color: #E31C5F; border-color: #E31C5F; }
+.fav-btn--on svg { animation: pop 380ms var(--ease-out); }
+.sheet__foot .btn--lg { display: inline-flex; align-items: center; justify-content: center; gap: 8px; }
+.sheet__foot .fav-btn + .btn--lg { flex: 1; }
+.detail__share { scroll-margin-top: 12px; }
+/* Location nudge reads as an action */
+.nudge { display: inline-flex; align-items: center; gap: 8px; background: var(--surface); border: 1px solid var(--line-strong); border-radius: 999px; padding: 9px 16px; min-height: 44px; }
+@media (hover: hover) { .nudge:hover { background: var(--surface); border-color: var(--ink); } }
+.plan__alt { font-size: var(--fs-small); color: var(--ink-2); margin-top: -4px; }
+.plan__alt a { color: var(--ink); font-weight: 700; }
+.plan__row { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.plan-btn { grid-auto-flow: column; justify-content: center; min-height: 52px; }
+.filters__empty { display: grid; gap: 10px; justify-items: start; }
+.filters__empty .hint { margin: 0; }
