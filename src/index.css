@@ -1702,3 +1702,43 @@ body::before { content: ''; position: fixed; inset: 0 0 auto; height: env(safe-a
 .crash__mark { height: 72px; }
 .crash__title { font-family: var(--font-display); font-weight: 400; font-size: 2.6rem; line-height: 1; max-width: 14ch; }
 .crash__text { color: var(--ink-2); max-width: 36ch; }
+
+/* ============================================================
+   Mood tiles: a set drawn from the Tile S logo. Each mood takes one of the
+   logo's pieces (rounded square or quarter-circle, curve facing out) in its
+   own palette color. Picking one keeps it bold and quiets the rest.
+   ============================================================ */
+.mood { --m: var(--tile); --mi: var(--ink); --r: 12px; gap: 9px; }
+.mood__tile {
+  aspect-ratio: 1; max-height: none; width: 100%; max-width: 76px; justify-self: center;
+  background: var(--m); color: var(--mi); border-radius: var(--r);
+  transition: transform var(--t-feedback) var(--ease-out), opacity var(--t-state), box-shadow var(--t-state);
+}
+.mood__tile svg { translate: var(--nudge, 0 0); }
+/* Shapes: square, or a quarter-circle with its curve at one corner (as in the logo). */
+.mood--eat, .mood--lively, .mood--family { --r: 12px; }
+.mood--date, .mood--creative { --r: 100% 12px 12px 12px; --nudge: 8% 8%; }
+.mood--laugh { --r: 12px 100% 12px 12px; --nudge: -8% 8%; }
+.mood--chill { --r: 12px 12px 12px 100%; --nudge: 8% -8%; }
+.mood--active { --r: 12px 12px 100% 12px; --nudge: -8% -8%; }
+/* Colors (light icon on dark tiles, ink on light ones). */
+.mood--eat      { --m: #D6A243; --mi: #23251B; }
+.mood--date     { --m: #B5543A; --mi: #FBF6EE; }
+.mood--lively   { --m: #2F3424; --mi: #E7C3B1; }
+.mood--chill    { --m: #2F5D62; --mi: #FBF6EE; }
+.mood--laugh    { --m: #E7C3B1; --mi: #23251B; }
+.mood--active   { --m: #4E5A35; --mi: #FBF6EE; }
+.mood--creative { --m: #8C4A3B; --mi: #FBF6EE; }
+.mood--family   { --m: #C4895B; --mi: #23251B; }
+.mood__label { color: var(--ink); font-weight: 600; }
+/* Selected: the picked tile lifts and gets a ring; the others step back. */
+.mood--on .mood__tile { background: var(--m); color: var(--mi); box-shadow: 0 0 0 3px var(--bg), 0 0 0 5px var(--ink); transform: translateY(-2px); }
+.mood--on .mood__label { font-weight: 800; }
+.moods__grid.has-pick .mood:not(.mood--on) .mood__tile { opacity: 0.4; }
+.moods__grid.has-pick .mood:not(.mood--on) .mood__label { color: var(--ink-2); }
+@media (hover: hover) {
+  .mood:hover .mood__tile { transform: translateY(-2px); }
+  .moods__grid.has-pick .mood:not(.mood--on):hover .mood__tile { opacity: 0.75; }
+}
+.moods__grid > .mood { width: 72px; }
+@media (min-width: 760px) { .mood__tile { max-width: 88px; } }

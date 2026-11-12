@@ -51,7 +51,7 @@ export function MoodPicker({ value, onChange }: Props) {
         </div>
       </div>
       <div
-        className="moods__grid"
+        className={`moods__grid${value ? ' has-pick' : ''}`}
         onScroll={(e: UIEvent<HTMLDivElement>) => {
           // Drop the "more this way" fade once the row is scrolled to its end.
           const el = e.currentTarget
@@ -65,12 +65,12 @@ export function MoodPicker({ value, onChange }: Props) {
             <button
               key={m.id}
               type="button"
-              className={`mood${on ? ' mood--on' : ''}`}
+              className={`mood mood--${m.id}${on ? ' mood--on' : ''}`}
               aria-pressed={on}
               onClick={() => onChange(on ? null : m.id)}
             >
               <span className="mood__tile">
-                <Icon size={26} strokeWidth={1.75} aria-hidden="true" />
+                <Icon size={26} strokeWidth={2} aria-hidden="true" />
               </span>
               <span className="mood__label">{m.label}</span>
             </button>
