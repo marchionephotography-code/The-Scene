@@ -1720,3 +1720,6 @@ body::before { content: ''; position: fixed; inset: 0 0 auto; height: env(safe-a
 .report__actions { display: flex; align-items: center; gap: 12px; }
 .report__actions .btn:disabled { opacity: 0.4; }
 .report__done { font-size: var(--fs-small); color: var(--ink-2); }
+.detail__go { display: inline-flex; align-items: center; justify-content: center; gap: 8px; width: 100%; margin-top: 8px; text-decoration: none; }
+.detail__go--quiet { background: var(--surface); color: var(--ink); border: 1px solid var(--line-strong); }
+.detail__source { font-size: var(--fs-small); color: var(--ink-2); }

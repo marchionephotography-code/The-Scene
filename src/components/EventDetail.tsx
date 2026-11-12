@@ -1,4 +1,4 @@
-import { Check, Copy, Mail, MessageCircle, Plus, Share2, ThumbsDown, ThumbsUp } from 'lucide-react'
+import { Check, Copy, ExternalLink, Mail, MessageCircle, Plus, Share2, ThumbsDown, ThumbsUp } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import type { Saved } from '../hooks/useSaved'
 import { CATEGORIES } from '../lib/discovery'
@@ -11,6 +11,16 @@ import { PlanTools } from './PlanTools'
 import { ReportProblem } from './ReportProblem'
 
 const AGE_TEXT = { 'all-ages': 'All ages', family: 'Family friendly', '18+': '18+', '21+': '21+' } as const
+
+/** Where a listing came from, shown under the event (Ticketmaster's terms ask for credit). */
+function sourceCredit(e: SceneEvent): string {
+  if (e.source === 'sample') return 'Sample listing for the demo, not a real event.'
+  if (e.id.startsWith('tm-')) return 'Listing and tickets from Ticketmaster.'
+  if (e.id.startsWith('sg-')) return 'Listing and tickets from SeatGeek.'
+  if (e.id.startsWith('lx-clemson')) return 'From the Clemson University events calendar.'
+  if (e.host) return `Hosted by ${e.host.name}. From their events calendar.`
+  return 'From the organizer’s calendar.'
+}
 
 interface Props {
   event: SceneEvent
@@ -102,17 +112,13 @@ export function EventDetail({ event, saved, allEvents, onOpenEvent, moreLike, on
           {' · '}{AGE_TEXT[event.age]}
         </p>
         <p className="detail__desc">{event.description}</p>
-        {event.host?.kind === 'library' && (
-          <p className="detail__host">
-            Hosted by {event.host.name}
-            {event.url && (
-              <>
-                {' · '}
-                <a href={event.url} target="_blank" rel="noopener noreferrer">See it on the library’s calendar</a>
-              </>
-            )}
-          </p>
+        {event.url && (
+          <a className={`btn btn--lg detail__go${event.id.startsWith('tm-') || event.id.startsWith('sg-') ? '' : ' detail__go--quiet'}`} href={event.url} target="_blank" rel="noopener noreferrer">
+            {event.id.startsWith('tm-') || event.id.startsWith('sg-') ? 'Get tickets' : 'See the event page'}
+            <ExternalLink size={16} strokeWidth={2.25} aria-hidden="true" />
+          </a>
         )}
+        <p className="detail__source">{sourceCredit(event)}</p>
       </section>
 
       <div className="detail__taste" role="group" aria-label="Tune your picks">

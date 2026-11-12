@@ -469,9 +469,7 @@ export default function App() {
 
         {isSample && (
           <p className="footnote">
-            {feed.status === 'ready' && feed.feed.source === 'mixed'
-              ? 'Library events come from each library’s own calendar. Everything else is sample data for this demo and labeled Sample.'
-              : 'All events, venues, times, and prices shown are sample data for this demo. They are not real listings.'}
+            All events, venues, times, and prices shown are sample data for this demo. Real listings replace them as soon as a live source connects.
           </p>
         )}
       </main>

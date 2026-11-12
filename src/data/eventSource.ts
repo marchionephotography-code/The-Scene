@@ -28,8 +28,8 @@ export type LibraryStatus = SourceStatus
 
 export interface EventFeed {
   events: SceneEvent[]
-  /** "sample" when everything is demo data, "mixed" when live events are included. */
-  source: DataSource | 'mixed'
+  /** "sample" when everything is demo data, "live" when real listings loaded. */
+  source: DataSource
   sources: SourceStatus[]
   libraries: LibraryStatus[]
   /** When the live sources were checked. */
@@ -90,8 +90,10 @@ export async function fetchEvents(now: Date = new Date(), area?: SearchArea): Pr
   )
   const sources = results.map((r) => r.status)
   return {
-    events: [...live, ...buildSampleEvents(now)],
-    source: live.length ? 'mixed' : 'sample',
+    // Real listings only once any arrive; sample events are just for demos
+    // and previews where no live source can be reached.
+    events: live.length ? live : buildSampleEvents(now),
+    source: live.length ? 'live' : 'sample',
     sources,
     libraries: sources.filter((s) => s.kind === 'library'),
     checkedAt: now.toISOString(),
