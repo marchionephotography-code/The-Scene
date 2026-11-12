@@ -39,7 +39,7 @@ test('beta form posts to Netlify Forms and confirms', async ({ page }) => {
 test('landing follows dark mode and the switch flips it', async ({ browser }) => {
   const page = await (await browser.newContext({ colorScheme: 'dark' })).newPage()
   await page.goto('/')
-  await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark')
+  await expect(page.locator('html')).toHaveAttribute('data-scene-theme', 'dark')
   await page.getByRole('button', { name: 'Switch to light mode' }).click()
-  await expect(page.locator('html')).toHaveAttribute('data-theme', 'light')
+  await expect(page.locator('html')).toHaveAttribute('data-scene-theme', 'light')
 })

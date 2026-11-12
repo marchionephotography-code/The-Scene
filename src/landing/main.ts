@@ -15,9 +15,9 @@ const modeBtn = document.querySelector<HTMLButtonElement>('[data-mode]')
 const labelMode = (t: Theme) => modeBtn?.setAttribute('aria-label', t === 'dark' ? 'Switch to light mode' : 'Switch to dark mode')
 labelMode(applyTheme(readChoice()))
 watchSystemTheme()
-window.addEventListener('scene:theme', () => labelMode(document.documentElement.dataset.theme as Theme))
+window.addEventListener('scene:theme', () => labelMode(document.documentElement.dataset.sceneTheme as Theme))
 modeBtn?.addEventListener('click', () => {
-  const next: Theme = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark'
+  const next: Theme = document.documentElement.dataset.sceneTheme === 'dark' ? 'light' : 'dark'
   labelMode(setChoice(next))
 })
 

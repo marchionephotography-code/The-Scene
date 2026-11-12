@@ -1763,7 +1763,7 @@ body::before { content: ''; position: fixed; inset: 0 0 auto; height: env(safe-a
    paper, warm cream text, blush as the main button. Art colors stay;
    only surfaces, text and lines change. Set by src/lib/theme.ts.
    ============================================================ */
-[data-theme='dark'] {
+[data-scene-theme='dark'] {
   --bg: #17190F;
   --surface: #212418;
   --tile: #2B2F20;
@@ -1785,16 +1785,16 @@ body::before { content: ''; position: fixed; inset: 0 0 auto; height: env(safe-a
   --shadow-sheet: 0 -8px 40px rgba(0, 0, 0, 0.6);
   color-scheme: dark;
 }
-[data-theme='dark'] ::selection { background: rgba(231, 195, 177, 0.35); }
-[data-theme='dark'] .collage__head { border: 1px solid var(--line); }
-[data-theme='dark'] .card__wx--rain, [data-theme='dark'] .wkd__tab.is-wet { color: #8EC0BC; }
-[data-theme='dark'] .tag-pill--rain { background: #23383A; color: #A9D3CE; }
-[data-theme='dark'] .tag-pill--warn { background: #4A2618; color: #F6C9B3; }
-[data-theme='dark'] .detail__status { background: #4A2618; color: #F6DCCB; }
-[data-theme='dark'] .agenda__day--on .agenda__date { color: #EBA585; }
-[data-theme='dark'] .install { background: var(--tile); }
-[data-theme='dark'] .hint--ok svg, [data-theme='dark'] .lib-status__dot--ok { color: #7FC79A; }
-[data-theme='dark'] .install .install__sub { color: var(--ink-2); }
+[data-scene-theme='dark'] ::selection { background: rgba(231, 195, 177, 0.35); }
+[data-scene-theme='dark'] .collage__head { border: 1px solid var(--line); }
+[data-scene-theme='dark'] .card__wx--rain, [data-scene-theme='dark'] .wkd__tab.is-wet { color: #8EC0BC; }
+[data-scene-theme='dark'] .tag-pill--rain { background: #23383A; color: #A9D3CE; }
+[data-scene-theme='dark'] .tag-pill--warn { background: #4A2618; color: #F6C9B3; }
+[data-scene-theme='dark'] .detail__status { background: #4A2618; color: #F6DCCB; }
+[data-scene-theme='dark'] .agenda__day--on .agenda__date { color: #EBA585; }
+[data-scene-theme='dark'] .install { background: var(--tile); }
+[data-scene-theme='dark'] .hint--ok svg, [data-scene-theme='dark'] .lib-status__dot--ok { color: #7FC79A; }
+[data-scene-theme='dark'] .install .install__sub { color: var(--ink-2); }
 
 /* Appearance switch (Light / Dark / Auto) */
 .seg { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; margin: 4px 0 0; padding: 4px; border: 0; border-radius: 999px; background: var(--tile); max-width: 360px; }
@@ -1802,7 +1802,7 @@ body::before { content: ''; position: fixed; inset: 0 0 auto; height: env(safe-a
 .seg__opt input { position: absolute; inset: 0; opacity: 0; margin: 0; cursor: pointer; }
 .seg__opt:has(input:checked) { background: var(--surface); color: var(--ink); box-shadow: var(--shadow-pill); }
 .seg__opt:has(input:focus-visible) { outline: 3px solid var(--focus); outline-offset: 2px; }
-[data-theme='dark'] .seg__opt:has(input:checked) { background: var(--primary); color: var(--primary-ink); }
+[data-scene-theme='dark'] .seg__opt:has(input:checked) { background: var(--primary); color: var(--primary-ink); }
 
 /* Venue photo credit (Google requires the photographer and "Google Maps" beside the photo) */
 .card__credit { position: absolute; right: 6px; bottom: 6px; z-index: 2; max-width: calc(100% - 12px); padding: 2px 7px; border-radius: 999px; background: rgba(17, 17, 17, 0.62); color: #fff; font-size: 0.5625rem; font-weight: 600; line-height: 1.3; border-radius: 8px; overflow-wrap: anywhere; pointer-events: none; }
@@ -1810,4 +1810,14 @@ body::before { content: ''; position: fixed; inset: 0 0 auto; height: env(safe-a
 .detail__credit a { color: inherit; }
 .detail__photo:has(.detail__credit) { aspect-ratio: auto; overflow: visible; background: none; }
 .detail__photo:has(.detail__credit) img { aspect-ratio: 16 / 9; height: auto; border-radius: var(--r-md); background: var(--tile); }
-[data-theme='dark'] .month__day--out { color: #7E8169; }
+[data-scene-theme='dark'] .month__day--out { color: #7E8169; }
+
+/* Dark mode: no dark text anywhere. Light boxes that held dark text turn dark. */
+[data-scene-theme='dark'] .stub { background: #212418; color: var(--ink); box-shadow: 0 2px 8px rgba(0, 0, 0, 0.45); }
+[data-scene-theme='dark'] .stub__top, [data-scene-theme='dark'] .stub__month { color: var(--ink-2); }
+[data-scene-theme='dark'] .stub--soon .stub__top { color: #EBA585; }
+[data-scene-theme='dark'] .setup-card .btn { background: var(--primary); color: var(--primary-ink); }
+[data-scene-theme='dark'] .heart { background: rgba(23, 25, 15, 0.82); color: var(--ink); }
+[data-scene-theme='dark'] .leaflet-bar a, [data-scene-theme='dark'] .leaflet-control-attribution { background: #212418; color: var(--ink); }
+[data-scene-theme='dark'] .leaflet-control-attribution a { color: var(--ink); }
+[data-scene-theme='dark'] .card__badge { background: #212418; color: var(--ink); }

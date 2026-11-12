@@ -96,10 +96,10 @@ test('every tab opens', async ({ page }) => {
 test('appearance switch changes and remembers light or dark', async ({ page }) => {
   await page.getByRole('navigation').getByText('You', { exact: true }).click()
   await page.locator('.seg__opt', { hasText: 'Dark' }).click()
-  await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark')
+  await expect(page.locator('html')).toHaveAttribute('data-scene-theme', 'dark')
   await page.reload()
-  await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark')
+  await expect(page.locator('html')).toHaveAttribute('data-scene-theme', 'dark')
   await page.getByRole('navigation').getByText('You', { exact: true }).click()
   await page.locator('.seg__opt', { hasText: 'Light' }).click()
-  await expect(page.locator('html')).toHaveAttribute('data-theme', 'light')
+  await expect(page.locator('html')).toHaveAttribute('data-scene-theme', 'light')
 })

@@ -4,7 +4,7 @@
   try { c = localStorage.getItem('scene:theme') || 'auto'; } catch { /* blocked storage */ }
   var dark = c === 'dark' || (c !== 'light' && window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches);
   var t = dark ? 'dark' : 'light';
-  document.documentElement.dataset.theme = t;
+  document.documentElement.dataset.sceneTheme = t;
   document.documentElement.style.colorScheme = t;
   var m = document.querySelector('meta[name="theme-color"]');
   if (m) m.content = dark ? '#17190F' : '#F4EFE6';

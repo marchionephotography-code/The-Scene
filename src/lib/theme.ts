@@ -33,7 +33,7 @@ function safeStorage(): Storage | null {
 export function applyTheme(choice: ThemeChoice = readChoice()): Theme {
   const theme = resolveTheme(choice, systemDark())
   const root = document.documentElement
-  root.dataset.theme = theme
+  root.dataset.sceneTheme = theme
   root.style.colorScheme = theme
   for (const meta of document.querySelectorAll<HTMLMetaElement>('meta[name="theme-color"]')) meta.content = THEME_COLORS[theme]
   return theme
