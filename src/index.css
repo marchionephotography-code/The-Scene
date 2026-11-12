@@ -776,7 +776,7 @@ body::before { content: ''; position: fixed; inset: 0 0 auto; height: env(safe-a
 .agenda__day { display: grid; gap: 8px; padding: 14px; border-radius: var(--r-lg); transition: background var(--t-state); }
 .agenda__day--on { background: color-mix(in srgb, var(--accent) 9%, var(--bg)); }
 .agenda__date { font-family: var(--font-display); font-size: var(--fs-card); font-weight: 700; letter-spacing: -0.01em; }
-.agenda__day--on .agenda__date { color: var(--accent); }
+.agenda__day--on .agenda__date { color: #8A4129; }
 .agenda__empty { font-size: var(--fs-meta); color: var(--ink-2); }
 .agenda__note { font-size: var(--fs-small); color: var(--ink-2); padding: 0 14px; }
 .month__num { line-height: 1.1; }
@@ -959,7 +959,7 @@ body::before { content: ''; position: fixed; inset: 0 0 auto; height: env(safe-a
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1), 0 6px 16px rgba(0, 0, 0, 0.12);
 }
 .stub__top { font-size: var(--fs-micro); font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em; color: #5f5f5f; }
-.stub--soon .stub__top { color: #C2390F; }
+.stub--soon .stub__top { color: #A8361B; }
 .stub__day { font-family: var(--font-display); font-size: 1.625rem; font-weight: 800; letter-spacing: -0.02em; margin-top: 3px; font-variant-numeric: tabular-nums; }
 .stub__month { font-size: var(--fs-micro); font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #5f5f5f; margin-top: 2px; }
 
@@ -1445,3 +1445,88 @@ body::before { content: ''; position: fixed; inset: 0 0 auto; height: env(safe-a
 [data-pal='night'] .tiles--food.cover--tiles     { --t: #FFB020; --k: #FF5A36; }
 [data-pal='night'] .tiles--outdoors.cover--tiles { --t: #2EFFB5; --k: #2EE6FF; }
 [data-pal='night'] .tiles--family.cover--tiles   { --t: #FFD84D; --k: #7B5CFF; }
+
+/* ============================================================
+   EARTHY VERSION (look-v2): editorial and grounded.
+   Cream paper, deep forest olive, blush, clay, mustard. Headlines in a
+   condensed serif (Instrument Serif); everything you read or tap stays in
+   Figtree for legibility.
+   ============================================================ */
+:root {
+  --bg: #F4EFE6;
+  --surface: #FBF8F2;
+  --tile: #EAE2D3;
+  --tile-hover: #E1D7C4;
+  --ink: #23251B;
+  --ink-2: #5C5D4C;
+  --line: #E0D7C6;
+  --line-strong: #C7BCA7;
+  --primary: #3A3D27;
+  --primary-ink: #F7F2E9;
+  --accent: #A4553A;
+  --focus: #A4553A;
+  --sample-bg: #EFDFC2;
+  --sample-ink: #66460F;
+  --forest: #2F3424;
+  --olive: #4E5A35;
+  --blush: #E7C3B1;
+  --clay: #B5543A;
+  --mustard: #D6A243;
+  --sand: #D9CBB2;
+  --font-display: 'Instrument Serif', 'Iowan Old Style', Georgia, serif;
+  --shadow-pill: 0 1px 2px rgba(47, 52, 36, 0.08), 0 6px 20px rgba(47, 52, 36, 0.1);
+  --shadow-pill-hover: 0 2px 4px rgba(47, 52, 36, 0.1), 0 12px 28px rgba(47, 52, 36, 0.14);
+}
+::selection { background: color-mix(in srgb, var(--blush) 70%, transparent); }
+
+/* Serif headlines: one weight, a touch larger, no faux bold */
+.title, .results__heading, .card__title, .state__title, .sheet__label, .filters__group legend,
+.detail__title, .cal__heading, .agenda__date, .saved__heading, .stub__day, .collage__head h1, .weekend__head h2 {
+  font-family: var(--font-display); font-weight: 400; letter-spacing: -0.005em;
+}
+.collage__head h1 { font-size: clamp(2.6rem, 1.8rem + 3.4vw, 4rem); line-height: 0.98; letter-spacing: -0.01em; }
+.results__heading, .sheet__label, .filters__group legend, .saved__heading, .state__title, .cal__heading { font-size: 1.85rem; line-height: 1.05; }
+.detail__title { font-size: 2.1rem; line-height: 1.02; }
+.card__title { font-size: 1.4rem; line-height: 1.08; }
+.agenda__date { font-size: 1.35rem; }
+.stub__day { font-weight: 400; font-size: 1.85rem; }
+@media (max-width: 619px) { .card__title { font-size: 1.3rem; } }
+.title { font-size: 1.5rem; letter-spacing: 0.1em; }
+
+/* Header and hero */
+.collage__head { background: var(--forest) !important; color: #F2EADD; }
+.collage__head p { color: #D9CFBE; }
+.collage__tile--a { background: var(--blush) !important; color: var(--forest); }
+.collage__tile--b { background: var(--clay) !important; color: #F7F2E9; }
+.collage__photo img { filter: saturate(0.85) sepia(0.12); }
+
+/* Controls */
+.mood__tile { background: var(--tile); color: var(--forest); }
+.mood--on .mood__tile { background: var(--forest); color: var(--blush); }
+.surprise { background: var(--clay); color: #FBF6EE; }
+.install { background: var(--blush); }
+.tag-pill { background: var(--tile); }
+.fav-btn--on, .heart--on { color: var(--clay); }
+.fav-btn--on { border-color: var(--clay); }
+.heart { background: rgba(251, 248, 242, 0.95); }
+.status--sample { background: var(--sample-bg); color: var(--sample-ink); }
+.card__wx--rain, .wkd__tab.is-wet { color: #2F5D62; }
+.tag-pill--rain { background: #DCE7E3; color: #2F5D62; }
+
+/* This weekend icons */
+.wkc--music    { --g: #8C4A3B; --c: #F7F2E9; }
+.wkc--sports   { --g: #3F5A3C; --c: #E8C07A; }
+.wkc--shows    { --g: #B5543A; --c: #F7F2E9; }
+.wkc--arts     { --g: #E7C3B1; --c: #23251B; }
+.wkc--food     { --g: #D6A243; --c: #23251B; }
+.wkc--outdoors { --g: #2F5D62; --c: #F7F2E9; }
+.wkc--family   { --g: #6B7B3A; --c: #F7F2E9; }
+
+/* Map pins */
+.pin--music { --g: #8C4A3B; } .pin--sports { --g: #3F5A3C; } .pin--shows { --g: #B5543A; }
+.pin--arts { --g: #E7C3B1; } .pin--food { --g: #D6A243; } .pin--outdoors { --g: #2F5D62; } .pin--family { --g: #6B7B3A; }
+.pin--music, .pin--sports, .pin--shows, .pin--outdoors, .pin--family { color: #F7F2E9; }
+
+/* Event photos take the earthy duotone too */
+.cover--duo .cover__photo { filter: saturate(0.8) sepia(0.15); }
+.install .install__sub { color: #3F4030; }

@@ -2,14 +2,14 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import '@fontsource-variable/bricolage-grotesque/opsz.css'
 import '@fontsource-variable/figtree'
+import '@fontsource/instrument-serif/400.css'
+import '@fontsource/instrument-serif/400-italic.css'
 import './index.css'
 import App from './App.tsx'
 
-// Mockup switch for card artwork: ?art=a|b|c (temporary).
-const artLook = new URLSearchParams(window.location.search).get('art')
-if (artLook) document.documentElement.dataset.art = artLook
-const palLook = new URLSearchParams(window.location.search).get('pal')
-if (palLook) document.documentElement.dataset.pal = palLook
+// Earthy version: aurora card art in the earth palette.
+document.documentElement.dataset.art = 'a'
+document.documentElement.dataset.pal = 'earth'
 
 
 createRoot(document.getElementById('root')!).render(
