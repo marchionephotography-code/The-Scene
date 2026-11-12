@@ -29,7 +29,7 @@ export class ErrorBoundary extends Component<{ children: ReactNode }, State> {
         </svg>
         <h1 className="crash__title">That didn’t go as planned</h1>
         <p className="crash__text">Something on this page broke. Your saved events and profile are safe on this device.</p>
-        <button type="button" className="btn btn--lg" onClick={() => { window.location.href = '/' }}>Back to The Scene</button>
+        <button type="button" className="btn btn--lg" onClick={() => { window.location.href = '/app/' }}>Back to The Scene</button>
       </main>
     )
   }

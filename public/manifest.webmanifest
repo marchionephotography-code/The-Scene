@@ -2,8 +2,8 @@
   "name": "The Scene",
   "short_name": "The Scene",
   "description": "Find fun things to do around the Upstate and plan them with friends.",
-  "start_url": "./",
-  "scope": "./",
+  "start_url": "/app/",
+  "scope": "/",
   "display": "standalone",
   "background_color": "#F4EFE6",
   "theme_color": "#F4EFE6",
@@ -24,5 +24,6 @@
       "type": "image/png",
       "purpose": "maskable"
     }
-  ]
+  ],
+  "id": "/app/"
 }

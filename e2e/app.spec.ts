@@ -3,7 +3,7 @@ import { expect, test, type Page } from '@playwright/test'
 // Keep tests on the built-in sample events: no outside calls.
 test.beforeEach(async ({ page }) => {
   await page.route(/^https?:\/\/(?!localhost)/, (r) => r.abort())
-  await page.goto('/')
+  await page.goto('/app/')
   await expect(page.locator('ul.grid > li').first()).toBeVisible()
   // The list fills in over a moment; wait until it's done.
   await expect.poll(() => page.locator('ul.grid > li').count()).toBeGreaterThan(5)
@@ -30,7 +30,7 @@ test('an event opens with its own link, and the link opens it again', async ({ p
   const url = page.url()
   await expect(page.locator('#invite-message')).toHaveValue(new RegExp(url.replace(/[.?*+^$()|[\]\\]/g, '\\$&')))
   await page.keyboard.press('Escape')
-  await expect(page).toHaveURL(/\/$/)
+  await expect(page).toHaveURL(/\/app\/$/)
   await page.goto(url)
   await expect(page.locator('.detail__title')).toHaveText(title)
 })

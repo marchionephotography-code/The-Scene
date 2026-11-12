@@ -2,30 +2,158 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>The Scene · Your weekend, sorted</title>
+    <meta name="description" content="The Scene finds the concerts, trivia nights, markets and hikes worth leaving the house for around the Upstate, then makes it easy to get your friends to come. Join the beta." />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-    <link rel="manifest" href="/manifest.webmanifest" />
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-title" content="The Scene" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>The Scene</title>
-    <meta name="description" content="Find fun things to do around the Upstate and plan them with friends." />
     <meta name="theme-color" content="#F4EFE6" />
-    <!-- Link previews (iMessage, Instagram, Facebook, X). The edge function swaps in an event's own details on /e/<id>. -->
     <meta property="og:site_name" content="The Scene" />
     <meta property="og:type" content="website" />
-    <meta property="og:title" content="The Scene" />
-    <meta property="og:description" content="Find fun things to do nearby and plan them with friends." />
+    <meta property="og:title" content="The Scene · Your weekend, sorted" />
+    <meta property="og:description" content="Find things to do around the Upstate and plan them with friends. Join the beta." />
     <meta property="og:image" content="/og-image.png" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
     <meta name="twitter:card" content="summary_large_image" />
   </head>
   <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
+    <a class="skip" href="#join">Skip to sign-up</a>
+
+    <header class="nav">
+      <a class="nav__brand" href="/" aria-label="The Scene, home">
+        <svg class="mark" viewBox="214 87 212 318" aria-hidden="true"><path d="M219,188 A96,96 0 0 1 315,92 L315,188 Z" fill="#B5543A"/><rect x="325" y="92" width="96" height="96" rx="8" fill="#D6A243"/><path d="M315,294 A96,96 0 0 1 219,198 L315,198 Z" fill="#4E5A35"/><path d="M325,198 A96,96 0 0 1 421,294 L325,294 Z" fill="#E7C3B1"/><rect x="219" y="304" width="96" height="96" rx="8" fill="#2F3424"/><path d="M421,304 A96,96 0 0 1 325,400 L325,304 Z" fill="#8C4A3B"/></svg>
+        <span>THE SCENE</span>
+      </a>
+      <nav class="nav__links" aria-label="Page">
+        <a href="#how">How it works</a>
+        <a href="/app/">Try the app</a>
+        <a class="nav__cta" href="#join">Join the beta</a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="hero" aria-labelledby="hero-h">
+        <div class="hero__copy">
+          <h1 id="hero-h" class="hero__title">Your weekend, <em>sorted.</em></h1>
+          <p class="hero__lede">The Scene finds the concerts, trivia nights, markets and hikes worth leaving the house for around the Upstate, then makes it easy to get your friends to come.</p>
+
+          <form id="join" class="join" name="beta" method="POST" data-netlify="true" netlify-honeypot="bot-field" novalidate>
+            <input type="hidden" name="form-name" value="beta" />
+            <p class="sr-only"><label>Leave this empty <input name="bot-field" tabindex="-1" autocomplete="off" /></label></p>
+            <div class="join__row">
+              <label class="sr-only" for="email-1">Email</label>
+              <input id="email-1" class="join__email" type="email" name="email" required autocomplete="email" placeholder="you@email.com" />
+              <label class="sr-only" for="town-1">Your town (optional)</label>
+              <select id="town-1" class="join__town" name="town">
+                <option value="">Your town</option>
+                <option>Anderson</option><option>Greenville</option><option>Clemson</option><option>Spartanburg</option>
+                <option>Seneca</option><option>Easley</option><option>Greer</option><option>Somewhere else</option>
+              </select>
+              <button class="join__btn" type="submit">Join the beta</button>
+            </div>
+            <p class="join__note" data-status aria-live="polite">Free. Starting in Upstate SC. We’ll email you once, when your invite is ready.</p>
+          </form>
+        </div>
+
+        <div class="hero__art" aria-hidden="true">
+          <div class="hero__photo"><img src="/landing/hero.webp" alt="" width="900" height="900" fetchpriority="high" /></div>
+          <div class="hero__tile hero__tile--a"></div>
+          <div class="hero__tile hero__tile--b"></div>
+          <figure class="phone phone--hero"><img src="/landing/screen-explore.webp" alt="" width="390" height="664" /></figure>
+        </div>
+      </section>
+
+      <div class="towns" aria-label="Starting in the Upstate">
+        <div class="towns__track">
+          <span>Anderson</span><span>Greenville</span><span>Clemson</span><span>Spartanburg</span><span>Seneca</span><span>Easley</span><span>Pendleton</span><span>Greer</span><span>Travelers Rest</span><span>Walhalla</span>
+          <span aria-hidden="true">Anderson</span><span aria-hidden="true">Greenville</span><span aria-hidden="true">Clemson</span><span aria-hidden="true">Spartanburg</span><span aria-hidden="true">Seneca</span><span aria-hidden="true">Easley</span><span aria-hidden="true">Pendleton</span><span aria-hidden="true">Greer</span><span aria-hidden="true">Travelers Rest</span><span aria-hidden="true">Walhalla</span>
+        </div>
+      </div>
+
+      <section id="how" class="how" aria-labelledby="how-h">
+        <h2 id="how-h" class="section-title">Three taps to a plan</h2>
+        <ol class="steps">
+          <li class="step">
+            <span class="step__shape step__shape--a" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2M7 2v20M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"/></svg></span>
+            <h3 class="step__title">Pick a mood</h3>
+            <p>Food and drink, date night, a night out, something chill. Tap one and the list reshuffles.</p>
+          </li>
+          <li class="step">
+            <span class="step__shape step__shape--b" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M20 10c0 4.99-5.54 10.19-7.4 11.8a1 1 0 0 1-1.2 0C9.54 20.19 4 14.99 4 10a8 8 0 0 1 16 0"/><circle cx="12" cy="10" r="3"/></svg></span>
+            <h3 class="step__title">See what’s on near you</h3>
+            <p>Shows, games, library nights and local spots, with the weekend’s weather right there.</p>
+          </li>
+          <li class="step">
+            <span class="step__shape step__shape--c" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></svg></span>
+            <h3 class="step__title">Bring your people</h3>
+            <p>One group text to the whole crew, with the link, the time and the place.</p>
+          </li>
+        </ol>
+      </section>
+
+      <section class="feature" aria-labelledby="f1-h">
+        <figure class="phone"><img src="/landing/screen-setup.webp" alt="The setup screen, where you pick what you’re into" width="390" height="664" loading="lazy" /></figure>
+        <div class="feature__copy">
+          <h2 id="f1-h" class="section-title">Picks that get to know you</h2>
+          <p>Tell it you love live music and breweries and you’d rather skip kids’ events. Your favorites rise to the top, the rest step aside, and every “Not for me” makes the next list better.</p>
+        </div>
+      </section>
+
+      <section class="feature feature--flip" aria-labelledby="f2-h">
+        <figure class="phone"><img src="/landing/screen-event.webp" alt="An event with Get tickets, Save and Invite friends" width="390" height="664" loading="lazy" /></figure>
+        <div class="feature__copy">
+          <h2 id="f2-h" class="section-title">Plan it in one place</h2>
+          <ul class="ticks">
+            <li>Text the whole group at once</li>
+            <li>Add it to your calendar with a reminder</li>
+            <li>Directions, parking and dinner nearby</li>
+            <li>Split the tickets with Venmo or Cash App</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="feature" aria-labelledby="f3-h">
+        <figure class="phone"><img src="/landing/screen-weekend.webp" alt="This weekend, with the forecast for each day" width="390" height="664" loading="lazy" /></figure>
+        <div class="feature__copy">
+          <h2 id="f3-h" class="section-title">Home, or anywhere you go</h2>
+          <p>Start with the Upstate. Traveling to Asheville or Atlanta? Search any city and see what’s on there tonight.</p>
+        </div>
+      </section>
+      <p class="screens-note">App screens show example events.</p>
+
+      <section class="cta" aria-labelledby="cta-h">
+        <div class="cta__copy">
+        <h2 id="cta-h" class="cta__title">Be first on The&nbsp;Scene</h2>
+        <p class="cta__lede">We’re opening in small groups, starting in the Upstate.</p>
+        <form class="join" name="beta" method="POST" data-netlify="true" netlify-honeypot="bot-field" novalidate>
+          <input type="hidden" name="form-name" value="beta" />
+          <p class="sr-only"><label>Leave this empty <input name="bot-field" tabindex="-1" autocomplete="off" /></label></p>
+          <div class="join__row">
+            <label class="sr-only" for="email-2">Email</label>
+            <input id="email-2" class="join__email" type="email" name="email" required autocomplete="email" placeholder="you@email.com" />
+            <label class="sr-only" for="town-2">Your town (optional)</label>
+            <select id="town-2" class="join__town" name="town">
+              <option value="">Your town</option>
+              <option>Anderson</option><option>Greenville</option><option>Clemson</option><option>Spartanburg</option>
+              <option>Seneca</option><option>Easley</option><option>Greer</option><option>Somewhere else</option>
+            </select>
+            <button class="join__btn" type="submit">Join the beta</button>
+          </div>
+          <p class="join__note" data-status aria-live="polite">No spam. One email when your invite is ready.</p>
+        </form>
+        </div>
+        <div class="cta__art" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span></div>
+      </section>
+    </main>
+
+    <footer class="foot">
+      <a class="nav__brand" href="/"><svg class="mark" viewBox="214 87 212 318" aria-hidden="true"><path d="M219,188 A96,96 0 0 1 315,92 L315,188 Z" fill="#B5543A"/><rect x="325" y="92" width="96" height="96" rx="8" fill="#D6A243"/><path d="M315,294 A96,96 0 0 1 219,198 L315,198 Z" fill="#4E5A35"/><path d="M325,198 A96,96 0 0 1 421,294 L325,294 Z" fill="#E7C3B1"/><rect x="219" y="304" width="96" height="96" rx="8" fill="#2F3424"/><path d="M421,304 A96,96 0 0 1 325,400 L325,304 Z" fill="#8C4A3B"/></svg><span>THE SCENE</span></a>
+      <p>Made in Anderson, SC.</p>
+      <a href="/app/">Try the app</a>
+    </footer>
+
+    <script type="module" src="/src/landing/main.ts"></script>
   </body>
 </html>

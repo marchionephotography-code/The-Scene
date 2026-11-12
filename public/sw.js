@@ -1,7 +1,7 @@
 /* The Scene service worker: lets the app open offline and load fast.
    Pages: network first, falling back to the cached copy.
    Built files (hashed names): cache first. Outside data is never cached. */
-const CACHE = 'scene-v1'
+const CACHE = 'scene-v2'
 
 self.addEventListener('install', () => self.skipWaiting())
 self.addEventListener('activate', (e) => {
@@ -16,15 +16,16 @@ self.addEventListener('fetch', (e) => {
   const url = new URL(req.url)
   if (url.origin !== self.location.origin) return
 
-  if (req.mode === 'navigate') {
+  // App pages (/app/…, /e/…): network first, falling back to the saved app.
+  if (req.mode === 'navigate' && (url.pathname.startsWith('/app') || url.pathname.startsWith('/e/'))) {
     e.respondWith(
       fetch(req)
         .then((res) => {
           const copy = res.clone()
-          caches.open(CACHE).then((c) => c.put('./', copy))
+          caches.open(CACHE).then((c) => c.put('/app/', copy))
           return res
         })
-        .catch(() => caches.match('./')),
+        .catch(() => caches.match('/app/')),
     )
     return
   }

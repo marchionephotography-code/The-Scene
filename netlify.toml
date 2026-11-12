@@ -16,10 +16,16 @@
 [build.environment]
   NODE_VERSION = "22"
 
-# Single-page app: every path (including /e/<id> event links) loads the app.
+# The landing page is / (index.html). The app is /app/; its tabs and event
+# links (/e/<id>) all load the app.
 [[redirects]]
-  from = "/*"
-  to = "/index.html"
+  from = "/e/*"
+  to = "/app/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/app/*"
+  to = "/app/index.html"
   status = 200
 
 [[headers]]

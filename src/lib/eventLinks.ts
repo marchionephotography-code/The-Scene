@@ -15,6 +15,9 @@ export function siteUrl(): string {
   return window.location.origin
 }
 
+/** Where the app itself lives; the landing page is at /. */
+export const APP_PATH = '/app/'
+
 export function eventPath(id: string): string {
   return `/e/${encodeURIComponent(id)}`
 }
@@ -34,7 +37,7 @@ export function eventIdFromLocation(loc: Location = window.location): string | n
 export function showEventInAddress(id: string | null): void {
   if (embedded) return
   try {
-    const want = id ? eventPath(id) : '/'
+    const want = id ? eventPath(id) : APP_PATH
     if (window.location.pathname !== want) window.history.replaceState(window.history.state, '', want + window.location.hash)
   } catch {
     // Address can't be changed here; links still work.
