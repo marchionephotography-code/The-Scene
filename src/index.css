@@ -1388,33 +1388,9 @@ body::before { content: ''; position: fixed; inset: 0 0 auto; height: env(safe-a
 }
 [data-art='a'] .cover--tiles .cover__icon { width: 22px; color: #fff; stroke-width: 2.25; }
 
-/* B · Clean: pale tint, one crisp icon tile, lots of white (Luma-like) */
-[data-art='b'] .poster { display: none; }
-[data-art='b'] .cover--tiles { background: color-mix(in oklab, var(--g) 16%, white); }
-[data-art='b'] .tiles--sports.cover--tiles { background: #EDEDED; }
-[data-art='b'] .tiles--outdoors.cover--tiles { background: color-mix(in oklab, #3D6BFF 12%, white); }
-[data-art='b'] .cover--tiles .tiles__main {
-  display: grid; inset: 0; margin: auto; height: 52px; width: 52px; border-radius: 16px !important;
-  background: var(--g); box-shadow: 0 6px 16px color-mix(in oklab, var(--g) 45%, transparent); transform: none !important;
-}
-[data-art='b'] .tiles--outdoors .tiles__main { background: #3D6BFF; }
-[data-art='b'] .cover--tiles .cover__icon { width: 26px; color: #fff; stroke-width: 2.25; translate: 0 0; }
-[data-art='b'] .tiles--food .cover__icon, [data-art='b'] .tiles--arts .cover__icon { color: #121212; }
 
-/* C · Big date: the day number is the art, on a two-tone gradient */
-[data-art='c'] .poster, [data-art='c'] .stub { display: none; }
-[data-art='c'] .cover--tiles { background: linear-gradient(150deg, var(--g) 0%, color-mix(in oklab, var(--g) 55%, var(--t)) 100%); }
-[data-art='c'] .bigdate {
-  display: grid; position: absolute; inset: 0; z-index: 1; place-content: center; justify-items: center; gap: 2px;
-  color: #fff; text-shadow: 0 1px 12px rgba(0, 0, 0, 0.12);
-}
-[data-art='c'] .tiles--food .bigdate, [data-art='c'] .tiles--outdoors .bigdate, [data-art='c'] .tiles--arts .bigdate { color: #121212; text-shadow: none; }
-[data-art='c'] .bigdate b { font-family: var(--font-display); font-weight: 700; font-size: clamp(2.75rem, 30cqi, 5rem); line-height: 0.9; letter-spacing: -0.04em; font-variant-numeric: tabular-nums; }
-[data-art='c'] .bigdate i { font-style: normal; font-size: var(--fs-micro); font-weight: 800; text-transform: uppercase; letter-spacing: 0.12em; opacity: 0.85; }
 [data-art='a'] .cover--tiles .tiles__main { left: auto; top: auto; right: 12px; bottom: 12px; width: 44px; height: 44px; aspect-ratio: auto; max-width: none; place-items: center; }
-[data-art='b'] .cover--tiles .tiles__main { left: 0; right: 0; top: 0; bottom: 0; width: 52px; height: 52px; aspect-ratio: auto; max-width: none; place-items: center; }
 [data-art='a'] .cover--tiles .cover__icon, [data-art='b'] .cover--tiles .cover__icon { position: static; rotate: 0deg; scale: 1; translate: none; height: auto; }
-[data-art='c'] .bigdate { place-content: end start; justify-items: start; padding: 0 0 12px 14px; }
 @media (max-width: 619px) { [data-art='a'] .cover--tiles .tiles__main { right: 8px; bottom: 8px; width: 38px; height: 38px; border-radius: 12px !important; } [data-art='a'] .cover--tiles .cover__icon { width: 19px; } [data-art='c'] .bigdate { padding: 0 0 8px 10px; } [data-art='c'] .bigdate b { font-size: 2.75rem; } }
 [data-art='a'] .cover--tiles .tiles__main, [data-art='b'] .cover--tiles .tiles__main { padding: 0; }
 
@@ -1435,21 +1411,6 @@ body::before { content: ''; position: fixed; inset: 0 0 auto; height: env(safe-a
 [data-pal='earth'] .tiles--family.cover--tiles,
 [data-pal='earth'] .tiles--family.cover--duo   { --g: #6B7B3A; --t: #B7C47A; --k: #E8C07A; }
 
-/* Nightlife: deep plum/ink base lit by neon glows */
-[data-pal='night'] .cover--tiles {
-  background:
-    radial-gradient(55% 65% at 18% 25%, color-mix(in oklab, var(--t) 85%, transparent) 0%, transparent 70%),
-    radial-gradient(50% 60% at 88% 88%, color-mix(in oklab, var(--k) 80%, transparent) 0%, transparent 70%),
-    radial-gradient(90% 90% at 60% 40%, #2A1650 0%, transparent 80%),
-    #120B24 !important;
-}
-[data-pal='night'] .tiles--music.cover--tiles    { --t: #FF2E88; --k: #7B5CFF; }
-[data-pal='night'] .tiles--sports.cover--tiles   { --t: #2EE6FF; --k: #3D6BFF; }
-[data-pal='night'] .tiles--shows.cover--tiles    { --t: #FF5A36; --k: #FF2E88; }
-[data-pal='night'] .tiles--arts.cover--tiles     { --t: #C04BFF; --k: #FF8FC8; }
-[data-pal='night'] .tiles--food.cover--tiles     { --t: #FFB020; --k: #FF5A36; }
-[data-pal='night'] .tiles--outdoors.cover--tiles { --t: #2EFFB5; --k: #2EE6FF; }
-[data-pal='night'] .tiles--family.cover--tiles   { --t: #FFD84D; --k: #7B5CFF; }
 
 /* ============================================================
    EARTHY VERSION (look-v2): editorial and grounded.
