@@ -38,6 +38,7 @@ export function EventDetail({ event, saved, allEvents, onOpenEvent, moreLike, on
   const [copied, setCopied] = useState(false)
   const [pastedFor, setPastedFor] = useState<string | null>(null)
   const [textOpen, setTextOpen] = useState(false)
+  const [photoFailed, setPhotoFailed] = useState(false)
   /** Set when an app link didn't open (app not installed), to offer the website. */
   const [fallback, setFallback] = useState<{ label: string; href: string } | null>(null)
   const [platform] = useState(() => detectPlatform())
@@ -95,6 +96,12 @@ export function EventDetail({ event, saved, allEvents, onOpenEvent, moreLike, on
 
   return (
     <div className="detail">
+      {event.image && !photoFailed && (
+        <figure className="detail__photo">
+          <img src={event.image} alt="" referrerPolicy="no-referrer" decoding="async" onError={() => setPhotoFailed(true)} />
+          <figcaption className="sr-only">Photo from {event.id.startsWith('tm-') ? 'Ticketmaster' : event.host?.name ?? 'the organizer'}</figcaption>
+        </figure>
+      )}
       <section className="detail__info">
         <p className="detail__cat">{category}{event.local ? ' · Local pick' : ''}</p>
         <h3 className="detail__title">{event.title}</h3>

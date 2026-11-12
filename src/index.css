@@ -1420,13 +1420,20 @@ body::before { content: ''; position: fixed; inset: 0 0 auto; height: env(safe-a
 
 /* Palette mockups for the aurora art (?pal=earth|night), temporary */
 /* Earthy: terracotta, olive, clay, moss, mustard, sand, deep teal */
-[data-pal='earth'] .tiles--music.cover--tiles    { --g: #8C4A3B; --t: #D98B5F; --k: #E8C07A; }
-[data-pal='earth'] .tiles--sports.cover--tiles   { --g: #3F5A3C; --t: #8FA35B; --k: #D9B66B; }
-[data-pal='earth'] .tiles--shows.cover--tiles    { --g: #B5543A; --t: #E59A6B; --k: #6E2F2A; }
-[data-pal='earth'] .tiles--arts.cover--tiles     { --g: #C4895B; --t: #EAC9A0; --k: #8C4A3B; }
-[data-pal='earth'] .tiles--food.cover--tiles     { --g: #C99A2E; --t: #E8C07A; --k: #B5543A; }
-[data-pal='earth'] .tiles--outdoors.cover--tiles { --g: #2F5D62; --t: #7FA39A; --k: #C9B98B; }
-[data-pal='earth'] .tiles--family.cover--tiles   { --g: #6B7B3A; --t: #B7C47A; --k: #E8C07A; }
+[data-pal='earth'] .tiles--music.cover--tiles,
+[data-pal='earth'] .tiles--music.cover--duo    { --g: #8C4A3B; --t: #D98B5F; --k: #E8C07A; }
+[data-pal='earth'] .tiles--sports.cover--tiles,
+[data-pal='earth'] .tiles--sports.cover--duo   { --g: #3F5A3C; --t: #8FA35B; --k: #D9B66B; }
+[data-pal='earth'] .tiles--shows.cover--tiles,
+[data-pal='earth'] .tiles--shows.cover--duo    { --g: #B5543A; --t: #E59A6B; --k: #6E2F2A; }
+[data-pal='earth'] .tiles--arts.cover--tiles,
+[data-pal='earth'] .tiles--arts.cover--duo     { --g: #C4895B; --t: #EAC9A0; --k: #8C4A3B; }
+[data-pal='earth'] .tiles--food.cover--tiles,
+[data-pal='earth'] .tiles--food.cover--duo     { --g: #C99A2E; --t: #E8C07A; --k: #B5543A; }
+[data-pal='earth'] .tiles--outdoors.cover--tiles,
+[data-pal='earth'] .tiles--outdoors.cover--duo { --g: #2F5D62; --t: #7FA39A; --k: #C9B98B; }
+[data-pal='earth'] .tiles--family.cover--tiles,
+[data-pal='earth'] .tiles--family.cover--duo   { --g: #6B7B3A; --t: #B7C47A; --k: #E8C07A; }
 
 /* Nightlife: deep plum/ink base lit by neon glows */
 [data-pal='night'] .cover--tiles {
@@ -1723,3 +1730,14 @@ body::before { content: ''; position: fixed; inset: 0 0 auto; height: env(safe-a
 .detail__go { display: inline-flex; align-items: center; justify-content: center; gap: 8px; width: 100%; margin-top: 8px; text-decoration: none; }
 .detail__go--quiet { background: var(--surface); color: var(--ink); border: 1px solid var(--line-strong); }
 .detail__source { font-size: var(--fs-small); color: var(--ink-2); }
+/* The organizer's photo at the top of the event screen */
+.detail__photo { margin: -4px 0 4px; aspect-ratio: 16 / 9; border-radius: var(--r-md); overflow: hidden; background: var(--tile); }
+.detail__photo img { width: 100%; height: 100%; object-fit: cover; display: block; filter: saturate(0.85) sepia(0.12); animation: photo-in 600ms var(--ease-out) both; }
+@keyframes photo-in { from { opacity: 0; transform: scale(1.03); } }
+@media (prefers-reduced-motion: reduce) { .detail__photo img { animation: none; } }
+
+/* Crash screen */
+.crash { min-height: 100dvh; display: grid; place-content: center; justify-items: center; gap: 16px; padding: 32px 24px; text-align: center; background: var(--bg); }
+.crash__mark { height: 72px; }
+.crash__title { font-family: var(--font-display); font-weight: 400; font-size: 2.6rem; line-height: 1; max-width: 14ch; }
+.crash__text { color: var(--ink-2); max-width: 36ch; }
