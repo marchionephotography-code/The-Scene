@@ -223,6 +223,9 @@ export function EventCard({ rec, now, favorite, onToggleFavorite, onOpen, weathe
             <span className={`status status--${event.price.status}`}>{PRICE_STATUS_LABEL[event.price.status]}</span>
           </p>
           <p className="card__tags">
+            {(event.status === 'postponed' || event.status === 'rescheduled') && (
+              <span className="tag-pill tag-pill--warn">{event.status === 'postponed' ? 'Postponed' : 'New date'}</span>
+            )}
             {isLibrary ? (
               <span className="tag-pill tag-pill--library"><BookOpen size={13} strokeWidth={2.5} aria-hidden="true" /> Library</span>
             ) : event.local ? (

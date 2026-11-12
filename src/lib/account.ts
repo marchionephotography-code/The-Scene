@@ -94,3 +94,21 @@ export async function deleteCloud(userId: string): Promise<void> {
   const { error } = await sb.from('profiles').delete().eq('id', userId)
   if (error) throw error
 }
+
+export interface ProblemReport {
+  eventId: string
+  eventTitle: string
+  eventUrl?: string
+  reason: string
+  note: string
+  createdAt: string
+}
+
+/** Sends a "Report a problem" note to the reports table (anyone can file one). */
+export async function submitReport(r: ProblemReport): Promise<void> {
+  const sb = await supabase()
+  const { error } = await sb.from('reports').insert({
+    event_id: r.eventId, event_title: r.eventTitle, event_url: r.eventUrl ?? null, reason: r.reason, note: r.note,
+  })
+  if (error) throw error
+}

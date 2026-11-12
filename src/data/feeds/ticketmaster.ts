@@ -4,7 +4,7 @@
  * https://developer.ticketmaster.com — set VITE_TICKETMASTER_KEY in a .env file.
  * Default quota: 5,000 calls a day, 5 a second.
  */
-import type { AgeSuitability, Category, SceneEvent } from '../../types/event'
+import type { EventStatus, AgeSuitability, Category, SceneEvent } from '../../types/event'
 import { AREA, fetchJson, REGION_HUBS, searchEach, type SearchArea } from './area'
 
 export const TICKETMASTER_KEY: string | undefined = import.meta.env.VITE_TICKETMASTER_KEY
@@ -15,7 +15,7 @@ export interface TmEvent {
   name: string
   url?: string
   info?: string
-  dates?: { start?: { localDate?: string; localTime?: string; dateTime?: string } }
+  dates?: { start?: { localDate?: string; localTime?: string; dateTime?: string }; status?: { code?: string } }
   classifications?: { segment?: { name?: string }; genre?: { name?: string } }[]
   priceRanges?: { min?: number; max?: number; currency?: string }[]
   images?: TmImage[]
@@ -36,6 +36,15 @@ function categoryFor(e: TmEvent): Category {
 function pickTmImage(images: TmImage[] = []): string | undefined {
   const wide = images.filter((i) => i.ratio === '16_9' && i.width >= 640).sort((a, b) => a.width - b.width)
   return (wide[0] ?? images[0])?.url
+}
+
+/** Ticketmaster's status codes: onsale, offsale, cancelled/canceled, postponed, rescheduled. */
+export function tmStatus(code = ''): EventStatus {
+  const c = code.toLowerCase()
+  if (c.startsWith('cancel')) return 'cancelled'
+  if (c === 'postponed') return 'postponed'
+  if (c === 'rescheduled') return 'rescheduled'
+  return 'scheduled'
 }
 
 export function tmToScene(e: TmEvent): SceneEvent | null {
@@ -70,6 +79,7 @@ export function tmToScene(e: TmEvent): SceneEvent | null {
     source: 'live',
     url: e.url,
     image: pickTmImage(e.images),
+    status: tmStatus(e.dates?.status?.code),
   }
 }
 

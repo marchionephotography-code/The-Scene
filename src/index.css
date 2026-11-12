@@ -1709,3 +1709,14 @@ body::before { content: ''; position: fixed; inset: 0 0 auto; height: env(safe-a
 .you__sub { display: block; }
 .you__sub svg { vertical-align: -2px; margin-right: 2px; }
 .you { padding-top: 12px; }
+
+/* Status and reports */
+.tag-pill--warn { background: #F6DCCB; color: #7A2E14; }
+.detail__status { padding: 10px 12px; border-radius: var(--r-sm); background: #F6DCCB; color: #5A230F; font-size: var(--fs-small); }
+.report__open { display: inline-flex; align-items: center; gap: 6px; justify-self: start; font-size: var(--fs-small); color: var(--ink-2); padding-left: 0; }
+.report { display: grid; gap: 10px; padding: 14px; border-radius: var(--r-md); border: 1px solid var(--line-strong); }
+.report__title { font-weight: 800; }
+.report .chips { flex-wrap: wrap; overflow: visible; margin: 0; padding: 0; }
+.report__actions { display: flex; align-items: center; gap: 12px; }
+.report__actions .btn:disabled { opacity: 0.4; }
+.report__done { font-size: var(--fs-small); color: var(--ink-2); }

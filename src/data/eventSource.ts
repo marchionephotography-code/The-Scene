@@ -5,6 +5,7 @@
  */
 import type { DataSource, SceneEvent } from '../types/event'
 import { distanceMiles } from '../lib/discovery'
+import { cleanEvents } from '../lib/cleanEvents'
 import { AREA, type SearchArea } from './feeds/area'
 import { fetchLocalist, LOCALIST_FEEDS } from './feeds/localist'
 import { fetchSeatGeek } from './feeds/seatgeek'
@@ -84,7 +85,7 @@ export async function fetchEvents(now: Date = new Date(), area?: SearchArea): Pr
     new Promise((r) => setTimeout(r, 300)),
   ])
 
-  const live = dedupe(results.flatMap((r) => r.events)).filter(
+  const live = cleanEvents(dedupe(results.flatMap((r) => r.events))).filter(
     (e) => distanceMiles(where.center, e.location) <= where.radiusMiles,
   )
   const sources = results.map((r) => r.status)

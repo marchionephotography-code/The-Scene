@@ -7,6 +7,7 @@ import { appHref, buildShareText, detectPlatform, formatShareWhen, mailtoHref, P
 import type { SceneEvent } from '../types/event'
 import { GroupText } from './GroupText'
 import { PlanTools } from './PlanTools'
+import { ReportProblem } from './ReportProblem'
 
 const AGE_TEXT = { 'all-ages': 'All ages', family: 'Family friendly', '18+': '18+', '21+': '21+' } as const
 
@@ -85,6 +86,12 @@ export function EventDetail({ event, saved, allEvents, onOpenEvent, moreLike, on
       <section className="detail__info">
         <p className="detail__cat">{category}{event.local ? ' · Local pick' : ''}</p>
         <h3 className="detail__title">{event.title}</h3>
+        {event.status === 'postponed' && (
+          <p className="detail__status" role="note"><strong>Postponed.</strong> The organizer hasn’t set a new date yet. Check their page before you go.</p>
+        )}
+        {event.status === 'rescheduled' && (
+          <p className="detail__status" role="note"><strong>Rescheduled.</strong> This is the new date. Tickets for the old date usually still work.</p>
+        )}
         <p className="detail__line detail__line--strong">{formatShareWhen(event.start)}</p>
         <p className="detail__line">{event.venue} · {event.town}</p>
         <p className="detail__line">
@@ -203,6 +210,7 @@ export function EventDetail({ event, saved, allEvents, onOpenEvent, moreLike, on
         )}
         <p className="sr-only" role="status">{copied ? 'Message copied' : ''}</p>
       </section>
+      <ReportProblem event={event} onHide={onNotForMe} />
     </div>
   )
 }

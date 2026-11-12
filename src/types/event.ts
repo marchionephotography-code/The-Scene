@@ -57,4 +57,8 @@ export interface SceneEvent {
   url?: string
   /** The organizer's own photo for this event, when the source provides one. */
   image?: string
+  /** Set when the source says plans changed. Cancelled events never reach the screen. */
+  status?: EventStatus
 }
+
+export type EventStatus = 'scheduled' | 'postponed' | 'rescheduled' | 'cancelled'
