@@ -3,8 +3,9 @@ import { useEffect, useState } from 'react'
 import type { Saved } from '../hooks/useSaved'
 import { CATEGORIES } from '../lib/discovery'
 import { formatPriceRange, PRICE_STATUS_LABEL } from '../lib/money'
-import { appHref, buildShareText, detectPlatform, formatShareWhen, mailtoHref, PASTE_TARGETS, smsHref, socialTargets } from '../lib/share'
+import { appHref, buildShareText, detectPlatform, formatShareWhen, mailtoHref, PASTE_TARGETS, socialTargets } from '../lib/share'
 import type { SceneEvent } from '../types/event'
+import { GroupText } from './GroupText'
 import { PlanTools } from './PlanTools'
 
 const AGE_TEXT = { 'all-ages': 'All ages', family: 'Family friendly', '18+': '18+', '21+': '21+' } as const
@@ -21,6 +22,7 @@ export function EventDetail({ event, saved, allEvents, onOpenEvent }: Props) {
   const [message, setMessage] = useState(() => buildShareText(event))
   const [copied, setCopied] = useState(false)
   const [pastedFor, setPastedFor] = useState<string | null>(null)
+  const [textOpen, setTextOpen] = useState(false)
   /** Set when an app link didn't open (app not installed), to offer the website. */
   const [fallback, setFallback] = useState<{ label: string; href: string } | null>(null)
   const [platform] = useState(() => detectPlatform())
@@ -133,10 +135,10 @@ export function EventDetail({ event, saved, allEvents, onOpenEvent }: Props) {
               Share to an app
             </button>
           )}
-          <a className="share-btn" href={smsHref(message)}>
+          <button type="button" className={`share-btn${textOpen ? ' share-btn--on' : ''}`} aria-expanded={textOpen} onClick={() => setTextOpen((o) => !o)}>
             <span className="share-btn__icon"><MessageCircle size={20} strokeWidth={2.25} aria-hidden="true" /></span>
-            Text a friend
-          </a>
+            Text friends
+          </button>
           <a className="share-btn" href={mailtoHref(`Want to go? ${event.title}`, message)}>
             <span className="share-btn__icon"><Mail size={20} strokeWidth={2.25} aria-hidden="true" /></span>
             Email
@@ -148,6 +150,8 @@ export function EventDetail({ event, saved, allEvents, onOpenEvent }: Props) {
             {copied ? 'Copied' : 'Copy caption'}
           </button>
         </div>
+
+        {textOpen && <GroupText message={message} platform={platform} />}
 
         <p className="field-label">Post to social media</p>
         <div className="share-social">

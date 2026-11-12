@@ -35,3 +35,19 @@ describe('sharing', () => {
     expect(detectPlatform('Mozilla/5.0 (Linux; Android 15; Pixel 9)')).toBe('android')
   })
 })
+
+import { cleanPhone, isPhone, smsGroupHref } from './share'
+
+describe('group text', () => {
+  it('cleans and checks phone numbers', () => {
+    expect(cleanPhone('(864) 555-0101')).toBe('8645550101')
+    expect(cleanPhone('+1 864 555 0101')).toBe('+18645550101')
+    expect(isPhone('555-0101')).toBe(false)
+    expect(isPhone('864.555.0101')).toBe(true)
+  })
+  it('builds one group message for iPhone and Android', () => {
+    expect(smsGroupHref(['864 555 0101', '(864) 555-0102'], 'Hi all', 'ios')).toBe('sms://open?addresses=8645550101,8645550102&body=Hi%20all')
+    expect(smsGroupHref(['8645550101', '8645550102'], 'Hi', 'android')).toBe('sms:8645550101;8645550102?body=Hi')
+    expect(smsGroupHref([], 'Hi', 'ios')).toBe('sms:?&body=Hi')
+  })
+})

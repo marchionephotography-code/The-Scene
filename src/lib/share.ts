@@ -29,6 +29,31 @@ export function smsHref(text: string): string {
   return `sms:?&body=${encodeURIComponent(text)}`
 }
 
+/** Keeps digits and a leading +, e.g. "(864) 555-0101" → "8645550101". */
+export function cleanPhone(raw: string): string {
+  const t = raw.trim()
+  return (t.startsWith('+') ? '+' : '') + t.replace(/\D/g, '')
+}
+
+/** A US number needs 10 digits (or 11 starting with 1); others need 8+. */
+export function isPhone(raw: string): boolean {
+  const c = cleanPhone(raw).replace('+', '')
+  return c.length >= 10 && c.length <= 15
+}
+
+/**
+ * One group text to several people. iPhone wants sms://open?addresses=a,b;
+ * Android separates numbers with a semicolon. With no numbers it falls back to
+ * a blank Messages draft where you can add people yourself.
+ */
+export function smsGroupHref(numbers: string[], text: string, platform: 'ios' | 'android' | 'desktop'): string {
+  const nums = numbers.map(cleanPhone).filter(Boolean)
+  const body = encodeURIComponent(text)
+  if (!nums.length) return smsHref(text)
+  if (platform === 'ios') return `sms://open?addresses=${nums.join(',')}&body=${body}`
+  return `sms:${nums.join(platform === 'android' ? ';' : ',')}?body=${body}`
+}
+
 export function mailtoHref(subject: string, body: string, to = ''): string {
   return `mailto:${encodeURIComponent(to)}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`
 }
