@@ -9,6 +9,7 @@ import App from './App.tsx'
 import { installLinkGuard } from './lib/links'
 import { ErrorBoundary } from './components/ErrorBoundary'
 import { reportError, startMonitoring } from './lib/monitoring'
+import { applyTheme, watchSystemTheme } from './lib/theme'
 
 startMonitoring()
 window.addEventListener('unhandledrejection', (e) => reportError(e.reason, 'promise'))
@@ -18,6 +19,8 @@ installLinkGuard()
 // Earthy version: aurora card art in the earth palette.
 document.documentElement.dataset.art = 'a'
 document.documentElement.dataset.pal = 'earth'
+applyTheme()
+watchSystemTheme()
 
 
 createRoot(document.getElementById('root')!).render(

@@ -9,6 +9,8 @@
     <link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <meta name="theme-color" content="#F4EFE6" />
+    <meta name="color-scheme" content="light dark" />
+    <script src="/theme.js"></script>
     <meta property="og:site_name" content="The Scene" />
     <meta property="og:type" content="website" />
     <meta property="og:title" content="The Scene · Your weekend, sorted" />
@@ -29,6 +31,10 @@
       <nav class="nav__links" aria-label="Page">
         <a href="#how">How it works</a>
         <a href="/app/">Try the app</a>
+        <button class="mode" type="button" aria-label="Switch to dark mode" data-mode>
+          <svg class="i-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+          <svg class="i-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+        </button>
         <a class="nav__cta" href="#join">Join the beta</a>
       </nav>
     </header>
@@ -61,7 +67,7 @@
           <div class="hero__photo"><img src="/landing/hero.webp" alt="" width="900" height="900" fetchpriority="high" /></div>
           <div class="hero__tile hero__tile--a"></div>
           <div class="hero__tile hero__tile--b"></div>
-          <figure class="phone phone--hero"><img src="/landing/screen-explore.webp" alt="" width="390" height="664" /></figure>
+          <figure class="phone phone--hero"><img class="shot--light" src="/landing/screen-explore.webp" alt="" width="390" height="664" /><img class="shot--dark" src="/landing/screen-explore-dark.webp" alt="" width="390" height="664" loading="lazy" /></figure>
         </div>
       </section>
 
@@ -94,7 +100,7 @@
       </section>
 
       <section class="feature" aria-labelledby="f1-h">
-        <figure class="phone"><img src="/landing/screen-setup.webp" alt="The setup screen, where you pick what you’re into" width="390" height="664" loading="lazy" /></figure>
+        <figure class="phone"><img class="shot--light" src="/landing/screen-setup.webp" alt="The setup screen, where you pick what you’re into" width="390" height="664" loading="lazy" /><img class="shot--dark" src="/landing/screen-setup-dark.webp" alt="The setup screen, where you pick what you’re into" width="390" height="664" loading="lazy" /></figure>
         <div class="feature__copy">
           <h2 id="f1-h" class="section-title">Picks that get to know you</h2>
           <p>Tell it you love live music and breweries and you’d rather skip kids’ events. Your favorites rise to the top, the rest step aside, and every “Not for me” makes the next list better.</p>
@@ -102,7 +108,7 @@
       </section>
 
       <section class="feature feature--flip" aria-labelledby="f2-h">
-        <figure class="phone"><img src="/landing/screen-event.webp" alt="An event with Get tickets, Save and Invite friends" width="390" height="664" loading="lazy" /></figure>
+        <figure class="phone"><img class="shot--light" src="/landing/screen-event.webp" alt="An event with Get tickets, Save and Invite friends" width="390" height="664" loading="lazy" /><img class="shot--dark" src="/landing/screen-event-dark.webp" alt="An event with Get tickets, Save and Invite friends" width="390" height="664" loading="lazy" /></figure>
         <div class="feature__copy">
           <h2 id="f2-h" class="section-title">Plan it in one place</h2>
           <ul class="ticks">
@@ -115,7 +121,7 @@
       </section>
 
       <section class="feature" aria-labelledby="f3-h">
-        <figure class="phone"><img src="/landing/screen-weekend.webp" alt="This weekend, with the forecast for each day" width="390" height="664" loading="lazy" /></figure>
+        <figure class="phone"><img class="shot--light" src="/landing/screen-weekend.webp" alt="This weekend, with the forecast for each day" width="390" height="664" loading="lazy" /><img class="shot--dark" src="/landing/screen-weekend-dark.webp" alt="This weekend, with the forecast for each day" width="390" height="664" loading="lazy" /></figure>
         <div class="feature__copy">
           <h2 id="f3-h" class="section-title">Home, or anywhere you go</h2>
           <p>Start with the Upstate. Traveling to Asheville or Atlanta? Search any city and see what’s on there tonight.</p>

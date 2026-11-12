@@ -8,6 +8,18 @@ import '@fontsource-variable/figtree'
 import '@fontsource/instrument-serif/400.css'
 import '@fontsource/instrument-serif/400-italic.css'
 import './landing.css'
+import { applyTheme, readChoice, setChoice, watchSystemTheme, type Theme } from '../lib/theme'
+
+// Light and dark mode: follows the system until someone taps the switch.
+const modeBtn = document.querySelector<HTMLButtonElement>('[data-mode]')
+const labelMode = (t: Theme) => modeBtn?.setAttribute('aria-label', t === 'dark' ? 'Switch to light mode' : 'Switch to dark mode')
+labelMode(applyTheme(readChoice()))
+watchSystemTheme()
+window.addEventListener('scene:theme', () => labelMode(document.documentElement.dataset.theme as Theme))
+modeBtn?.addEventListener('click', () => {
+  const next: Theme = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark'
+  labelMode(setChoice(next))
+})
 
 const embedded = (() => {
   try { return window.top !== window.self } catch { return true }

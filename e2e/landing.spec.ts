@@ -35,3 +35,11 @@ test('beta form posts to Netlify Forms and confirms', async ({ page }) => {
   expect(body).toContain('email=friend%40example.com')
   expect(body).toContain('town=Anderson')
 })
+
+test('landing follows dark mode and the switch flips it', async ({ browser }) => {
+  const page = await (await browser.newContext({ colorScheme: 'dark' })).newPage()
+  await page.goto('/')
+  await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark')
+  await page.getByRole('button', { name: 'Switch to light mode' }).click()
+  await expect(page.locator('html')).toHaveAttribute('data-theme', 'light')
+})

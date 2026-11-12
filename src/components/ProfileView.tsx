@@ -4,6 +4,7 @@ import type { ProfileApi } from '../hooks/useProfile'
 import { sendSignInLink, signInWithGoogle, signOut } from '../lib/account'
 import { likesSummary } from '../lib/profile'
 import { InterestPicker, StylePicker } from './PrefPickers'
+import { ThemeSwitch } from './ThemeSwitch'
 
 interface Props {
   api: ProfileApi
@@ -55,6 +56,12 @@ export function ProfileView({ api, onRedoSetup }: Props) {
       <div className="you__section">
         <h2 className="saved__heading">How you go out</h2>
         <StylePicker profile={profile} update={update} />
+      </div>
+
+      <div className="you__section">
+        <h2 className="saved__heading">Appearance</h2>
+        <p className="hint">Auto matches your phone’s light or dark setting.</p>
+        <ThemeSwitch />
       </div>
 
       {profile.hiddenEvents.length > 0 && (

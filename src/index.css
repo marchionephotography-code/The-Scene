@@ -1757,3 +1757,49 @@ body::before { content: ''; position: fixed; inset: 0 0 auto; height: env(safe-a
   .collage__head { gap: 20px; padding: 40px 44px 44px; }
   .collage__head .collage__sub { font-size: 1.1875rem; }
 }
+
+/* ============================================================
+   DARK MODE: the same earthy palette after sunset. Deep olive-black
+   paper, warm cream text, blush as the main button. Art colors stay;
+   only surfaces, text and lines change. Set by src/lib/theme.ts.
+   ============================================================ */
+[data-theme='dark'] {
+  --bg: #17190F;
+  --surface: #212418;
+  --tile: #2B2F20;
+  --tile-hover: #353A28;
+  --ink: #F0E9DB;
+  --ink-2: #B9B3A0;
+  --line: #313525;
+  --line-strong: #4A4F3A;
+  --primary: #E7C3B1;
+  --primary-ink: #1E2015;
+  --accent: #E08A68;
+  --focus: #E8A27F;
+  --warn: #F09A86;
+  --sample-bg: #3A3120;
+  --sample-ink: #EBCB86;
+  --forest: #262A1C;
+  --shadow-pill: 0 1px 2px rgba(0, 0, 0, 0.4), 0 6px 20px rgba(0, 0, 0, 0.35);
+  --shadow-pill-hover: 0 2px 4px rgba(0, 0, 0, 0.45), 0 12px 28px rgba(0, 0, 0, 0.45);
+  --shadow-sheet: 0 -8px 40px rgba(0, 0, 0, 0.6);
+  color-scheme: dark;
+}
+[data-theme='dark'] ::selection { background: rgba(231, 195, 177, 0.35); }
+[data-theme='dark'] .collage__head { border: 1px solid var(--line); }
+[data-theme='dark'] .card__wx--rain, [data-theme='dark'] .wkd__tab.is-wet { color: #8EC0BC; }
+[data-theme='dark'] .tag-pill--rain { background: #23383A; color: #A9D3CE; }
+[data-theme='dark'] .tag-pill--warn { background: #4A2618; color: #F6C9B3; }
+[data-theme='dark'] .detail__status { background: #4A2618; color: #F6DCCB; }
+[data-theme='dark'] .agenda__day--on .agenda__date { color: #EBA585; }
+[data-theme='dark'] .install { background: var(--tile); }
+[data-theme='dark'] .hint--ok svg, [data-theme='dark'] .lib-status__dot--ok { color: #7FC79A; }
+[data-theme='dark'] .install .install__sub { color: var(--ink-2); }
+
+/* Appearance switch (Light / Dark / Auto) */
+.seg { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; margin: 4px 0 0; padding: 4px; border: 0; border-radius: 999px; background: var(--tile); max-width: 360px; }
+.seg__opt { position: relative; display: flex; align-items: center; justify-content: center; gap: 6px; min-height: var(--tap); border-radius: 999px; font-weight: 700; font-size: var(--fs-meta); color: var(--ink-2); cursor: pointer; transition: background var(--t-state) var(--ease-out), color var(--t-state); }
+.seg__opt input { position: absolute; inset: 0; opacity: 0; margin: 0; cursor: pointer; }
+.seg__opt:has(input:checked) { background: var(--surface); color: var(--ink); box-shadow: var(--shadow-pill); }
+.seg__opt:has(input:focus-visible) { outline: 3px solid var(--focus); outline-offset: 2px; }
+[data-theme='dark'] .seg__opt:has(input:checked) { background: var(--primary); color: var(--primary-ink); }
