@@ -1772,8 +1772,8 @@ body::before { content: ''; position: fixed; inset: 0 0 auto; height: env(safe-a
   --ink-2: #B9B3A0;
   --line: #313525;
   --line-strong: #4A4F3A;
-  --primary: #E7C3B1;
-  --primary-ink: #1E2015;
+  --primary: #A64B32;
+  --primary-ink: #F2EADD;
   --accent: #E08A68;
   --focus: #E8A27F;
   --warn: #F09A86;
@@ -1810,3 +1810,4 @@ body::before { content: ''; position: fixed; inset: 0 0 auto; height: env(safe-a
 .detail__credit a { color: inherit; }
 .detail__photo:has(.detail__credit) { aspect-ratio: auto; overflow: visible; background: none; }
 .detail__photo:has(.detail__credit) img { aspect-ratio: 16 / 9; height: auto; border-radius: var(--r-md); background: var(--tile); }
+[data-theme='dark'] .month__day--out { color: #7E8169; }

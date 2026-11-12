@@ -12,8 +12,8 @@ Cream paper, deep forest olive, and four warm accents. There is a light and a
 dark mode: Auto follows the phone, and the You tab (and the landing page's
 nav) lets people pick. Dark mode swaps surfaces, text and lines
 (`[data-theme='dark']` in `src/index.css` and `src/landing/landing.css`);
-art and category colors stay the same. In dark mode the main button is blush
-with dark text. New colors must work in both: use the tokens, not hex values.
+art and category colors stay the same. In dark mode the main button is deep clay
+(`#A64B32`) with cream text. New colors must work in both: use the tokens, not hex values.
 
 | Token | Value | Use |
 |---|---|---|
