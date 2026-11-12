@@ -176,6 +176,7 @@ export function EventCard({ rec, now, favorite, onToggleFavorite, onOpen, weathe
             </span>
             <span className="tiles__chip" />
             <span className="poster">{POSTER_WORD[event.category]}</span>
+            <span className="bigdate"><b>{when.day}</b><i>{when.top}</i></span>
           </div>
         )}
         <span className="card__cat">{category}</span>

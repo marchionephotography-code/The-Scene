@@ -5,6 +5,10 @@ import '@fontsource-variable/figtree'
 import './index.css'
 import App from './App.tsx'
 
+// Mockup switch for card artwork: ?art=a|b|c (temporary).
+const artLook = new URLSearchParams(window.location.search).get('art')
+if (artLook) document.documentElement.dataset.art = artLook
+
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>

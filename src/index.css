@@ -1366,3 +1366,56 @@ body::before { content: ''; position: fixed; inset: 0 0 auto; height: env(safe-a
 @media (hover: hover) { .card:hover .poster { translate: 4px -4px; } }
 @media (prefers-reduced-motion: reduce) { .poster { transition: none; } }
 @media (max-width: 619px) { .poster { font-size: 3.4rem; bottom: -6%; } }
+
+/* ============================================================
+   Modern card artwork mockups (?art=a|b|c), temporary
+   ============================================================ */
+.bigdate { display: none; }
+
+/* A · Aurora: soft blended brand colors with a frosted icon */
+[data-art='a'] .poster { display: none; }
+[data-art='a'] .cover--tiles {
+  background:
+    radial-gradient(60% 70% at 15% 20%, var(--t) 0%, transparent 70%),
+    radial-gradient(55% 65% at 90% 85%, var(--k) 0%, transparent 70%),
+    radial-gradient(80% 90% at 70% 10%, color-mix(in oklab, var(--g) 70%, white) 0%, transparent 75%),
+    var(--g);
+}
+[data-art='a'] .tiles--sports.cover--tiles { --g: #3D6BFF; --t: #121212; --k: #FFC53D; }
+[data-art='a'] .tiles--outdoors.cover--tiles { --g: #7FD1AE; --t: #3D6BFF; --k: #FFC53D; }
+[data-art='a'] .cover--tiles .tiles__main {
+  display: grid; inset: auto; right: 12px; bottom: 12px; height: 44px; width: 44px; border-radius: 14px !important;
+  background: rgba(255, 255, 255, 0.28); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.45); transform: none !important;
+}
+[data-art='a'] .cover--tiles .cover__icon { width: 22px; color: #fff; stroke-width: 2.25; }
+
+/* B · Clean: pale tint, one crisp icon tile, lots of white (Luma-like) */
+[data-art='b'] .poster { display: none; }
+[data-art='b'] .cover--tiles { background: color-mix(in oklab, var(--g) 16%, white); }
+[data-art='b'] .tiles--sports.cover--tiles { background: #EDEDED; }
+[data-art='b'] .tiles--outdoors.cover--tiles { background: color-mix(in oklab, #3D6BFF 12%, white); }
+[data-art='b'] .cover--tiles .tiles__main {
+  display: grid; inset: 0; margin: auto; height: 52px; width: 52px; border-radius: 16px !important;
+  background: var(--g); box-shadow: 0 6px 16px color-mix(in oklab, var(--g) 45%, transparent); transform: none !important;
+}
+[data-art='b'] .tiles--outdoors .tiles__main { background: #3D6BFF; }
+[data-art='b'] .cover--tiles .cover__icon { width: 26px; color: #fff; stroke-width: 2.25; translate: 0 0; }
+[data-art='b'] .tiles--food .cover__icon, [data-art='b'] .tiles--arts .cover__icon { color: #121212; }
+
+/* C · Big date: the day number is the art, on a two-tone gradient */
+[data-art='c'] .poster, [data-art='c'] .stub { display: none; }
+[data-art='c'] .cover--tiles { background: linear-gradient(150deg, var(--g) 0%, color-mix(in oklab, var(--g) 55%, var(--t)) 100%); }
+[data-art='c'] .bigdate {
+  display: grid; position: absolute; inset: 0; z-index: 1; place-content: center; justify-items: center; gap: 2px;
+  color: #fff; text-shadow: 0 1px 12px rgba(0, 0, 0, 0.12);
+}
+[data-art='c'] .tiles--food .bigdate, [data-art='c'] .tiles--outdoors .bigdate, [data-art='c'] .tiles--arts .bigdate { color: #121212; text-shadow: none; }
+[data-art='c'] .bigdate b { font-family: var(--font-display); font-weight: 700; font-size: clamp(2.75rem, 30cqi, 5rem); line-height: 0.9; letter-spacing: -0.04em; font-variant-numeric: tabular-nums; }
+[data-art='c'] .bigdate i { font-style: normal; font-size: var(--fs-micro); font-weight: 800; text-transform: uppercase; letter-spacing: 0.12em; opacity: 0.85; }
+[data-art='a'] .cover--tiles .tiles__main { left: auto; top: auto; right: 12px; bottom: 12px; width: 44px; height: 44px; aspect-ratio: auto; max-width: none; place-items: center; }
+[data-art='b'] .cover--tiles .tiles__main { left: 0; right: 0; top: 0; bottom: 0; width: 52px; height: 52px; aspect-ratio: auto; max-width: none; place-items: center; }
+[data-art='a'] .cover--tiles .cover__icon, [data-art='b'] .cover--tiles .cover__icon { position: static; rotate: 0deg; scale: 1; translate: none; height: auto; }
+[data-art='c'] .bigdate { place-content: end start; justify-items: start; padding: 0 0 12px 14px; }
+@media (max-width: 619px) { [data-art='a'] .cover--tiles .tiles__main { right: 8px; bottom: 8px; width: 38px; height: 38px; border-radius: 12px !important; } [data-art='a'] .cover--tiles .cover__icon { width: 19px; } [data-art='c'] .bigdate { padding: 0 0 8px 10px; } [data-art='c'] .bigdate b { font-size: 2.75rem; } }
+[data-art='a'] .cover--tiles .tiles__main, [data-art='b'] .cover--tiles .tiles__main { padding: 0; }
