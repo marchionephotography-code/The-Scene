@@ -6,6 +6,9 @@ import '@fontsource/instrument-serif/400.css'
 import '@fontsource/instrument-serif/400-italic.css'
 import './index.css'
 import App from './App.tsx'
+import { installLinkGuard } from './lib/links'
+
+installLinkGuard()
 
 // Earthy version: aurora card art in the earth palette.
 document.documentElement.dataset.art = 'a'

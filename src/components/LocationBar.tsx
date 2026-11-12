@@ -2,7 +2,7 @@ import { Check, Globe2, MapPin, Navigation, Search, X } from 'lucide-react'
 import { useEffect, useId, useState } from 'react'
 import { SAMPLE_TOWNS } from '../data/sampleEvents'
 import type { LocationState } from '../hooks/useLocation'
-import { NEARBY_CITIES, searchPlaces, type Place } from '../lib/geocode'
+import { mergePlaces, NEARBY_CITIES, searchLocal, searchPlaces, type Place } from '../lib/geocode'
 import type { GeoPoint } from '../types/event'
 
 interface Props {
@@ -13,7 +13,7 @@ interface Props {
   onClear: () => void
 }
 
-type Search = { status: 'idle' } | { status: 'loading' } | { status: 'done'; places: Place[] } | { status: 'error' }
+type Search = { status: 'idle' } | { status: 'loading'; places?: Place[] } | { status: 'done'; places: Place[] } | { status: 'error' }
 
 /**
  * Where to look: any US city by search, your current location, the whole
@@ -25,17 +25,19 @@ export function LocationBar({ state, onUseDevice, onPickTown, onClear }: Props) 
   const id = useId()
   const picked = state.status === 'manual' ? state.label : null
 
+  // Built-in cities answer as you type; the online lookup adds the rest.
   useEffect(() => {
     const q = query.trim()
     if (q.length < 2) return
+    const local = searchLocal(q)
     const ctl = new AbortController()
     const t = window.setTimeout(() => {
-      setSearch({ status: 'loading' })
+      setSearch({ status: local.length ? 'done' : 'loading', places: local } as Search)
       searchPlaces(q, ctl.signal).then(
-        (places) => setSearch({ status: 'done', places }),
-        (err) => { if (!ctl.signal.aborted) { setSearch({ status: 'error' }); void err } },
+        (online) => setSearch({ status: 'done', places: mergePlaces(local, online) }),
+        () => { if (!ctl.signal.aborted) setSearch(local.length ? { status: 'done', places: local } : { status: 'error' }) },
       )
-    }, 300)
+    }, 120)
     return () => { window.clearTimeout(t); ctl.abort() }
   }, [query])
 
@@ -92,7 +94,7 @@ export function LocationBar({ state, onUseDevice, onPickTown, onClear }: Props) 
       {searching ? (
         <div aria-live="polite">
           {search.status === 'loading' && <p className="hint">Searching…</p>}
-          {search.status === 'error' && <p className="hint">City search isn’t reachable right now. Pick a city below instead.</p>}
+          {search.status === 'error' && <p className="hint">We couldn’t find that city. Try the full name, like “Nashville, TN.”</p>}
           {search.status === 'done' && search.places.length === 0 && <p className="hint">No US city by that name. Check the spelling?</p>}
           {search.status === 'done' && search.places.length > 0 && (
             <ul className="rows" aria-label="Matching cities">

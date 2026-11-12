@@ -2,6 +2,7 @@
  * City search for the location picker, using Open-Meteo's free geocoding API
  * (no key, works from the browser): https://open-meteo.com/en/docs/geocoding-api
  */
+import { US_CITIES } from '../data/usCities'
 import type { GeoPoint } from '../types/event'
 
 export interface Place {
@@ -48,6 +49,40 @@ export function parsePlaces(json: { results?: OmResult[] }): Place[] {
       }
     })
     .filter((p) => (seen.has(p.label) ? false : (seen.add(p.label), true)))
+}
+
+const STATE_NAMES = Object.fromEntries(Object.entries(STATES).map(([name, abbr]) => [abbr, name.toLowerCase()]))
+
+/**
+ * Instant answers from the built-in list. Matches the start of the city name
+ * ("char" finds Charlotte and Charleston); "city, st" or "city st" narrows to
+ * a state. Best matches (exact, then shortest name) come first.
+ */
+export function searchLocal(query: string, limit = 8): Place[] {
+  const q = query.trim().toLowerCase().replace(/\s+/g, ' ')
+  if (q.length < 2) return []
+  const m = q.match(/^(.*?)[,\s]+([a-z]{2}|[a-z ]{4,})$/)
+  const tries = m ? [{ city: m[1].trim(), st: m[2].trim() }, { city: q, st: '' }] : [{ city: q, st: '' }]
+  for (const { city, st } of tries) {
+    const hits = US_CITIES.filter(([name, abbr]) => {
+      const n = name.toLowerCase()
+      const stOk = !st || abbr.toLowerCase() === st || (STATE_NAMES[abbr] ?? '').startsWith(st)
+      return stOk && (n.startsWith(city) || n.split(/[\s-]/).some((w) => w.startsWith(city)))
+    })
+    if (hits.length) {
+      return hits
+        .sort((a, b) => Number(b[0].toLowerCase() === city) - Number(a[0].toLowerCase() === city) || a[0].length - b[0].length)
+        .slice(0, limit)
+        .map(([name, abbr, lat, lng]) => ({ label: `${name}, ${abbr}`, point: { lat, lng } }))
+    }
+  }
+  return []
+}
+
+/** Built-in matches first, then anything extra the online lookup finds. */
+export function mergePlaces(local: Place[], online: Place[], limit = 8): Place[] {
+  const seen = new Set(local.map((p) => p.label))
+  return [...local, ...online.filter((p) => !seen.has(p.label))].slice(0, limit)
 }
 
 export async function searchPlaces(query: string, signal?: AbortSignal): Promise<Place[]> {

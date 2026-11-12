@@ -48,7 +48,13 @@ export function useSaved() {
   )
   const removeWish = useCallback((id: string) => setWishlist((w) => w.filter((x) => x.id !== id)), [])
 
-  return { favorites, isFavorite, toggleFavorite, wishlist, onWishlist, toggleWishEvent, addWish, toggleWishDone, removeWish }
+  /** Merge in what an account brought from another device (nothing is lost). */
+  const mergeIn = useCallback((favs: string[], wishes: WishItem[]) => {
+    setFavorites((f) => [...f, ...favs.filter((x) => !f.includes(x))])
+    setWishlist((w) => [...w, ...wishes.filter((x) => !w.some((y) => y.id === x.id))])
+  }, [])
+
+  return { favorites, isFavorite, toggleFavorite, wishlist, onWishlist, toggleWishEvent, addWish, toggleWishDone, removeWish, mergeIn }
 }
 
 export type Saved = ReturnType<typeof useSaved>

@@ -161,6 +161,7 @@ export function EventDetail({ event, saved, allEvents, onOpenEvent }: Props) {
               key={s.id}
               className={`social social--${s.id}`}
               href={appHref(s, platform)}
+              data-web={s.href}
               {...(platform === 'desktop' ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
               onClick={() => copyThenOpen(s)}
             >
