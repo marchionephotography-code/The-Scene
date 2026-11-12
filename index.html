@@ -25,11 +25,13 @@
 
     <header class="nav">
       <a class="nav__brand" href="/" aria-label="The Scene, home">
-        <svg class="mark" viewBox="214 87 212 318" aria-hidden="true"><path d="M219,188 A96,96 0 0 1 315,92 L315,188 Z" fill="#B5543A"/><rect x="325" y="92" width="96" height="96" rx="8" fill="#D6A243"/><path d="M315,294 A96,96 0 0 1 219,198 L315,198 Z" fill="#4E5A35"/><path d="M325,198 A96,96 0 0 1 421,294 L325,294 Z" fill="#E7C3B1"/><rect x="219" y="304" width="96" height="96" rx="8" fill="#2F3424"/><path d="M421,304 A96,96 0 0 1 325,400 L325,304 Z" fill="#8C4A3B"/></svg>
+        <svg class="mark" viewBox="214 87 212 318" aria-hidden="true"><path d="M219,188 A96,96 0 0 1 315,92 L315,188 Z" fill="#B5543A"/><rect x="325" y="92" width="96" height="96" rx="8" fill="#D6A243"/><path d="M315,294 A96,96 0 0 1 219,198 L315,198 Z" fill="#4E5A35"/><path d="M325,198 A96,96 0 0 1 421,294 L325,294 Z" fill="#E7C3B1"/><rect class="mark__dark" x="219" y="304" width="96" height="96" rx="8"/><path d="M421,304 A96,96 0 0 1 325,400 L325,304 Z" fill="#8C4A3B"/></svg>
         <span>THE SCENE</span>
       </a>
       <nav class="nav__links" aria-label="Page">
-        <a href="#how">How it works</a>
+        <a href="#moods">Moods</a>
+        <a href="#crew">Your crew</a>
+        <a href="#faq">FAQ</a>
         <a href="/app/">Try the app</a>
         <button class="mode" type="button" aria-label="Switch to dark mode" data-mode>
           <svg class="i-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
@@ -40,34 +42,132 @@
     </header>
 
     <main>
+      <!-- HERO: the headline carries the photos -->
       <section class="hero" aria-labelledby="hero-h">
-        <div class="hero__copy">
-          <h1 id="hero-h" class="hero__title">Your weekend, <em>sorted.</em></h1>
-          <p class="hero__lede">The Scene finds the concerts, trivia nights, markets and hikes worth leaving the house for around the Upstate, then makes it easy to get your friends to come.</p>
+        <p class="badge"><span class="badge__dot" aria-hidden="true"></span> Beta opening in Upstate SC</p>
+        <h1 id="hero-h" class="hero__title">
+          <span class="line">Your <span class="pill pill--rotate" aria-hidden="true"><img src="/landing/s-festival.webp" alt="" width="360" height="150" /><img src="/landing/s-patio.webp" alt="" width="360" height="150" /><img src="/landing/s-climb.webp" alt="" width="360" height="150" /><img src="/landing/s-date.webp" alt="" width="360" height="150" /></span> weekend,</span>
+          <span class="line"><em>sorted</em> <span class="pill pill--mark" aria-hidden="true"><svg viewBox="214 87 212 318"><path d="M219,188 A96,96 0 0 1 315,92 L315,188 Z" fill="#B5543A"/><rect x="325" y="92" width="96" height="96" rx="8" fill="#D6A243"/><path d="M315,294 A96,96 0 0 1 219,198 L315,198 Z" fill="#4E5A35"/><path d="M325,198 A96,96 0 0 1 421,294 L325,294 Z" fill="#E7C3B1"/><rect x="219" y="304" width="96" height="96" rx="8" fill="#2F3424"/><path d="M421,304 A96,96 0 0 1 325,400 L325,304 Z" fill="#8C4A3B"/></svg></span> together.</span>
+        </h1>
+        <p class="hero__lede">Concerts, trivia nights, markets and hikes worth leaving the house for, picked for you. Then one text gets your friends there.</p>
 
-          <form id="join" class="join" name="beta" method="POST" data-netlify="true" netlify-honeypot="bot-field" novalidate>
-            <input type="hidden" name="form-name" value="beta" />
-            <p class="sr-only"><label>Leave this empty <input name="bot-field" tabindex="-1" autocomplete="off" /></label></p>
-            <div class="join__row">
-              <label class="sr-only" for="email-1">Email</label>
-              <input id="email-1" class="join__email" type="email" name="email" required autocomplete="email" placeholder="you@email.com" />
-              <label class="sr-only" for="town-1">Your town (optional)</label>
-              <select id="town-1" class="join__town" name="town">
-                <option value="">Your town</option>
-                <option>Anderson</option><option>Greenville</option><option>Clemson</option><option>Spartanburg</option>
-                <option>Seneca</option><option>Easley</option><option>Greer</option><option>Somewhere else</option>
-              </select>
-              <button class="join__btn" type="submit">Join the beta</button>
-            </div>
-            <p class="join__note" data-status aria-live="polite">Free. Starting in Upstate SC. We’ll email you once, when your invite is ready.</p>
-          </form>
+        <form id="join" class="join join--bar" name="beta" method="POST" data-netlify="true" netlify-honeypot="bot-field" novalidate>
+          <input type="hidden" name="form-name" value="beta" />
+          <p class="sr-only"><label>Leave this empty <input name="bot-field" tabindex="-1" autocomplete="off" /></label></p>
+          <div class="join__row">
+            <label class="sr-only" for="email-1">Email</label>
+            <input id="email-1" class="join__email" type="email" name="email" required autocomplete="email" placeholder="you@email.com" />
+            <label class="sr-only" for="town-1">Your town (optional)</label>
+            <select id="town-1" class="join__town" name="town">
+              <option value="">Your town</option>
+              <option>Anderson</option><option>Greenville</option><option>Clemson</option><option>Spartanburg</option>
+              <option>Seneca</option><option>Easley</option><option>Greer</option><option>Somewhere else</option>
+            </select>
+            <button class="join__btn" type="submit">Join the beta</button>
+          </div>
+          <p class="join__note" data-status aria-live="polite">Free. We’ll email you once, when your invite is ready.</p>
+        </form>
+        <a class="hero__try" href="/app/">Or try the app now <span aria-hidden="true">→</span></a>
+      </section>
+
+      <!-- POSTER WALL: what a weekend on The Scene looks like -->
+      <section class="wall" aria-label="Example events">
+        <ul class="wall__track" tabindex="0" aria-label="Example events, scroll sideways">
+          <li class="poster poster--a"><img src="/landing/p-festival.webp" alt="" width="560" height="700" /><div class="poster__body"><span class="poster__when">Sat · 4 PM</span><span class="poster__title">Riverfront Music Fest</span><span class="poster__where">Greenville</span></div><span class="sticker sticker--mustard">Free</span></li>
+          <li class="poster poster--b"><img src="/landing/p-dinner.webp" alt="" width="560" height="700" /><div class="poster__body"><span class="poster__when">Fri · 7 PM</span><span class="poster__title">Supper Club on the Patio</span><span class="poster__where">Anderson</span></div><span class="sticker sticker--blush">Date night</span></li>
+          <li class="poster poster--c"><img src="/landing/p-climb.webp" alt="" width="560" height="700" /><div class="poster__body"><span class="poster__when">Sun · 10 AM</span><span class="poster__title">Intro to Bouldering</span><span class="poster__where">Clemson</span></div><span class="sticker sticker--clay">Get active</span></li>
+          <li class="poster poster--d"><img src="/landing/p-pottery.webp" alt="" width="560" height="700" loading="lazy" /><div class="poster__body"><span class="poster__when">Thu · 6 PM</span><span class="poster__title">Wheel Throwing Night</span><span class="poster__where">Easley</span></div><span class="sticker sticker--moss">BYOB</span></li>
+          <li class="poster poster--e"><img src="/landing/p-nightout.webp" alt="" width="560" height="700" loading="lazy" /><div class="poster__body"><span class="poster__when">Tonight · 9 PM</span><span class="poster__title">’90s Dance Party</span><span class="poster__where">Spartanburg</span></div><span class="sticker sticker--mustard">21+</span></li>
+        </ul>
+        <p class="wall__note">Example events</p>
+      </section>
+
+      <!-- MOODS: an interactive taste of the app -->
+      <section id="moods" class="moods" aria-labelledby="moods-h">
+        <div class="moods__copy">
+          <p class="kicker">Step one</p>
+          <h2 id="moods-h" class="h2">What are you in the mood for?</h2>
+          <p class="body">Tap a mood and the whole list reshuffles. Go on, try it.</p>
+          <div class="moods__chips" role="radiogroup" aria-label="Pick a mood">
+            <button type="button" role="radio" aria-checked="true" data-mood="eat" class="chip">Food &amp; drink</button>
+            <button type="button" role="radio" aria-checked="false" data-mood="date" class="chip">Date night</button>
+            <button type="button" role="radio" aria-checked="false" data-mood="out" class="chip">Night out</button>
+            <button type="button" role="radio" aria-checked="false" data-mood="chill" class="chip">Something chill</button>
+            <button type="button" role="radio" aria-checked="false" data-mood="active" class="chip">Get active</button>
+            <button type="button" role="radio" aria-checked="false" data-mood="family" class="chip">Family day</button>
+          </div>
         </div>
+        <div class="moods__stage">
+          <ol class="stack" aria-live="polite" data-stack></ol>
+          <p class="stack__note">Example events</p>
+        </div>
+      </section>
 
-        <div class="hero__art" aria-hidden="true">
-          <div class="hero__photo"><img src="/landing/hero.webp" alt="" width="900" height="900" fetchpriority="high" /></div>
-          <div class="hero__tile hero__tile--a"></div>
-          <div class="hero__tile hero__tile--b"></div>
-          <figure class="phone phone--hero"><img class="shot--light" src="/landing/screen-explore.webp" alt="" width="390" height="664" /><img class="shot--dark" src="/landing/screen-explore-dark.webp" alt="" width="390" height="664" loading="lazy" /></figure>
+      <!-- CREW: the group chat -->
+      <section id="crew" class="crew" aria-labelledby="crew-h">
+        <div class="crew__copy">
+          <p class="kicker">Step two</p>
+          <h2 id="crew-h" class="h2">Get the group chat to actually commit.</h2>
+          <p class="body">Pick your people and send one text to all of them at once, with the time, the place and a link that opens right on their phone. They don’t need the app.</p>
+          <ul class="ticks">
+            <li>One group text, not five separate ones</li>
+            <li>Add it to everyone’s calendar</li>
+            <li>Split tickets with Venmo or Cash App</li>
+          </ul>
+        </div>
+        <div class="chat" role="img" aria-label="Example group text: an invite to trivia night, and three friends replying yes.">
+          <div class="chat__to"><span>To:</span> <b>Ana</b>, <b>Marcus</b>, <b>Jess</b></div>
+          <div class="chat__thread" data-chat>
+            <div class="msg msg--me">
+              <div class="linkcard">
+                <img src="/landing/s-patio.webp" alt="" width="360" height="150" loading="lazy" />
+                <div><b>Trivia Night: ’90s Edition</b><span>Fri · 8 PM · Clemson</span><small>Open in The Scene</small></div>
+              </div>
+              <p>Trivia Friday? We need a 4th 🧠</p>
+            </div>
+            <div class="msg"><i style="--c: var(--mustard)">A</i><p>I’m in</p></div>
+            <div class="msg"><i style="--c: var(--blush)">M</i><p>what time again</p></div>
+            <div class="msg msg--me"><p>8, it starts at 8:30</p></div>
+            <div class="msg"><i style="--c: var(--sage)">J</i><p>added it to my calendar 🙌</p></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- BENTO: the rest of what it does -->
+      <section class="bento-wrap" aria-labelledby="bento-h">
+        <h2 id="bento-h" class="h2 h2--center">Everything the outing needs</h2>
+        <div class="bento">
+          <article class="tile tile--phone">
+            <div class="tile__text"><h3>This weekend, at a glance</h3><p>Friday to Sunday, with the forecast for each day.</p></div>
+            <figure class="phone"><img class="shot--light" src="/landing/screen-weekend.webp" alt="This weekend, with the forecast for each day" width="390" height="664" loading="lazy" /><img class="shot--dark" src="/landing/screen-weekend-dark.webp" alt="This weekend, with the forecast for each day" width="390" height="664" loading="lazy" /></figure>
+          </article>
+          <article class="tile tile--taste">
+            <h3>Picks that get to know you</h3>
+            <p>Your favorites rise to the top. Skips stay out of sight.</p>
+            <ul class="tastes" aria-label="Example likes and skips">
+              <li class="like">Live music</li><li class="like">Breweries</li><li class="nope">Kids’ events</li><li class="like">Comedy</li><li class="nope">Sports</li><li class="like">Markets</li>
+            </ul>
+          </article>
+          <article class="tile tile--travel">
+            <h3>Home, or anywhere you go</h3>
+            <p>Traveling? Search any city and see what’s on there tonight.</p>
+            <ul class="cities" aria-hidden="true"><li>Anderson</li><li>Asheville</li><li>Atlanta</li><li>Charleston</li><li>Nashville</li></ul>
+          </article>
+          <article class="tile tile--cal">
+            <div class="cal" aria-hidden="true"><b>FRI</b><span>14</span></div>
+            <h3>On your calendar</h3>
+            <p>With a reminder, so nobody forgets.</p>
+          </article>
+          <article class="tile tile--split">
+            <div class="split" aria-hidden="true"><span>$48 total</span><b>$12 each</b></div>
+            <h3>Split the cost</h3>
+            <p>Venmo or Cash App, right from the event.</p>
+          </article>
+          <article class="tile tile--wish">
+            <h3>A wish list for someday</h3>
+            <p>Save the big ideas and check them off.</p>
+            <ul class="wish" aria-hidden="true"><li class="done">Paddle Lake Jocassee</li><li>Pottery class</li><li>Hot air balloon ride</li></ul>
+          </article>
         </div>
       </section>
 
@@ -78,84 +178,47 @@
         </div>
       </div>
 
-      <section id="how" class="how" aria-labelledby="how-h">
-        <h2 id="how-h" class="section-title">Three taps to a plan</h2>
-        <ol class="steps">
-          <li class="step">
-            <span class="step__shape step__shape--a" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2M7 2v20M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"/></svg></span>
-            <h3 class="step__title">Pick a mood</h3>
-            <p>Food and drink, date night, a night out, something chill. Tap one and the list reshuffles.</p>
-          </li>
-          <li class="step">
-            <span class="step__shape step__shape--b" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M20 10c0 4.99-5.54 10.19-7.4 11.8a1 1 0 0 1-1.2 0C9.54 20.19 4 14.99 4 10a8 8 0 0 1 16 0"/><circle cx="12" cy="10" r="3"/></svg></span>
-            <h3 class="step__title">See what’s on near you</h3>
-            <p>Shows, games, library nights and local spots, with the weekend’s weather right there.</p>
-          </li>
-          <li class="step">
-            <span class="step__shape step__shape--c" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></svg></span>
-            <h3 class="step__title">Bring your people</h3>
-            <p>One group text to the whole crew, with the link, the time and the place.</p>
-          </li>
-        </ol>
-      </section>
-
-      <section class="feature" aria-labelledby="f1-h">
-        <figure class="phone"><img class="shot--light" src="/landing/screen-setup.webp" alt="The setup screen, where you pick what you’re into" width="390" height="664" loading="lazy" /><img class="shot--dark" src="/landing/screen-setup-dark.webp" alt="The setup screen, where you pick what you’re into" width="390" height="664" loading="lazy" /></figure>
-        <div class="feature__copy">
-          <h2 id="f1-h" class="section-title">Picks that get to know you</h2>
-          <p>Tell it you love live music and breweries and you’d rather skip kids’ events. Your favorites rise to the top, the rest step aside, and every “Not for me” makes the next list better.</p>
+      <section id="faq" class="faq" aria-labelledby="faq-h">
+        <h2 id="faq-h" class="h2">Good questions</h2>
+        <div class="faq__list">
+          <details><summary>Is it free?</summary><p>Yes, The Scene is free. Tickets are sold by the venues, and the app links you straight to them.</p></details>
+          <details><summary>Where does it work?</summary><p>We’re starting in Upstate South Carolina: Anderson, Greenville, Clemson, Spartanburg and the towns around them. When you travel, you can search any city.</p></details>
+          <details><summary>Do my friends need the app?</summary><p>No. Your group text comes with a link that opens the event right in their phone’s browser.</p></details>
+          <details><summary>When do I get in?</summary><p>We’re inviting people in small groups. Join the list and we’ll email you once, when your invite is ready. Want a look now? <a href="/app/">Try the app</a>.</p></details>
         </div>
       </section>
-
-      <section class="feature feature--flip" aria-labelledby="f2-h">
-        <figure class="phone"><img class="shot--light" src="/landing/screen-event.webp" alt="An event with Get tickets, Save and Invite friends" width="390" height="664" loading="lazy" /><img class="shot--dark" src="/landing/screen-event-dark.webp" alt="An event with Get tickets, Save and Invite friends" width="390" height="664" loading="lazy" /></figure>
-        <div class="feature__copy">
-          <h2 id="f2-h" class="section-title">Plan it in one place</h2>
-          <ul class="ticks">
-            <li>Text the whole group at once</li>
-            <li>Add it to your calendar with a reminder</li>
-            <li>Directions, parking and dinner nearby</li>
-            <li>Split the tickets with Venmo or Cash App</li>
-          </ul>
-        </div>
-      </section>
-
-      <section class="feature" aria-labelledby="f3-h">
-        <figure class="phone"><img class="shot--light" src="/landing/screen-weekend.webp" alt="This weekend, with the forecast for each day" width="390" height="664" loading="lazy" /><img class="shot--dark" src="/landing/screen-weekend-dark.webp" alt="This weekend, with the forecast for each day" width="390" height="664" loading="lazy" /></figure>
-        <div class="feature__copy">
-          <h2 id="f3-h" class="section-title">Home, or anywhere you go</h2>
-          <p>Start with the Upstate. Traveling to Asheville or Atlanta? Search any city and see what’s on there tonight.</p>
-        </div>
-      </section>
-      <p class="screens-note">App screens show example events.</p>
 
       <section class="cta" aria-labelledby="cta-h">
-        <div class="cta__copy">
-        <h2 id="cta-h" class="cta__title">Be first on The&nbsp;Scene</h2>
-        <p class="cta__lede">We’re opening in small groups, starting in the Upstate.</p>
-        <form class="join" name="beta" method="POST" data-netlify="true" netlify-honeypot="bot-field" novalidate>
-          <input type="hidden" name="form-name" value="beta" />
-          <p class="sr-only"><label>Leave this empty <input name="bot-field" tabindex="-1" autocomplete="off" /></label></p>
-          <div class="join__row">
-            <label class="sr-only" for="email-2">Email</label>
-            <input id="email-2" class="join__email" type="email" name="email" required autocomplete="email" placeholder="you@email.com" />
-            <label class="sr-only" for="town-2">Your town (optional)</label>
-            <select id="town-2" class="join__town" name="town">
-              <option value="">Your town</option>
-              <option>Anderson</option><option>Greenville</option><option>Clemson</option><option>Spartanburg</option>
-              <option>Seneca</option><option>Easley</option><option>Greer</option><option>Somewhere else</option>
-            </select>
-            <button class="join__btn" type="submit">Join the beta</button>
-          </div>
-          <p class="join__note" data-status aria-live="polite">No spam. One email when your invite is ready.</p>
-        </form>
+        <div class="cta__photos" aria-hidden="true">
+          <img src="/landing/p-patio.webp" alt="" width="560" height="700" loading="lazy" />
+          <img src="/landing/p-hammock.webp" alt="" width="560" height="700" loading="lazy" />
+          <img src="/landing/p-camp.webp" alt="" width="560" height="700" loading="lazy" />
         </div>
-        <div class="cta__art" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span></div>
+        <div class="cta__copy">
+          <h2 id="cta-h" class="cta__title">Be first on The&nbsp;Scene.</h2>
+          <p class="cta__lede">We’re opening in small groups, starting in the Upstate.</p>
+          <form class="join join--bar join--oncolor" name="beta" method="POST" data-netlify="true" netlify-honeypot="bot-field" novalidate>
+            <input type="hidden" name="form-name" value="beta" />
+            <p class="sr-only"><label>Leave this empty <input name="bot-field" tabindex="-1" autocomplete="off" /></label></p>
+            <div class="join__row">
+              <label class="sr-only" for="email-2">Email</label>
+              <input id="email-2" class="join__email" type="email" name="email" required autocomplete="email" placeholder="you@email.com" />
+              <label class="sr-only" for="town-2">Your town (optional)</label>
+              <select id="town-2" class="join__town" name="town">
+                <option value="">Your town</option>
+                <option>Anderson</option><option>Greenville</option><option>Clemson</option><option>Spartanburg</option>
+                <option>Seneca</option><option>Easley</option><option>Greer</option><option>Somewhere else</option>
+              </select>
+              <button class="join__btn" type="submit">Join the beta</button>
+            </div>
+            <p class="join__note" data-status aria-live="polite">No spam. One email when your invite is ready.</p>
+          </form>
+        </div>
       </section>
     </main>
 
     <footer class="foot">
-      <a class="nav__brand" href="/"><svg class="mark" viewBox="214 87 212 318" aria-hidden="true"><path d="M219,188 A96,96 0 0 1 315,92 L315,188 Z" fill="#B5543A"/><rect x="325" y="92" width="96" height="96" rx="8" fill="#D6A243"/><path d="M315,294 A96,96 0 0 1 219,198 L315,198 Z" fill="#4E5A35"/><path d="M325,198 A96,96 0 0 1 421,294 L325,294 Z" fill="#E7C3B1"/><rect x="219" y="304" width="96" height="96" rx="8" fill="#2F3424"/><path d="M421,304 A96,96 0 0 1 325,400 L325,304 Z" fill="#8C4A3B"/></svg><span>THE SCENE</span></a>
+      <a class="nav__brand" href="/"><svg class="mark" viewBox="214 87 212 318" aria-hidden="true"><path d="M219,188 A96,96 0 0 1 315,92 L315,188 Z" fill="#B5543A"/><rect x="325" y="92" width="96" height="96" rx="8" fill="#D6A243"/><path d="M315,294 A96,96 0 0 1 219,198 L315,198 Z" fill="#4E5A35"/><path d="M325,198 A96,96 0 0 1 421,294 L325,294 Z" fill="#E7C3B1"/><rect class="mark__dark" x="219" y="304" width="96" height="96" rx="8"/><path d="M421,304 A96,96 0 0 1 325,400 L325,304 Z" fill="#8C4A3B"/></svg><span>THE SCENE</span></a>
       <p>Made in Anderson, SC.</p>
       <a href="/app/">Try the app</a>
     </footer>
