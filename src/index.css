@@ -1742,3 +1742,18 @@ body::before { content: ''; position: fixed; inset: 0 0 auto; height: env(safe-a
 }
 .moods__grid > .mood { width: 72px; }
 @media (min-width: 760px) { .mood__tile { max-width: 88px; } }
+/* Hero subtitle: lighter than the serif headline, a little air above, even line breaks. */
+.collage__head { gap: 12px; }
+.collage__head .collage__sub {
+  font-size: 1.0625rem; font-weight: 400; line-height: 1.45; letter-spacing: 0.005em;
+  color: #DCD3C3; max-width: 30ch; text-wrap: balance;
+}
+@media (min-width: 760px) { .collage__head .collage__sub { font-size: 1.125rem; max-width: 34ch; } }
+/* Hero panel: more breathing room between headline, subtitle, and edges. */
+.collage__head { gap: 18px; padding: 28px 26px 32px; }
+.collage__head h1 { line-height: 1.04; }
+.collage__head .collage__sub { line-height: 1.5; }
+@media (min-width: 760px) {
+  .collage__head { gap: 20px; padding: 40px 44px 44px; }
+  .collage__head .collage__sub { font-size: 1.1875rem; }
+}
