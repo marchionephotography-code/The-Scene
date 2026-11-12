@@ -8,6 +8,7 @@ import {
   directionsHref,
   googleCalendarHref,
   icsFile,
+  mapEmbedHref,
   parkingNote,
   paybackLine,
   paybackLinks,
@@ -84,7 +85,7 @@ export function PlanTools({ event, allEvents, onOpenEvent, onAddToMessage }: Pro
             Add to calendar
           </button>
         )}
-        <a className="plan-btn" href={directionsHref(event.location, event.venue, platform)} target="_blank" rel="noopener noreferrer">
+        <a className="plan-btn" href={directionsHref(event.location, event.venue, platform)} data-embed={mapEmbedHref(`${event.location.lat},${event.location.lng}`, event.location)} target="_blank" rel="noopener noreferrer">
           <Navigation size={18} strokeWidth={2.25} aria-hidden="true" />
           Directions
         </a>
@@ -115,7 +116,7 @@ export function PlanTools({ event, allEvents, onOpenEvent, onAddToMessage }: Pro
               ))}
             </ul>
           )}
-          <a className="link-btn" href={dinnerSearchHref(event.location, platform)} target="_blank" rel="noopener noreferrer">
+          <a className="link-btn" href={dinnerSearchHref(event.location, platform)} data-embed={mapEmbedHref(`restaurants near ${event.location.lat},${event.location.lng}`, event.location, 14)} target="_blank" rel="noopener noreferrer">
             Find restaurants near {event.venue.replace(/ \(sample\)$/, '')}
           </a>
         </div>

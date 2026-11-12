@@ -146,3 +146,8 @@ export function paybackLine(eachCents: number, links: { label: string; href: str
   if (!links.length) return ''
   return `Tickets are ${formatMoney({ amountCents: eachCents, currency: 'USD' })} each. Pay me back: ${links.map((l) => `${l.label} ${l.href}`).join(' · ')}`
 }
+
+/** Google's embeddable map (allowed inside the app's page viewer). */
+export function mapEmbedHref(q: string, near: GeoPoint, zoom = 15): string {
+  return `https://maps.google.com/maps?q=${encodeURIComponent(q)}&ll=${near.lat},${near.lng}&z=${zoom}&output=embed`
+}

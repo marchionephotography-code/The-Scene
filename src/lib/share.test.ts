@@ -17,7 +17,7 @@ describe('sharing', () => {
     expect(smsHref(text)).toBe('sms:?&body=Hi%20%26%20see%20you%20at%207%3F')
     expect(mailtoHref('Plans', text)).toBe('mailto:?subject=Plans&body=Hi%20%26%20see%20you%20at%207%3F')
     const targets = socialTargets(text)
-    expect(targets.map((t) => t.id)).toEqual(['x', 'threads', 'bluesky', 'whatsapp'])
+    expect(targets.map((t) => t.id)).toEqual(['x', 'threads'])
     for (const t of targets) expect(t.href).toContain('Hi%20%26%20see')
   })
 

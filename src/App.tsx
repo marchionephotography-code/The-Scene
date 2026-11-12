@@ -8,6 +8,7 @@ import { EventDetail } from './components/EventDetail'
 import { FilterPanel } from './components/FilterPanel'
 import { LocationBar } from './components/LocationBar'
 import { InstallPrompt } from './components/InstallPrompt'
+import { LinkViewer } from './components/LinkViewer'
 import { MapView } from './components/MapView'
 import { MoodPicker } from './components/MoodPicker'
 import { WeekendStrip } from './components/WeekendStrip'
@@ -20,6 +21,7 @@ import { APP_NAME } from './config'
 import { fetchEvents, type EventFeed } from './data/eventSource'
 import { AREA } from './data/feeds/area'
 import { applyWeather, fetchForecast, forecastFor, type Forecast } from './lib/weather'
+import { setLinkViewer, type OutsideLink } from './lib/links'
 import { useLocation } from './hooks/useLocation'
 import { useSaved } from './hooks/useSaved'
 import { FOOD_GUIDE } from './data/guides'
@@ -69,6 +71,23 @@ export default function App() {
   const location = useLocation()
   const saved = useSaved()
   const [view, setView] = useState<'list' | 'map'>('list')
+
+  // Outside links open in an in-app page with a Back button. It takes a
+  // history entry, so the phone's back gesture closes it too.
+  const [outside, setOutside] = useState<OutsideLink | null>(null)
+  useEffect(() => {
+    setLinkViewer((l) => {
+      try { window.history.pushState({ viewer: true }, '') } catch { /* history unavailable */ }
+      setOutside(l)
+    })
+    const onPop = () => setOutside(null)
+    window.addEventListener('popstate', onPop)
+    return () => { setLinkViewer(null); window.removeEventListener('popstate', onPop) }
+  }, [])
+  const closeOutside = useCallback(() => {
+    if ((window.history.state as { viewer?: boolean } | null)?.viewer) window.history.back()
+    else setOutside(null)
+  }, [])
   const [forecast, setForecast] = useState<Forecast | null>(null)
 
   // Forecast for where the viewer is (or the Upstate by default). If it
@@ -492,6 +511,7 @@ export default function App() {
       >
         {openEventData && <EventDetail key={openEventData.id} event={openEventData} saved={saved} allEvents={events} onOpenEvent={openEvent} />}
       </Sheet>
+      {outside && <LinkViewer key={outside.href} link={outside} onBack={closeOutside} />}
     </div>
   )
 }

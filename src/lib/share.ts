@@ -59,7 +59,7 @@ export function mailtoHref(subject: string, body: string, to = ''): string {
 }
 
 export interface SocialTarget {
-  id: 'x' | 'threads' | 'bluesky' | 'whatsapp'
+  id: 'x' | 'threads'
   label: string
   href: string
 }
@@ -110,7 +110,5 @@ export function socialTargets(text: string): SocialTarget[] {
   return [
     { id: 'x', label: 'X', href: `https://x.com/intent/post?text=${t}` },
     { id: 'threads', label: 'Threads', href: `https://www.threads.net/intent/post?text=${t}` },
-    { id: 'bluesky', label: 'Bluesky', href: `https://bsky.app/intent/compose?text=${t}` },
-    { id: 'whatsapp', label: 'WhatsApp', href: `https://wa.me/?text=${t}` },
   ]
 }

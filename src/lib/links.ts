@@ -10,6 +10,20 @@
 const APP_SCHEMES = /^(instagram|fb|snssdk\d+|tiktok|intent|twitter|threads|whatsapp):/i
 const HANDOFF = /^(mailto|sms|tel):/i
 
+export interface OutsideLink {
+  href: string
+  /** A version of the page that is allowed to show inside the app (e.g. a map embed). */
+  embed?: string
+  /** What the link said, for the page title. */
+  label: string
+}
+
+/** Set by the app: show outside pages in its own viewer with a Back button. */
+let viewer: ((l: OutsideLink) => void) | null = null
+export function setLinkViewer(fn: ((l: OutsideLink) => void) | null): void {
+  viewer = fn
+}
+
 export function installLinkGuard(doc: Document = document, win: Window = window): () => void {
   const embedded = (() => {
     try { return win.top !== win.self } catch { return true }
@@ -41,7 +55,11 @@ export function installLinkGuard(doc: Document = document, win: Window = window)
     const outside = url.origin !== win.location.origin
     if (outside || embedded) {
       e.preventDefault()
-      win.open(url.href, '_blank', 'noopener')
+      if (viewer && a.dataset.noViewer === undefined) {
+        viewer({ href: url.href, embed: a.dataset.embed, label: (a.getAttribute('aria-label') || a.textContent || '').trim() })
+      } else {
+        win.open(url.href, '_blank', 'noopener')
+      }
     }
   }
   doc.addEventListener('click', onClick)

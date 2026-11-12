@@ -156,7 +156,7 @@ export function EventDetail({ event, saved, allEvents, onOpenEvent }: Props) {
         <p className="field-label">Post to social media</p>
         <div className="share-social">
           {socialTargets(message).map((s) => (
-            <a key={s.id} className={`social social--${s.id}`} href={s.href} target="_blank" rel="noopener noreferrer">
+            <a key={s.id} className={`social social--${s.id}`} href={s.href} target="_blank" rel="noopener noreferrer" data-no-viewer="">
               {s.label}
             </a>
           ))}
@@ -166,6 +166,7 @@ export function EventDetail({ event, saved, allEvents, onOpenEvent }: Props) {
               className={`social social--${s.id}`}
               href={appHref(s, platform)}
               data-web={s.href}
+              data-no-viewer=""
               {...(platform === 'desktop' ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
               onClick={() => copyThenOpen(s)}
             >
