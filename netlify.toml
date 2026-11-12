@@ -1,6 +1,7 @@
 # Netlify settings for The Scene.
 # In Netlify → Site configuration → Environment variables, add:
 #   TICKETMASTER_KEY        (server only; do NOT add VITE_TICKETMASTER_KEY on Netlify)
+#   GOOGLE_PLACES_KEY       (server only; venue photos for events without their own picture)
 #   VITE_SITE_URL           e.g. https://thescene.app (used in shared links)
 #   VITE_SUPABASE_URL / VITE_SUPABASE_ANON_KEY   (optional, accounts)
 #   VITE_SUPPORT_EMAIL      (optional, report emails)

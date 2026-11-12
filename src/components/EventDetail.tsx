@@ -6,6 +6,7 @@ import { formatPriceRange, PRICE_STATUS_LABEL } from '../lib/money'
 import { appHref, buildShareText, detectPlatform, formatShareWhen, mailtoHref, PASTE_TARGETS, socialTargets } from '../lib/share'
 import type { SceneEvent } from '../types/event'
 import { eventUrl } from '../lib/eventLinks'
+import { useVenuePhoto } from '../lib/venuePhoto'
 import { GroupText } from './GroupText'
 import { PlanTools } from './PlanTools'
 import { ReportProblem } from './ReportProblem'
@@ -39,6 +40,8 @@ export function EventDetail({ event, saved, allEvents, onOpenEvent, moreLike, on
   const [pastedFor, setPastedFor] = useState<string | null>(null)
   const [textOpen, setTextOpen] = useState(false)
   const [photoFailed, setPhotoFailed] = useState(false)
+  const venue = useVenuePhoto(event)
+  const photoSrc = event.image ?? venue?.url
   /** Set when an app link didn't open (app not installed), to offer the website. */
   const [fallback, setFallback] = useState<{ label: string; href: string } | null>(null)
   const [platform] = useState(() => detectPlatform())
@@ -96,10 +99,19 @@ export function EventDetail({ event, saved, allEvents, onOpenEvent, moreLike, on
 
   return (
     <div className="detail">
-      {event.image && !photoFailed && (
+      {photoSrc && !photoFailed && (
         <figure className="detail__photo">
-          <img src={event.image} alt="" referrerPolicy="no-referrer" decoding="async" onError={() => setPhotoFailed(true)} />
-          <figcaption className="sr-only">Photo from {event.id.startsWith('tm-') ? 'Ticketmaster' : event.host?.name ?? 'the organizer'}</figcaption>
+          <img src={photoSrc} alt="" referrerPolicy="no-referrer" decoding="async" onError={() => setPhotoFailed(true)} />
+          {event.image ? (
+            <figcaption className="sr-only">Photo from {event.id.startsWith('tm-') ? 'Ticketmaster' : event.host?.name ?? 'the organizer'}</figcaption>
+          ) : venue && (
+            <figcaption className="detail__credit">
+              Photo of {event.venue}
+              {venue.credit.length > 0 && <> by {venue.credit.slice(0, 2).map((c, i) => (
+                <span key={c.name}>{i > 0 && ', '}{c.uri ? <a href={c.uri} target="_blank" rel="noopener noreferrer">{c.name}</a> : c.name}</span>
+              ))}</>} · Google Maps
+            </figcaption>
+          )}
         </figure>
       )}
       <section className="detail__info">

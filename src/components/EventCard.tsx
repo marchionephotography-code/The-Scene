@@ -31,6 +31,7 @@ import {
 } from 'lucide-react'
 import { Cloud, CloudRain, Sun } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
+import { useVenuePhoto } from '../lib/venuePhoto'
 import { describe as describeWeather, isOutdoor, RAINY, type DayForecast } from '../lib/weather'
 import { CATEGORIES, formatMiles, type Recommendation } from '../lib/discovery'
 import { formatPriceRange, PRICE_STATUS_LABEL } from '../lib/money'
@@ -145,7 +146,19 @@ export function EventCard({ rec, now, favorite, onToggleFavorite, onOpen, weathe
   // Number in the id (sample-7 → 7) keeps neighbouring cards on different photos.
   // The event's own photo comes first; a broken or missing one falls back to the tile art.
   const [photoFailed, setPhotoFailed] = useState(false)
-  const photo = photoFailed ? null : (event.image ?? photoFor(event.category, Number(event.id.match(/\d+/)?.[0] ?? h)))
+  // Live events without their own picture try a photo of the venue (Google Places) once on screen.
+  const cardRef = useRef<HTMLElement>(null)
+  const [near, setNear] = useState(false)
+  useEffect(() => {
+    const el = cardRef.current
+    if (!el || near || typeof IntersectionObserver === 'undefined') return
+    const io = new IntersectionObserver(([en]) => { if (en.isIntersecting) { setNear(true); io.disconnect() } }, { rootMargin: '300px' })
+    io.observe(el)
+    return () => io.disconnect()
+  }, [near])
+  const venue = useVenuePhoto(event, near)
+  const venueShown = !photoFailed && !event.image && !!venue
+  const photo = photoFailed ? null : (event.image ?? venue?.url ?? photoFor(event.category, Number(event.id.match(/\d+/)?.[0] ?? h)))
 
   const when = dayParts(event.start, now)
   const extraReasons = reasons.filter((r) => !SHOWN_ON_CARD.has(r) && !HIDDEN_ON_CARD.has(r))
@@ -154,7 +167,7 @@ export function EventCard({ rec, now, favorite, onToggleFavorite, onOpen, weathe
   const isLibrary = event.host?.kind === 'library'
 
   return (
-    <article className="card" aria-labelledby={`${event.id}-title`}>
+    <article ref={cardRef} className="card" aria-labelledby={`${event.id}-title`}>
       <div className="card__media">
         {photo ? (
           <div className={`cover cover--photo cover--duo tiles--${event.category}`} aria-hidden="true">
@@ -180,6 +193,7 @@ export function EventCard({ rec, now, favorite, onToggleFavorite, onOpen, weathe
           </div>
         )}
         <span className="card__cat">{category}</span>
+        {venueShown && venue && <span className="card__credit" title={venue.credit.map((c) => c.name).join(', ')}>{venue.credit[0]?.name ? `© ${venue.credit[0].name} · ` : ''}Google Maps</span>}
         <button
           type="button"
           className={`heart${favorite ? ' heart--on' : ''}`}

@@ -62,7 +62,7 @@ button { font: inherit; }
 .hero { width: var(--wrap); margin: 0 auto; padding: clamp(28px, 5vw, 64px) 0 clamp(40px, 5vw, 56px); display: grid; justify-items: center; text-align: center; }
 .badge { display: inline-flex; align-items: center; gap: 10px; padding: 8px 14px 8px 12px; border-radius: 999px; background: var(--surface); border: 1px solid var(--line); font-size: 0.875rem; font-weight: 600; }
 .badge__dot { width: 8px; height: 8px; border-radius: 999px; background: var(--clay); box-shadow: 0 0 0 0 color-mix(in srgb, var(--clay) 50%, transparent); }
-.hero__title { margin-top: 22px; font: 400 clamp(3.1rem, 1.2rem + 7.6vw, 8.6rem)/0.98 var(--serif); letter-spacing: -0.025em; }
+.hero__title { margin-top: 22px; font: 400 clamp(3.6rem, 1.6rem + 8vw, 9rem)/0.96 var(--serif); letter-spacing: -0.025em; }
 .hero__title .line { display: block; white-space: nowrap; }
 .hero__title em { font-style: italic; color: var(--title-em); padding-right: 0.04em; }
 .pill { display: inline-block; vertical-align: -0.06em; height: 0.78em; border-radius: 999px; overflow: hidden; position: relative; }
@@ -248,19 +248,6 @@ button { font: inherit; }
 [data-theme='dark'] .shot--dark { display: block; }
 .phone img { width: 100%; }
 
-/* ---------- Towns: big outlined type ---------- */
-.towns { overflow: hidden; padding: 6px 0 clamp(64px, 8vw, 110px); }
-.towns__track { display: flex; width: max-content; animation: drift 60s linear infinite; }
-.towns__track span { font: italic 400 clamp(3rem, 1.6rem + 5vw, 6.5rem)/1.1 var(--serif); padding: 0 0.3em; white-space: nowrap; color: var(--ink); }
-.towns__track span:nth-child(even) { color: transparent; -webkit-text-stroke: 1.5px var(--ink); }
-.towns:hover .towns__track { animation-play-state: paused; }
-@keyframes drift { to { transform: translateX(-50%); } }
-@media (prefers-reduced-motion: reduce) {
-  .towns__track { animation: none; width: auto; flex-wrap: wrap; justify-content: center; padding-inline: 20px; }
-  .towns__track span { font-size: clamp(2rem, 1.4rem + 2vw, 3.2rem); }
-  .towns__track span[aria-hidden] { display: none; }
-}
-
 /* ---------- FAQ ---------- */
 .faq { width: var(--wrap); margin: 0 auto; padding-bottom: clamp(72px, 9vw, 120px); display: grid; grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr); gap: 40px; align-items: start; }
 .faq__list { border-top: 1px solid var(--line-strong); }
@@ -342,3 +329,4 @@ button { font: inherit; }
 .foot p { flex: 1 1 180px; }
 .moods .stack__note { color: var(--on-tint-2, #46432F); }
 [data-theme='dark'] .moods .stack__note { color: #CFC8B5; }
+.hero__accent { color: var(--title-em); }
