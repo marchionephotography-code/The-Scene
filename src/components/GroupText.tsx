@@ -1,4 +1,4 @@
-import { BookUser, Check, ChevronDown, MessageCircle, Plus, Send, Users, X } from 'lucide-react'
+import { BookUser, Check, ChevronDown, Copy, Info, MessageCircle, Plus, Send, Users, X } from 'lucide-react'
 import { useId, useState } from 'react'
 import { useFriends } from '../hooks/useFriends'
 import { readJSON, writeJSON } from '../lib/storage'
@@ -14,6 +14,11 @@ interface ContactsApi {
 }
 
 const LAST_CREW = 'scene:last-crew'
+
+/** Inside a preview frame (like Claude's), phones block contacts, texting and sharing. */
+const embedded = (() => {
+  try { return typeof window !== 'undefined' && window.top !== window.self } catch { return true }
+})()
 
 function contactPicker(): ContactsApi | null {
   if (typeof navigator === 'undefined') return null
@@ -39,8 +44,17 @@ export function GroupText({ message, platform }: Props) {
   const [manual, setManual] = useState(false)
   const [note, setNote] = useState('')
   const id = useId()
-  const picker = contactPicker()
-  const canShare = typeof navigator !== 'undefined' && typeof navigator.share === 'function'
+  const picker = embedded ? null : contactPicker()
+  const canShare = !embedded && typeof navigator !== 'undefined' && typeof navigator.share === 'function'
+  const [copied, setCopied] = useState<'' | 'ok' | 'select'>('')
+  const copyInvite = async () => {
+    try {
+      await navigator.clipboard.writeText(message)
+      setCopied('ok')
+    } catch {
+      setCopied('select')
+    }
+  }
 
   const chosen = friends.filter((f) => picked.includes(f.id))
   const href = smsGroupHref(chosen.map((f) => f.phone), message, platform)
@@ -99,9 +113,16 @@ export function GroupText({ message, platform }: Props) {
         )}
       </div>
 
+      {embedded && (
+        <p className="gtext__notice">
+          <Info size={16} strokeWidth={2.25} aria-hidden="true" />
+          <span>This preview blocks contacts and texting. Open The Scene on your phone to text friends. For now, copy the invite and paste it into Messages.</span>
+        </p>
+      )}
+
       {/* Start from the phone's contacts */}
       <div className="gtext__ways">
-        {picker ? (
+        {!embedded && (picker ? (
           <button type="button" className="way way--main" onClick={fromContacts}>
             <span className="way__icon" aria-hidden="true"><BookUser size={20} strokeWidth={2.25} /></span>
             <span className="way__text"><b>Choose from contacts</b><small>Pick as many people as you like</small></span>
@@ -111,14 +132,22 @@ export function GroupText({ message, platform }: Props) {
             <span className="way__icon" aria-hidden="true"><BookUser size={20} strokeWidth={2.25} /></span>
             <span className="way__text"><b>Pick friends in Messages</b><small>The invite is written for you. Type names in To: to add people from your contacts.</small></span>
           </a>
-        )}
+        ))}
         {canShare && (
           <button type="button" className="way" onClick={shareToChat}>
             <span className="way__icon" aria-hidden="true"><Send size={18} strokeWidth={2.25} /></span>
             <span className="way__text"><b>Send to a group chat</b><small>Your recent chats show up first</small></span>
           </button>
         )}
+        <button type="button" className={`way${embedded ? ' way--main' : ''}`} onClick={copyInvite}>
+          <span className="way__icon" aria-hidden="true">{copied === 'ok' ? <Check size={18} strokeWidth={2.5} /> : <Copy size={18} strokeWidth={2.25} />}</span>
+          <span className="way__text"><b>{copied === 'ok' ? 'Invite copied' : 'Copy the invite'}</b><small>{copied === 'ok' ? 'Paste it into any chat' : 'Paste it into any chat or app'}</small></span>
+        </button>
       </div>
+      {copied === 'select' && (
+        <textarea className="input gtext__copy" readOnly value={message} rows={5} aria-label="Invite text, select and copy it"
+          ref={(el) => { if (el) { el.focus(); el.select() } }} />
+      )}
       {note && <p className="hint" role="status">{note}</p>}
 
       {friends.length > 0 && (
@@ -157,13 +186,14 @@ export function GroupText({ message, platform }: Props) {
         </>
       )}
 
-      {chosen.length > 0 && (
+      {chosen.length > 0 && !embedded && (
         <a className="btn btn--lg gtext__send" href={href} onClick={rememberCrew}>
           <MessageCircle size={18} strokeWidth={2.25} aria-hidden="true" />
           {chosen.length === 1 ? `Text ${chosen[0].name}` : `Text ${chosen.length} friends together`}
         </a>
       )}
 
+      {!embedded && (<>
       <button type="button" className="link-btn gtext__toggle" aria-expanded={manual} aria-controls={`${id}-add`} onClick={() => setManual((m) => !m)}>
         <Plus size={16} strokeWidth={2.5} aria-hidden="true" /> Add a number yourself
         <ChevronDown size={16} strokeWidth={2.5} aria-hidden="true" className={manual ? 'is-open' : undefined} />
@@ -182,6 +212,7 @@ export function GroupText({ message, platform }: Props) {
           </button>
         </div>
       )}
+      </>)}
       {error && <p id={`${id}-err`} className="hint hint--error" role="alert">{error}</p>}
 
       <p className="hint">Names and numbers stay on this phone.</p>

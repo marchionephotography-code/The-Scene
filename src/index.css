@@ -1871,3 +1871,6 @@ body::before { content: ''; position: fixed; inset: 0 0 auto; height: env(safe-a
 .friend--crew { font-weight: 700; }
 .gtext__toggle { display: inline-flex; align-items: center; gap: 6px; justify-self: start; padding-left: 0; font-size: var(--fs-small); }
 .gtext__toggle .is-open { rotate: 180deg; }
+.gtext__notice { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 8px; align-items: start; padding: 10px 12px; border-radius: var(--r-sm); background: var(--sample-bg); color: var(--sample-ink); font-size: var(--fs-small); line-height: 1.4; }
+.gtext__notice svg { margin-top: 2px; }
+.gtext__copy { width: 100%; font-size: var(--fs-small); resize: vertical; }
