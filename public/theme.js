@@ -2,7 +2,8 @@
 (function () {
   var c = 'auto';
   try { c = localStorage.getItem('scene:theme') || 'auto'; } catch { /* blocked storage */ }
-  var dark = c === 'dark' || (c !== 'light' && window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches);
+  var host = document.documentElement.getAttribute('data-theme');
+  var dark = c === 'dark' || (c !== 'light' && (host === 'dark' || (host !== 'light' && window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches)));
   var t = dark ? 'dark' : 'light';
   document.documentElement.dataset.sceneTheme = t;
   document.documentElement.style.colorScheme = t;

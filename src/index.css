@@ -68,11 +68,10 @@
   caret-color: var(--accent);
 }
 
-/* SCENE commits to one bright, white look (like Uber and Airbnb) on every
-   device, so there is no dark theme. */
-
 * { box-sizing: border-box; }
-body { margin: 0; background: var(--bg); }
+/* Set text color and type on body itself: some hosts (like the Claude
+   preview) style body directly, which would beat what :root passes down. */
+body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--font-text); font-size: 1rem; line-height: var(--lh-text); }
 button, input, select { font: inherit; color: inherit; letter-spacing: inherit; }
 button { cursor: pointer; }
 h1, h2, h3, p { margin: 0; }
@@ -1846,3 +1845,8 @@ body::before { content: ''; position: fixed; inset: 0 0 auto; height: env(safe-a
 [data-scene-theme='dark'] .collage__tile--a { background: #8A5547 !important; color: #F7F2E9; }
 [data-scene-theme='dark'] .setup-card__icon { background: var(--primary); color: var(--primary-ink); }
 [data-scene-theme='dark'] .logo-mark__dark { fill: #F0E9DB; }
+
+/* The search bar stays white in light and dark mode. */
+.pill, [data-scene-theme='dark'] .pill { background: #FFFFFF; color: #23251B; border-color: #E0D7C6; }
+.pill .pill__sub, [data-scene-theme='dark'] .pill .pill__sub { color: #5C5D4C; }
+.pill .pill__icon { color: #23251B; }

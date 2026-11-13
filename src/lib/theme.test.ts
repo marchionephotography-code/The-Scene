@@ -14,5 +14,8 @@ describe('theme', () => {
     expect(resolveTheme('auto', false)).toBe('light')
     expect(resolveTheme('light', true)).toBe('light')
     expect(resolveTheme('dark', false)).toBe('dark')
+    expect(resolveTheme('auto', false, 'dark')).toBe('dark')
+    expect(resolveTheme('auto', true, 'light')).toBe('light')
+    expect(resolveTheme('light', false, 'dark')).toBe('light')
   })
 })

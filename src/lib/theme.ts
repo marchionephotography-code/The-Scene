@@ -18,8 +18,15 @@ export function readChoice(storage: Pick<Storage, 'getItem'> | null = safeStorag
   }
 }
 
-export function resolveTheme(choice: ThemeChoice, systemDark: boolean): Theme {
-  return choice === 'auto' ? (systemDark ? 'dark' : 'light') : choice
+/** Auto follows the host's own setting (e.g. the Claude viewer's data-theme) when there is one, else the system. */
+export function resolveTheme(choice: ThemeChoice, systemDark: boolean, host: Theme | null = null): Theme {
+  if (choice !== 'auto') return choice
+  return host ?? (systemDark ? 'dark' : 'light')
+}
+
+function hostTheme(): Theme | null {
+  const v = typeof document === 'undefined' ? null : document.documentElement.getAttribute('data-theme')
+  return v === 'dark' || v === 'light' ? v : null
 }
 
 function systemDark(): boolean {
@@ -31,7 +38,7 @@ function safeStorage(): Storage | null {
 }
 
 export function applyTheme(choice: ThemeChoice = readChoice()): Theme {
-  const theme = resolveTheme(choice, systemDark())
+  const theme = resolveTheme(choice, systemDark(), hostTheme())
   const root = document.documentElement
   root.dataset.sceneTheme = theme
   root.style.colorScheme = theme
@@ -53,7 +60,13 @@ export function setChoice(choice: ThemeChoice): Theme {
 export function watchSystemTheme(): () => void {
   if (typeof matchMedia !== 'function') return () => {}
   const mq = matchMedia('(prefers-color-scheme: dark)')
-  const on = () => { if (readChoice() === 'auto') applyTheme('auto') }
+  const on = () => {
+    if (readChoice() !== 'auto') return
+    applyTheme('auto')
+    window.dispatchEvent(new CustomEvent('scene:theme', { detail: 'auto' }))
+  }
   mq.addEventListener('change', on)
-  return () => mq.removeEventListener('change', on)
+  const mo = typeof MutationObserver === 'function' ? new MutationObserver(on) : null
+  mo?.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] })
+  return () => { mq.removeEventListener('change', on); mo?.disconnect() }
 }
