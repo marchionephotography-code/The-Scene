@@ -1850,3 +1850,24 @@ body::before { content: ''; position: fixed; inset: 0 0 auto; height: env(safe-a
 .pill, [data-scene-theme='dark'] .pill { background: #FFFFFF; color: #23251B; border-color: #E0D7C6; }
 .pill .pill__sub, [data-scene-theme='dark'] .pill .pill__sub { color: #5C5D4C; }
 .pill .pill__icon { color: #23251B; }
+
+/* Group text: start from the phone's contacts */
+.gtext__ways { display: grid; gap: 8px; }
+.way {
+  display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: center; gap: 12px;
+  min-height: 60px; padding: 10px 14px; border-radius: var(--r-md); text-align: left; text-decoration: none;
+  background: var(--surface); color: var(--ink); border: 1px solid var(--line-strong); cursor: pointer;
+  transition: transform var(--t-feedback) var(--ease-out), background var(--t-state);
+}
+.way:active { transform: scale(0.985); }
+@media (hover: hover) { .way:hover { background: var(--bg); } }
+.way__icon { width: 40px; height: 40px; border-radius: 12px; display: grid; place-items: center; background: var(--tile); color: var(--ink); }
+.way--main { border-color: var(--primary); }
+.way--main .way__icon { background: var(--primary); color: var(--primary-ink); }
+.way__text { display: grid; gap: 2px; min-width: 0; }
+.way__text b { font-weight: 700; font-size: var(--fs-body); }
+.way__text small { font-size: var(--fs-small); color: var(--ink-2); line-height: 1.35; }
+.gtext__label { font-size: var(--fs-micro, 0.6875rem); font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-2); margin-top: 4px; }
+.friend--crew { font-weight: 700; }
+.gtext__toggle { display: inline-flex; align-items: center; gap: 6px; justify-self: start; padding-left: 0; font-size: var(--fs-small); }
+.gtext__toggle .is-open { rotate: 180deg; }

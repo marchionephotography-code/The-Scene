@@ -21,7 +21,7 @@ export function buildShareText(event: SceneEvent, locale?: string, link = ''): s
     `Price: ${formatPriceRange(event.price, locale)}`,
   ]
   if (link) lines.push(link)
-  if (event.source === 'sample') lines.push('', `(Sample listing from the ${APP_NAME} demo, not a real event yet.)`)
+  if (event.source === 'sample') lines.push('', `(Sample listing from the demo of ${APP_NAME}. Not a real event yet.)`)
   return lines.join('\n')
 }
 

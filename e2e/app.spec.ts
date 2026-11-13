@@ -60,6 +60,8 @@ test('setup ranks likes first and hides skips, and Not for me can be undone', as
 test('group text goes to everyone picked', async ({ page }) => {
   await page.locator('ul.grid .card__open').first().click()
   await page.getByRole('button', { name: 'Text friends' }).click()
+  await expect(page.getByRole('link', { name: /Pick friends in Messages/ })).toHaveAttribute('href', /^sms:/)
+  await page.getByRole('button', { name: 'Add a number yourself' }).click()
   for (const [n, ph] of [['Ana', '864 555 0101'], ['Ben', '864-555-0102']]) {
     await page.getByPlaceholder('Name').fill(n)
     await page.getByPlaceholder('Phone number').fill(ph)
@@ -111,4 +113,21 @@ test('top bar switch flips light and dark', async ({ page }) => {
   await expect(html).not.toHaveAttribute('data-scene-theme', before ?? '')
   await page.getByRole('button', { name: /Switch to (dark|light) mode/ }).click()
   await expect(html).toHaveAttribute('data-scene-theme', before ?? 'light')
+})
+
+test('pulls several friends from contacts at once', async ({ page }) => {
+  await page.addInitScript(() => {
+    Object.defineProperty(navigator, 'contacts', { value: { select: async () => [
+      { name: ['Ana Ruiz'], tel: ['(864) 555-0101'] },
+      { name: ['Marcus'], tel: ['+1 864 555 0102'] },
+      { name: ['No Number'], tel: [] },
+    ] } })
+  })
+  await page.reload()
+  await page.locator('ul.grid .card__open').first().click()
+  await page.getByRole('button', { name: 'Text friends' }).click()
+  await page.getByRole('button', { name: /Choose from contacts/ }).click()
+  await expect(page.getByRole('status').filter({ hasText: 'Added 2 friends' })).toContainText('1 had no phone number')
+  await expect(page.locator('.gtext__send')).toHaveText(/Text 2 friends together/)
+  await expect(page.locator('.gtext__send')).toHaveAttribute('href', /8645550101,\+?1?8645550102/)
 })
