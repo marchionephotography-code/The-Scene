@@ -17,7 +17,7 @@ export function LogoMark({ height = 30 }: { height?: number }) {
       <rect x="325" y="92" width="96" height="96" rx="8" fill="#D6A243" />
       <path d="M315,294 A96,96 0 0 1 219,198 L315,198 Z" fill="#4E5A35" />
       <path d="M325,198 A96,96 0 0 1 421,294 L325,294 Z" fill="#E7C3B1" />
-      <rect x="219" y="304" width="96" height="96" rx="8" fill="#2F3424" />
+      <rect className="logo-mark__dark" x="219" y="304" width="96" height="96" rx="8" fill="#2F3424" />
       <path d="M421,304 A96,96 0 0 1 325,400 L325,304 Z" fill="#8C4A3B" />
     </svg>
   )

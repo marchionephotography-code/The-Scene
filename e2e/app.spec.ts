@@ -103,3 +103,12 @@ test('appearance switch changes and remembers light or dark', async ({ page }) =
   await page.locator('.seg__opt', { hasText: 'Light' }).click()
   await expect(page.locator('html')).toHaveAttribute('data-scene-theme', 'light')
 })
+
+test('top bar switch flips light and dark', async ({ page }) => {
+  const html = page.locator('html')
+  const before = await html.getAttribute('data-scene-theme')
+  await page.getByRole('button', { name: /Switch to (dark|light) mode/ }).click()
+  await expect(html).not.toHaveAttribute('data-scene-theme', before ?? '')
+  await page.getByRole('button', { name: /Switch to (dark|light) mode/ }).click()
+  await expect(html).toHaveAttribute('data-scene-theme', before ?? 'light')
+})

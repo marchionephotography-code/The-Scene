@@ -1821,3 +1821,28 @@ body::before { content: ''; position: fixed; inset: 0 0 auto; height: env(safe-a
 [data-scene-theme='dark'] .leaflet-bar a, [data-scene-theme='dark'] .leaflet-control-attribution { background: #212418; color: var(--ink); }
 [data-scene-theme='dark'] .leaflet-control-attribution a { color: var(--ink); }
 [data-scene-theme='dark'] .card__badge { background: #212418; color: var(--ink); }
+
+/* Light / dark switch in the top bar */
+.topbar__tools { display: flex; align-items: center; gap: 8px; }
+.mode-toggle {
+  width: var(--tap); height: var(--tap); display: grid; place-items: center; flex: none;
+  border-radius: 999px; border: 1px solid var(--line-strong); background: transparent; color: var(--ink); cursor: pointer;
+  transition: background var(--t-state) var(--ease-out), transform var(--t-feedback) var(--ease-out);
+}
+@media (hover: hover) { .mode-toggle:hover { background: var(--tile); } }
+.mode-toggle:active { transform: scale(0.94); }
+@media (prefers-reduced-motion: no-preference) { .mode-toggle svg { animation: mode-spin 380ms var(--ease-out); } }
+@keyframes mode-spin { from { transform: rotate(-60deg) scale(0.6); opacity: 0; } }
+
+/* Dark mode: icons on colored tiles are cream too. Light tiles get a deeper
+   shade of the same color so cream reads on them. */
+[data-scene-theme='dark'] .mood--eat    { --m: #8E6A1F; --mi: #F7F2E9; }
+[data-scene-theme='dark'] .mood--laugh  { --m: #8A5547; --mi: #F7F2E9; }
+[data-scene-theme='dark'] .mood--family { --m: #87593A; --mi: #F7F2E9; }
+[data-scene-theme='dark'] .mood--lively { --m: #3A3F2C; --mi: #F7F2E9; }
+[data-scene-theme='dark'] .wkc--arts    { --g: #8A5547; --c: #F7F2E9; }
+[data-scene-theme='dark'] .wkc--food    { --g: #8E6A1F; --c: #F7F2E9; }
+[data-scene-theme='dark'] .wkc--sports  { --c: #F7F2E9; }
+[data-scene-theme='dark'] .collage__tile--a { background: #8A5547 !important; color: #F7F2E9; }
+[data-scene-theme='dark'] .setup-card__icon { background: var(--primary); color: var(--primary-ink); }
+[data-scene-theme='dark'] .logo-mark__dark { fill: #F0E9DB; }

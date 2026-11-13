@@ -1,4 +1,5 @@
 import { Dices, ExternalLink, Heart, List, Map as MapIcon, MapPin, Send, Sparkles, UtensilsCrossed, X } from 'lucide-react'
+import { ModeToggle } from './components/ModeToggle'
 import { useCallback, useEffect, useMemo, useRef, useState, type CSSProperties } from 'react'
 import { ActiveFilters } from './components/ActiveFilters'
 import { CalendarView } from './components/CalendarView'
@@ -272,11 +273,14 @@ export default function App() {
               <LogoMark height={30} />
               <span>{APP_NAME}</span>
             </button>
-            {isSample && (
-              <span className="badge-sample" title="These events are made up for the demo. Prices and times are not real.">
-                Sample data
-              </span>
-            )}
+            <div className="topbar__tools">
+              {isSample && (
+                <span className="badge-sample" title="These events are made up for the demo. Prices and times are not real.">
+                  Sample data
+                </span>
+              )}
+              <ModeToggle />
+            </div>
           </div>
           {tab !== 'saved' && (
             <SearchPill
